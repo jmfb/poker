@@ -25,24 +25,43 @@ using namespace std;
 
 //9 players is considered ideal table size.
 
+long long Combinations(long long total, long long take)
+{
+	long long result = 1;
+	for (long long index = 0; index < take; ++index)
+		result = result * (total - index) / (index + 1);
+	return result;
+}
+
+long long Partitions(long long count)
+{
+	return count == 2 ? 1 : (count - 1) * Partitions(count - 2);
+}
+
 int main()
 {
 	try
 	{
-		HoleCards hole1{ { Face::Ace, Suit::Spades }, { Face::Ace, Suit::Hearts } };
-		auto count = 0;
-		for (HoleCards hole2; hole2.IsValid(); hole2.MoveNext())
-		{
-			if (!hole2.IsDisjoint(hole1))
-				continue;
-			for (HoleCards hole3; hole3.IsValid(); hole3.MoveNext())
-			{
-				if (!hole3.IsDisjoint(hole1) || !hole3.IsDisjoint(hole2))
-					continue;
-				++count;
-			}
-		}
-		cout << count << " Permutations for a single handle against two opponents.\n";
+		//auto startingHands = Combinations(52, 2);
+		//auto opponentCount = 8;
+		//auto opponentCards = 2 * opponentCount;
+		//auto opponentCombinations = Combinations(50, opponentCards);
+		//auto partitions = Partitions(opponentCards);
+		//auto communityCards = Combinations(50 - opponentCards, 5);
+
+		cout << Combinations(52, 5) << endl;
+
+		//Starting Hands : 1,326
+		//Opponent Cards : 16
+		//Opponent Combinations : 4,923,689,695,575
+		//Partitions : 2,027,025
+		//Community Cards : 278,256
+
+		//3 octillion overflows 64 bit (would need a 128 bit)
+		//auto omfg = startingHands * opponentCombinations * partitions * communityCards;
+		//3,682,458,333,300,934,657,049,580,000
+
+		//1,326 * 4,923,689,695,575 * 2,027,025 * 278,256
 	}
 	catch (const exception& exception)
 	{
