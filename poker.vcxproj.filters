@@ -1,10 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <None Include=".gitignore" />
-    <None Include="README.md" />
+    <None Include="README.md">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include=".gitignore">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Suit.cpp">
+      <Filter>Classes\Suit</Filter>
+    </ClCompile>
+    <ClCompile Include="Face.cpp">
+      <Filter>Classes\Face</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>Classes\Card</Filter>
+    </ClCompile>
+    <ClCompile Include="HandValue.cpp">
+      <Filter>Classes\HandValue</Filter>
+    </ClCompile>
+    <ClCompile Include="Hand.cpp">
+      <Filter>Classes\Hand</Filter>
+    </ClCompile>
+    <ClCompile Include="AllHands.cpp">
+      <Filter>Classes\AllHands</Filter>
+    </ClCompile>
+    <ClCompile Include="HoleCards.cpp">
+      <Filter>Classes\HoleCards</Filter>
+    </ClCompile>
+    <ClCompile Include="Odds.cpp">
+      <Filter>Classes\Odds</Filter>
+    </ClCompile>
+    <ClCompile Include="OddsCache.cpp">
+      <Filter>Classes\OddsCache</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{d1250ee2-3dde-4056-89e8-23bee96786ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{b1b35f80-e31e-455c-a821-38bbd856b4e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{e9f8520a-9625-4150-89ae-8e5260f35832}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Suit">
+      <UniqueIdentifier>{dfb30ac1-952f-416d-89cb-12ebd73c92ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Face">
+      <UniqueIdentifier>{798d3e70-3fe8-4fc1-b8fc-a0a082452bbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Deck">
+      <UniqueIdentifier>{5d88e681-fd40-42a5-a8dc-ea8a973096cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Card">
+      <UniqueIdentifier>{ca185511-c13b-4f9e-a3c4-283880f6174a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\HandValue">
+      <UniqueIdentifier>{a7d56328-4c67-4ba7-84c1-123cd6df4a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\HandSize">
+      <UniqueIdentifier>{de11ecfb-f858-4e29-a141-8c6cabcaf2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\HandType">
+      <UniqueIdentifier>{f7ceaf8c-70da-411b-ac52-93b3ab5d7fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Hand">
+      <UniqueIdentifier>{9dbd29bc-7236-4b4f-b90c-d5e3bf36919f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\AllHands">
+      <UniqueIdentifier>{5a8f8d84-c1d3-4331-9fe6-2cb25f9138a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\HoleCards">
+      <UniqueIdentifier>{d947ff95-30ac-45e1-b547-faf2361795b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds">
+      <UniqueIdentifier>{4e8959c4-5dc2-4c74-80d1-5c85025ab2b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\OddsCache">
+      <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Suit.h">
+      <Filter>Classes\Suit</Filter>
+    </ClInclude>
+    <ClInclude Include="Face.h">
+      <Filter>Classes\Face</Filter>
+    </ClInclude>
+    <ClInclude Include="Deck.h">
+      <Filter>Classes\Deck</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>Classes\Card</Filter>
+    </ClInclude>
+    <ClInclude Include="HandValue.h">
+      <Filter>Classes\HandValue</Filter>
+    </ClInclude>
+    <ClInclude Include="HandSize.h">
+      <Filter>Classes\HandSize</Filter>
+    </ClInclude>
+    <ClInclude Include="HandType.h">
+      <Filter>Classes\HandType</Filter>
+    </ClInclude>
+    <ClInclude Include="Hand.h">
+      <Filter>Classes\Hand</Filter>
+    </ClInclude>
+    <ClInclude Include="AllHands.h">
+      <Filter>Classes\AllHands</Filter>
+    </ClInclude>
+    <ClInclude Include="HoleCards.h">
+      <Filter>Classes\HoleCards</Filter>
+    </ClInclude>
+    <ClInclude Include="Odds.h">
+      <Filter>Classes\Odds</Filter>
+    </ClInclude>
+    <ClInclude Include="OddsCache.h">
+      <Filter>Classes\OddsCache</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

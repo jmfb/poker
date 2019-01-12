@@ -127,11 +127,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AllHands.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="Face.cpp" />
+    <ClCompile Include="Hand.cpp" />
+    <ClCompile Include="HandValue.cpp" />
+    <ClCompile Include="HoleCards.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Odds.cpp" />
+    <ClCompile Include="OddsCache.cpp" />
+    <ClCompile Include="Suit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AllHands.h" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="Face.h" />
+    <ClInclude Include="Hand.h" />
+    <ClInclude Include="HandSize.h" />
+    <ClInclude Include="HandType.h" />
+    <ClInclude Include="HandValue.h" />
+    <ClInclude Include="HoleCards.h" />
+    <ClInclude Include="Odds.h" />
+    <ClInclude Include="OddsCache.h" />
+    <ClInclude Include="Suit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
