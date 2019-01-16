@@ -37,6 +37,9 @@
     <ClCompile Include="OddsCache.cpp">
       <Filter>Classes\OddsCache</Filter>
     </ClCompile>
+    <ClCompile Include="Math.cpp">
+      <Filter>Classes\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -84,6 +87,9 @@
     <Filter Include="Classes\OddsCache">
       <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Math">
+      <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -121,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="OddsCache.h">
       <Filter>Classes\OddsCache</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Classes\Math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

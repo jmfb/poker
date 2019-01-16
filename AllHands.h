@@ -19,6 +19,7 @@ public:
 	int GetRankByHash(int hash) const;
 	int GetCountByHandType(HandType type) const;
 	int GetBestHandRank(int c1, int c2, int m1, int m2, int m3, int m4, int m5) const;
+	int GetBestHandRank(int c, int m1, int m2, int m3, int m4, int m5) const;
 	void DumpHandDistribution() const;
 
 private:

@@ -67,6 +67,17 @@ int AllHands::GetBestHandRank(int c1, int c2, int m1, int m2, int m3, int m4, in
 	return rank;
 }
 
+int AllHands::GetBestHandRank(int c, int m1, int m2, int m3, int m4, int m5) const
+{
+	auto rank = GetRank(m1, m2, m3, m4, m5);
+	rank = max(rank, GetRank(c, m1, m2, m3, m4));
+	rank = max(rank, GetRank(c, m1, m2, m3, m5));
+	rank = max(rank, GetRank(c, m1, m2, m4, m5));
+	rank = max(rank, GetRank(c, m1, m3, m4, m5));
+	rank = max(rank, GetRank(c, m2, m3, m4, m5));
+	return rank;
+}
+
 void AllHands::DumpHandDistribution() const
 {
 	cout << GetDistinctHandCount() << " possible hands.\n";
