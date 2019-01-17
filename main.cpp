@@ -11,6 +11,15 @@ using namespace std;
 #include "HoleCards.h"
 #include "AllHands.h"
 
+long long ComputeTotalCombinations(long long cards, long long opponentCards)
+{
+	if (opponentCards < 0)
+		return 0;
+	if (opponentCards == 0)
+		return 1;
+	return Combinations(cards, opponentCards) * Partitions(opponentCards);
+}
+
 void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, int c3, int c4, int c5, long long& win, long long& draw, long long& lose)
 {
 	vector<int> cards;
@@ -41,26 +50,56 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 		else
 			++c;
 	}
-
-	for (auto c : oneCards)
-		cout << c << ' ';
-	cout << '\n';
+	cout << "1-card losses: " << oneCards.size() << '\n';
 
 	//All 2-card hands that beat you (grouped by first card)
-	map<int, set<int>> twoCardSets;
-	set<pair<int, int>> twoCards;
-	vector<HoleCards> twoCardHoles;
+	vector<HoleCards> twoCards;
 	for (auto o1 = cards.begin(); o1 != end; ++o1)
 		for (auto o2 = o1 + 1; o2 != end; ++o2)
-		{
-			auto nextBestHand = allHands.GetBestHandRank(*o1, *o2, c1, c2, c3, c4, c5);
-			if (nextBestHand > bestHand)
-			{
-				twoCards.emplace(*o1, *o2);
-				twoCardSets[*o1].insert(*o2);
-				twoCardHoles.emplace_back(Card{ *o1 }, Card{ *o2 });
-			}
-		}
+			if (allHands.GetBestHandRank(*o1, *o2, c1, c2, c3, c4, c5) > bestHand)
+				twoCards.emplace_back(*o1, *o2);
+	cout << "2-card losses: " << twoCards.size() << '\n';
+
+	for (auto opponents = 1; opponents <= 3; ++opponents)
+	{
+		cout << "Opponents: " << opponents << '\n';
+		auto overlap = 0;
+		for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
+			for (auto prev = twoCards.begin(); prev != iter; ++prev)
+				if (iter->IsDisjoint(*prev))
+					++overlap;
+		cout << "Overlap: " << overlap << '\n';
+
+		auto opponentCards = opponents * 2;
+		cout << "Opponent Cards: " << opponentCards << '\n';
+
+		auto remaining = DeckSize - 2 - 5;
+		auto total = ComputeTotalCombinations(DeckSize - 2 - 5, opponentCards);
+		cout << "Total: " << total << '\n';
+
+		remaining -= static_cast<decltype(remaining)>(oneCards.size());
+		cout << "Remaining: " << remaining << '\n';
+		auto excludingOneCardLosses = ComputeTotalCombinations(remaining, opponentCards);
+		cout << "Excluding 1-card losses: " << excludingOneCardLosses << '\n';
+
+		//auto guess = ComputeTotalCombinations(remaining - 4, opponentCards - 4);
+		//cout << "Guess: " << guess << '\n';
+		//auto weight = opponents == 1 ? 0 : opponents == 2 ? 1 : guess;
+		//cout << "Weight: " << weight << '\n';
+		auto x = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
+		cout << "X: " << x << '\n';
+		//auto subtract = overlap * weight;
+		auto subtract = opponents == 1 ? 0 : opponents == 2 ? overlap : opponents == 3 ? 8074 : 0;
+		auto twoCardLosses = x * twoCards.size() - subtract;
+		cout << "2-card losses: " << twoCardLosses << '\n';
+		auto winOrDraw = excludingOneCardLosses - twoCardLosses;
+		cout << "Win or draw: " << winOrDraw << '\n';
+		cout << '\n';
+	}
+
+	map<int, set<int>> twoCardSets;
+	for (auto p : twoCards)
+		twoCardSets[p.GetCard1()].insert(p.GetCard2());
 
 	auto headsUpCount = 0;
 	auto matchOne = 0;
@@ -210,10 +249,10 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 
 	auto x = 0;
 	auto totalY = 0;
-	for (auto iter = twoCardHoles.begin(); iter != twoCardHoles.end(); ++iter)
+	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
 	{
 		auto y = 0;
-		for (auto prev = twoCardHoles.begin(); prev != iter; ++prev)
+		for (auto prev = twoCards.begin(); prev != iter; ++prev)
 		{
 			if (iter->IsDisjoint(*prev))
 				++y;
@@ -228,6 +267,167 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 	cout << "Computed Two Win or Draw " << computedTwoWinOrDraw << '\n';
 
 	//TODO: Still need to make this generic for more players.
+
+	cout << "Brute forcing 3-opponents (this may take a while)...\n";
+
+	{
+		auto c = 0;
+		auto wod = 0;
+		auto l = 0;
+
+		map<int, map<int, int>> twoLosses;
+
+		auto lose = [&](int h1, int h2) -> bool
+		{
+			auto iter = twoCardSets.find(h1);
+			if (iter == twoCardSets.end())
+				return false;
+			if (iter->second.find(h2) == iter->second.end())
+				return false;
+			++twoLosses[h1][h2];
+			return true;
+		};
+
+		auto test = [&](int h1, int h2, int h3, int h4, int h5, int h6)
+		{
+			++c;
+			if (lose(h1, h2) || lose(h3, h4) || lose(h5, h6))
+				++l;
+			else
+				++wod;
+		};
+
+		auto fuck3 = [&](int h1, int h2, int h3, int h4, int h5, int h6)
+		{
+			test(h1, h2, h3, h4, h5, h6);
+			test(h1, h2, h3, h5, h4, h6);
+			test(h1, h2, h3, h6, h4, h5);
+			test(h1, h3, h2, h4, h5, h6);
+			test(h1, h3, h2, h5, h4, h6);
+			test(h1, h3, h2, h6, h4, h5);
+			test(h1, h4, h2, h3, h5, h6);
+			test(h1, h4, h2, h5, h3, h6);
+			test(h1, h4, h2, h6, h3, h5);
+			test(h1, h5, h2, h3, h4, h6);
+			test(h1, h5, h2, h4, h3, h6);
+			test(h1, h5, h2, h6, h3, h4);
+			test(h1, h6, h2, h3, h4, h5);
+			test(h1, h6, h2, h4, h3, h5);
+			test(h1, h6, h2, h5, h3, h4);
+		};
+
+		for (auto i1 = remaining.begin(); i1 != end2; ++i1)
+			for (auto i2 = i1 + 1; i2 != end2; ++i2)
+				for (auto i3 = i2 + 1; i3 != end2; ++i3)
+					for (auto i4 = i3 + 1; i4 != end2; ++i4)
+						for (auto i5 = i4 + 1; i5 != end2; ++i5)
+							for (auto i6 = i5 + 1; i6 != end2; ++i6)
+								fuck3(*i1, *i2, *i3, *i4, *i5, *i6);
+
+		cout << "3-Op Two Card Count: " << c << '\n';
+		cout << "3-Op Lose: " << l << '\n';
+		cout << "3-Op Win or Draw: " << wod << '\n';
+
+		auto guess = 153;
+		auto stuff = 14535;
+		long long sum = 0;
+		long long timesSum = 0;
+		for (auto p : twoLosses)
+		{
+			cout << Card{ p.first }.ToString() << ": ";
+			for (auto s : p.second)
+			{
+				auto less = stuff - s.second;
+				auto times = less / guess;
+				auto leftover = less % guess;
+				timesSum += times;
+				cout << Card{ s.first }.ToString() << "(" << s.second << "/" << less << "(" << times << "g+" << leftover << ")" << ") ";
+				sum += s.second;
+			}
+			cout << '\n';
+		}
+
+		cout << "Sum of losses = " << sum << '\n';
+		cout << "Times Sum: " << timesSum << '\n';
+		auto upper = stuff * twoCards.size();
+		cout << "Stuff: " << stuff << '\n';
+		cout << "2-Cards: " << twoCards.size() << '\n';
+		cout << "Upper: " << upper << '\n';
+		auto diff = upper - sum;
+		cout << "Difference: " << diff << '\n';
+		cout << "Guess: " << guess << '\n';
+		cout << "Diff mod guess: " << (diff % guess) << '\n';
+		cout << "Diff / guess: " << (diff / guess) << '\n';
+		auto overlap = 856;
+		cout << "Overlap: " << overlap << '\n';
+		auto calculated = overlap * guess;
+		cout << "Calculated: " << calculated << '\n';
+		if (calculated > diff)
+		{
+			auto overshoot = calculated - diff;
+			cout << "Overshot by: " << overshoot << '\n'; //7998
+			//Overshot by 7998.  This means for any given card, instead of subtracting C(18,2)=153 for previous disjoint cards I should subtract less.
+			//First set of cards is exact.
+			//Second set of cards is subtracted by 153 exactly.
+			//Starting with third set, we've reduced subtraction by some amount.
+		}
+		else
+		{
+			auto undershoot = diff - calculated;
+			cout << "Undershot by: " << undershoot << '\n';
+		}
+
+		cout << "Disjoint analysis:\n";
+		auto magicSum = 0;
+		map<int, map<int, int>> wtf;
+		for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
+		{
+			auto wtfSum = 0;
+			auto prevDisjoint = 0;
+			for (auto prev = twoCards.begin(); prev != iter; ++prev)
+				if (iter->IsDisjoint(*prev))
+				{
+					++prevDisjoint;
+					wtfSum += wtf[prev->GetCard1()][prev->GetCard2()];
+				}
+			wtf[iter->GetCard1()][iter->GetCard2()] = prevDisjoint;
+			auto actual = stuff - twoLosses[iter->GetCard1()][iter->GetCard2()];
+			auto expected = prevDisjoint * guess;
+			auto magic = expected - actual;
+			magicSum += magic;
+			cout << iter->ToString() << ": Previous disjoint " << prevDisjoint << ", Expected: " << expected << ", Actual: " << actual << ", Magic: " << magic << ", WTF " << wtfSum << '\n';
+		}
+		cout << "Magic Sum: " << magicSum << '\n';
+
+		/* Close.  The WTF works for a while, then strays a little, goes back to working, then skews off
+		5s 6s: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s 5c: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s 6c: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s Ac: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s 5d: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s 6d: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		5s Ad: Previous disjoint 0, Expected: 0, Actual: 0, Magic: 0, WTF 0
+		6s 5c: Previous disjoint 5, Expected: 765, Actual: 765, Magic: 0, WTF 0
+		6s 6c: Previous disjoint 5, Expected: 765, Actual: 765, Magic: 0, WTF 0
+		6s 5d: Previous disjoint 5, Expected: 765, Actual: 765, Magic: 0, WTF 0
+		6s 6d: Previous disjoint 5, Expected: 765, Actual: 765, Magic: 0, WTF 0
+		7s 7c: Previous disjoint 11, Expected: 1683, Actual: 1663, Magic: 20, WTF 20
+		7s 7d: Previous disjoint 11, Expected: 1683, Actual: 1663, Magic: 20, WTF 20
+		Ts Tc: Previous disjoint 13, Expected: 1989, Actual: 1947, Magic: 42, WTF 42
+		Ts Td: Previous disjoint 13, Expected: 1989, Actual: 1947, Magic: 42, WTF 42
+		Qs Qc: Previous disjoint 15, Expected: 2295, Actual: 2227, Magic: 68, WTF 68
+		Qs Ac: Previous disjoint 14, Expected: 2142, Actual: 2082, Magic: 60, WTF 68 <-- First deviance (+8 from Magic) (Also first non-pair after pairs with magic)
+		Qs Qd: Previous disjoint 15, Expected: 2295, Actual: 2227, Magic: 68, WTF 68
+		Qs Ad: Previous disjoint 14, Expected: 2142, Actual: 2082, Magic: 60, WTF 68 <-- +8 again
+		Ks Kc: Previous disjoint 19, Expected: 2907, Actual: 2781, Magic: 126, WTF 126
+		Ks Ac: Previous disjoint 17, Expected: 2601, Actual: 2500, Magic: 101, WTF 112 <-- +11
+		Ks Kd: Previous disjoint 19, Expected: 2907, Actual: 2781, Magic: 126, WTF 126
+		Ks Ad: Previous disjoint 17, Expected: 2601, Actual: 2500, Magic: 101, WTF 112 <-- +11
+		5c 6c: Previous disjoint 19, Expected: 2907, Actual: 2771, Magic: 136, WTF 188 <-- +52 (off the rails)
+		5c Ac: Previous disjoint 18, Expected: 2754, Actual: 2631, Magic: 123, WTF 162 <-- +39
+		5c 5d: Previous disjoint 19, Expected: 2907, Actual: 2771, Magic: 136, WTF 188 <-- +52
+		*/
+	}
 }
 
 int main()
