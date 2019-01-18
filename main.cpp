@@ -275,6 +275,8 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 		auto wod = 0;
 		auto l = 0;
 
+		map<int, map<int, int>> sevens;
+
 		map<int, map<int, int>> twoLosses;
 
 		auto lose = [&](int h1, int h2) -> bool
@@ -288,17 +290,63 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 			return true;
 		};
 
+		auto sevenSpades = Card{ Face::King, Suit::Spades }.GetId();
+		auto sevenClubs = Card{ Face::Ace, Suit::Clubs }.GetId();
+
 		auto test = [&](int h1, int h2, int h3, int h4, int h5, int h6)
 		{
+			if (h1 == h2 || h1 == h3 || h1 == h4 || h1 == h5 || h1 == h6 ||
+				h2 == h3 || h2 == h4 || h2 == h5 || h2 == h6 ||
+				h3 == h4 || h3 == h5 || h3 == h6 ||
+				h4 == h5 || h4 == h6 ||
+				h5 == h6)
+			{
+				cout << h1 << h2 << ' ' << h3 << h4 << ' ' << h5 << h6 << " WTF!::!:!L!LL!\n";
+				throw runtime_error{ "Stop fucking shit up in your stupid manual partitions." };
+			}
+
 			++c;
-			if (lose(h1, h2) || lose(h3, h4) || lose(h5, h6))
+			//7s 7c
+			if (lose(h1, h2))
+			{
 				++l;
+				if (h3 == sevenSpades && h4 == sevenClubs)
+					++sevens[h1][h2];
+				else if (h5 == sevenSpades && h6 == sevenClubs)
+					++sevens[h1][h2];
+			}
+			else if (lose(h3, h4))
+			{
+				++l;
+				if (h5 == sevenSpades && h6 == sevenClubs)
+					++sevens[h3][h4];
+			}
+			else if (lose(h5, h6))
+			{
+				++l;
+			}
 			else
 				++wod;
+
+
+			//if (lose(h1, h2) || lose(h3, h4) || lose(h5, h6))
+			//	++l;
+			//else
+			//	++wod;
 		};
 
 		auto fuck3 = [&](int h1, int h2, int h3, int h4, int h5, int h6)
 		{
+			if (h1 == h2 || h1 == h3 || h1 == h4 || h1 == h5 || h1 == h6 ||
+				h2 == h3 || h2 == h4 || h2 == h5 || h2 == h6 ||
+				h3 == h4 || h3 == h5 || h3 == h6 ||
+				h4 == h5 || h4 == h6 ||
+				h5 == h6)
+			{
+				cout << h1 << h2 << ' ' << h3 << h4 << ' ' << h5 << h6 << " WTF!::!:!L!LL!\n";
+				throw runtime_error{ "Stop fucking shit up in your stupid fucking loops." };
+			}
+
 			test(h1, h2, h3, h4, h5, h6);
 			test(h1, h2, h3, h5, h4, h6);
 			test(h1, h2, h3, h6, h4, h5);
@@ -426,7 +474,47 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 		5c 6c: Previous disjoint 19, Expected: 2907, Actual: 2771, Magic: 136, WTF 188 <-- +52 (off the rails)
 		5c Ac: Previous disjoint 18, Expected: 2754, Actual: 2631, Magic: 123, WTF 162 <-- +39
 		5c 5d: Previous disjoint 19, Expected: 2907, Actual: 2771, Magic: 136, WTF 188 <-- +52
+
+		7s 7c - This is the first one that deviates from the 153 expectation.
+		5s: 6s(153) 5c(153) 6c(153) Ac(153) 5d(153) 6d(153) Ad(153) -0
+		6s: 5c(148) 6c(148) 5d(148) 6d(148) -5
+
+		Qs Qc - This is the last one that would match a deviation based on previous disjoint count
+		5s: 6s(153) 5c(153) 6c(153) Ac(153) 5d(153) 6d(153) Ad(153) -0
+		6s: 5c(148) 6c(148) 5d(148) 6d(148) -5
+		7s: 7c(142) 7d(142) -11
+		Ts: Tc(140) Td(140) -13
+
+		Qs Ac - This is the first one that differs from previous disjoin count
+		5s: 6s(153) 5c(153) 6c(153) 5d(153) 6d(153) Ad(153) -0
+		6s: 5c(149) 6c(149) 5d(149) 6d(149) -4 (instead of -5, so +1 for some reason)
+		7s: 7c(143) 7d(143) -10 (instead of -11, so +1 for some reason)
+		Ts: Tc(141) Td(141) -12 (instead of -13, so +1 for some reason)
+
+		Ks Ac - First one off by 11 (previous only off by 8)
+		5s: 6s(153) 5c(153) 6c(153) 5d(153) 6d(153) Ad(153) -0
+		6s: 5c(149) 6c(149) 5d(149) 6d(149) -4 (instead of -5 so +1)
+		7s: 7c(143) 7d(143) -10 (instead of -11 so +1)
+		Ts: Tc(141) Td(141) -12 (instead of -13 so +1)
+		Qs: Qc(139) Qd(139) Ad(140) -14, -14, -13 (instead of -15/-15/-14, so +1)
+
+		5c 6c - First one just completely off the rails
+		5s: 6s(153) Ac(153) 5d(153) 6d(153) Ad(153) -0
+		6s: 5d(150) 6d(150) -3 (instead of -5, so +2 for some reason)
+		7s: 7c(146) 7d(146) -7 (instead of -11, so +4 for some reason)
+		Ts: Tc(144) Td(144) -9 (instead of -13, so +4 for some reason)
+		Qs: Qc(142) Ac(143) Qd(142) Ad(143) -11, -10, -11, -10 (instead of -15/-14/-15/-14 so +4 for some reason)
+		Ks: Kc(138) Ac(140) Kd(138) Ad(140) -15, -13, -15, -13 (instead of -19/-17/-19/-17 so +4 for some reason)
 		*/
+
+		cout << "Sevens summary:\n";
+		for (auto& seven : sevens)
+		{
+			cout << Card{ seven.first }.ToString() << ": ";
+			for (auto& x : seven.second)
+				cout << Card{ x.first }.ToString() << "(" << x.second << ") ";
+			cout << '\n';
+		}
 	}
 }
 
@@ -434,6 +522,120 @@ int main()
 {
 	try
 	{
+		if (true)
+		{
+			map<char, map<char, int>> losses;
+
+			set<pair<char, char>> twoCards
+			{
+				{ '1', '2' }, { '2', '6' }, { '2', '8' }, { '2', 'T' }, { '6', '7' }, { '6', '8' }, { '6', '9' }, { '6', 'T' }, { '8', 'T' }
+			};
+
+			auto isTwoCard = [&](char c1, char c2) -> bool
+			{
+				return twoCards.find({ c1, c2 }) != twoCards.end();
+			};
+
+			auto lose = [&](char c1, char c2) -> bool
+			{
+				if (!isTwoCard(c1, c2))
+					return false;
+				++losses[c1][c2];
+				return true;
+			};
+
+			auto c = 0;
+			auto l = 0;
+			auto wod = 0;
+
+			auto test = [&](char c1, char c2, char c3, char c4, char c5, char c6)
+			{
+				++c;
+				if (lose(c1, c2) || lose(c3, c4) || lose(c5, c6))
+					++l;
+				else
+					++wod;
+			};
+
+			auto fuck = [&](char c1, char c2, char c3, char c4, char c5, char c6)
+			{
+				test(c1, c2, c3, c4, c5, c6);
+				test(c1, c2, c3, c5, c4, c6);
+				test(c1, c2, c3, c6, c4, c5);
+
+				test(c1, c3, c2, c4, c5, c6);
+				test(c1, c3, c2, c5, c4, c6);
+				test(c1, c3, c2, c6, c4, c5);
+
+				test(c1, c4, c2, c3, c5, c6);
+				test(c1, c4, c2, c5, c3, c6);
+				test(c1, c4, c2, c6, c3, c5);
+
+				test(c1, c5, c2, c3, c4, c6);
+				test(c1, c5, c2, c4, c3, c6);
+				test(c1, c5, c2, c6, c3, c4);
+
+				test(c1, c6, c2, c3, c4, c5);
+				test(c1, c6, c2, c4, c3, c5);
+				test(c1, c6, c2, c5, c3, c4);
+			};
+
+			vector<char> cards{ '1', '2', '6', '7', '8', '9', 'T' };
+			for (auto i1 = 0; i1 < cards.size(); ++i1)
+				for (auto i2 = i1 + 1; i2 < cards.size(); ++i2)
+					for (auto i3 = i2 + 1; i3 < cards.size(); ++i3)
+						for (auto i4 = i3 + 1; i4 < cards.size(); ++i4)
+							for (auto i5 = i4 + 1; i5 < cards.size(); ++i5)
+								for (auto i6 = i5 + 1; i6 < cards.size(); ++i6)
+									fuck(cards[i1], cards[i2], cards[i3], cards[i4], cards[i5], cards[i6]);
+
+
+			/*
+			Remaining Cards minus 8T = { 12679 }
+			12 67 (12 loss) NOTE: Also 67 loss \___This is the +2 !!!!
+			12 69 (12 loss) NOTE: Also 69 loss /
+			12 79 (12 loss)
+			16 27 *
+			16 29 *
+			16 79 *
+			17 26 (26 loss)
+			17 29 *
+			17 69 (69 loss)
+			19 26 (26 loss)
+			19 27 *
+			19 67 (67 loss)
+			26 79 (26 loss)
+			27 69 (69 loss)
+			29 67 (67 loss)
+
+			8T prev disjoint { 12, 26, 67, 69 } Disjoint 2-partitions { 12 67, 12 69 } = 2
+
+			//TODO: Implement algorithm
+			*/
+
+			cout << "Count " << c << '\n';
+			cout << "Loss " << l << '\n';
+			cout << "Win or draw " << wod << '\n';
+			for (auto x : losses)
+			{
+				cout << x.first << ": ";
+				for (auto y : x.second)
+					cout << y.first << "(" << y.second << ") ";
+				cout << '\n';
+			}
+
+			//TODO: Generate l (95) from twoCards {A2 26 28 2T 67 68 69 6T 8T} (9)
+			//Using previous algorithm: 5C4P4*9 = 15*9 = 135, subtract PD*3C2 = 14*3 = 42 ... 135-42 = 93, add PD2P = 2 ... 93+2 = 95 (check)
+			//Is there a more elegant forward generative solution?
+			//OC = O*2 = 3*2 = 6, D = { A26789T } (7)
+			//Two Card Map: { { A: 2 }, { 2: 6 8 T }, { 6: 7 8 9 }, { 8: T } }
+			//Total OPC = 7C6P6 = 7*15 = 105
+			//If A (1/7 * 105 = 15) Ax xx xx and (6/7 * 105 = 90) {26789T} xx xx xx
+			//. A2 {6789T} xx xx is loss (?/15) <- already can't figure this one out.  Previous algorithm should work....fingers crossed.
+
+			return 0;
+		}
+
 		cout << "Computing best hands...";
 		AllHands allHands;
 		cout << "done.\n";
