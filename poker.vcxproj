@@ -133,6 +133,7 @@
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="HandValue.cpp" />
     <ClCompile Include="HoleCards.cpp" />
+    <ClCompile Include="LargeInteger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Odds.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="HandType.h" />
     <ClInclude Include="HandValue.h" />
     <ClInclude Include="HoleCards.h" />
+    <ClInclude Include="LargeInteger.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Odds.h" />
     <ClInclude Include="OddsCache.h" />

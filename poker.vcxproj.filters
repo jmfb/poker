@@ -40,6 +40,9 @@
     <ClCompile Include="Math.cpp">
       <Filter>Classes\Math</Filter>
     </ClCompile>
+    <ClCompile Include="LargeInteger.cpp">
+      <Filter>Classes\LargeInteger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -90,6 +93,9 @@
     <Filter Include="Classes\Math">
       <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\LargeInteger">
+      <UniqueIdentifier>{1cbfe26f-6b3f-4950-bef7-1ea81b42a85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -130,6 +136,9 @@
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Classes\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="LargeInteger.h">
+      <Filter>Classes\LargeInteger</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

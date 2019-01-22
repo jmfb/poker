@@ -1,4 +1,5 @@
 #pragma once
+#include "LargeInteger.h"
 
-long long Combinations(long long total, long long take);
-long long Partitions(long long count);
+LargeInteger Combinations(LargeInteger total, LargeInteger take);
+LargeInteger Partitions(LargeInteger count);
