@@ -3,10 +3,6 @@
 #include "HoleCards.h"
 #include "Odds.h"
 #include "Suit.h"
-#include <set>
-#include <map>
-#include <tuple>
-using namespace std;
 
 class OddsCache
 {

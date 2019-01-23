@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "Face.h"
-#include <stdexcept>
-using namespace std;
 
 string ToString(Face value)
 {

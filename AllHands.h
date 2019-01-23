@@ -1,8 +1,5 @@
 #pragma once
 #include "HandType.h"
-#include <vector>
-#include <map>
-using namespace std;
 
 class AllHands
 {

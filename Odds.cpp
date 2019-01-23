@@ -1,7 +1,6 @@
+#include "pch.h"
 #include "Odds.h"
 #include "Deck.h"
-#include <sstream>
-using namespace std;
 
 Odds::Odds(int win, int draw, int lose)
 	: win{ win }, draw{ draw }, lose{ lose }

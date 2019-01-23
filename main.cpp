@@ -1,24 +1,8 @@
-#include <iostream>
-#include <vector>
-#include <set>
-#include <map>
-#include <algorithm>
-#include <exception>
-using namespace std;
-
+#include "pch.h"
 #include "Math.h"
 #include "Deck.h"
 #include "HoleCards.h"
 #include "AllHands.h"
-
-LargeInteger ComputeTotalCombinations(LargeInteger cards, LargeInteger opponentCards)
-{
-	if (opponentCards < 0)
-		return 0;
-	if (opponentCards == 0)
-		return 1;
-	return Combinations(cards, opponentCards) * Partitions(opponentCards);
-}
 
 bool IsDisjoint(const vector<HoleCards>& holes, const HoleCards& hole)
 {
@@ -49,7 +33,7 @@ LargeInteger ComputeTwoCardOverlap(
 	return overlap;
 }
 
-void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, int c3, int c4, int c5, long long& win, long long& draw, long long& lose)
+void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, int c3, int c4, int c5, int opponents, LargeInteger& lose, LargeInteger& winOrDraw)
 {
 	vector<int> cards;
 	for (auto card = 0; card < DeckSize; ++card)
@@ -79,7 +63,6 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 		else
 			++c;
 	}
-	cout << "1-card losses: " << oneCards.size() << '\n';
 
 	//All 2-card hands that beat you (grouped by first card)
 	vector<HoleCards> twoCards;
@@ -87,55 +70,25 @@ void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, in
 		for (auto o2 = o1 + 1; o2 != end; ++o2)
 			if (allHands.GetBestHandRank(*o1, *o2, c1, c2, c3, c4, c5) > bestHand)
 				twoCards.emplace_back(*o1, *o2);
-	cout << "2-card losses: " << twoCards.size() << '\n';
-	cout << '\n';
 
-	//64-bit overflow occurs before 8 opponents.  TODO: Need large integer support
-	for (LargeInteger opponents = 1; opponents <= 8; ++opponents)
-	{
-		cout << "Opponents: " << opponents << '\n';
-		LargeInteger overlap = 0;
-		for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-			for (auto prev = twoCards.begin(); prev != iter; ++prev)
-				if (iter->IsDisjoint(*prev))
-					++overlap;
-		cout << "Overlap: " << overlap << '\n';
+	auto opponentCards = opponents * 2;
 
-		auto opponentCards = opponents * 2;
-		cout << "Opponent Cards: " << opponentCards << '\n';
+	LargeInteger remaining = DeckSize - 2 - 5;
+	auto total = ComputeTotalCombinations(remaining, opponentCards);
 
-		LargeInteger remaining = DeckSize - 2 - 5;
-		auto total = ComputeTotalCombinations(remaining, opponentCards);
-		cout << "Total: " << total << '\n';
+	remaining -= static_cast<long long>(oneCards.size());
+	auto excludingOneCardLosses = ComputeTotalCombinations(remaining, opponentCards);
 
-		remaining -= static_cast<long long>(oneCards.size());
-		cout << "Remaining: " << remaining << '\n';
-		auto excludingOneCardLosses = ComputeTotalCombinations(remaining, opponentCards);
-		cout << "Excluding 1-card losses: " << excludingOneCardLosses << '\n';
+	auto twoCardCount = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
+	auto twoCardLosses = twoCardCount * static_cast<long long>(twoCards.size());
 
-		auto twoCardCount = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
-		auto twoCardLosses = twoCardCount * static_cast<long long>(twoCards.size());
-		cout << "2-Card count: " << twoCards.size() << '\n';
-		cout << "2-Card count per pair: " << twoCardCount << '\n';
-		cout << "2-Card losses: " << twoCardLosses << '\n';
+	LargeInteger twoCardOverlap = 0;
+	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
+		twoCardOverlap += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, remaining - 2, opponentCards - 2);
+	auto twoCardTotal = twoCardLosses - twoCardOverlap;
 
-		LargeInteger twoCardOverlap = 0;
-		for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-			twoCardOverlap += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, remaining - 2, opponentCards - 2);
-		cout << "2-Card overlap: " << twoCardOverlap << '\n';
-		auto twoCardTotal = twoCardLosses - twoCardOverlap;
-		cout << "2-Card total: " << twoCardTotal << '\n';
-
-		auto winOrDraw = excludingOneCardLosses - twoCardTotal;
-		cout << "Win or draw: " << winOrDraw << '\n';
-
-		auto winOrDrawPercent = (winOrDraw * 1000 + 5) / total;
-		cout << "Percent * 10 = " << winOrDrawPercent << '\n';
-		auto oneIn = total / winOrDraw;
-		cout << "Win or draw 1 in " << oneIn << '\n';
-
-		cout << '\n';
-	}
+	winOrDraw = excludingOneCardLosses - twoCardTotal;
+	lose = total - winOrDraw;
 }
 
 int main()
@@ -154,16 +107,19 @@ int main()
 		auto end = remove(cards.begin(), cards.end(), hole.GetCard1());
 		end = remove(cards.begin(), end, hole.GetCard2());
 
-		long long win = 0;
-		long long draw = 0;
-		long long lose = 0;
+		LargeInteger winOrDraw = 0;
+		LargeInteger lose = 0;
 
 		Card c1{ Face::Two, Suit::Hearts };
 		Card c2{ Face::Three, Suit::Hearts };
 		Card c3{ Face::Four, Suit::Hearts };
 		Card c4{ Face::Eight, Suit::Hearts };
 		Card c5{ Face::Nine, Suit::Clubs };
-		Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), win, draw, lose);
+		Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), 8, lose, winOrDraw);
+
+		cout << "Win or draw: " << winOrDraw << '\n';
+		cout << "Lose: " << lose << '\n';
+		cout << "Total: " << (winOrDraw + lose) << '\n';
 
 		//for (auto c1 = cards.begin(); c1 != end; ++c1)
 		//	for (auto c2 = c1 + 1; c2 != end; ++c2)

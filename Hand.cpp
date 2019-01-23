@@ -1,12 +1,6 @@
+#include "pch.h"
 #include "Hand.h"
 #include "Deck.h"
-#include <map>
-#include <vector>
-#include <tuple>
-#include <algorithm>
-#include <functional>
-#include <stdexcept>
-using namespace std;
 
 Hand::Hand(int c1, int c2, int c3, int c4, int c5)
 {

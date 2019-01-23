@@ -1,7 +1,6 @@
+#include "pch.h"
 #include "HoleCards.h"
 #include "Deck.h"
-#include <algorithm>
-using namespace std;
 
 HoleCards::HoleCards(int hash)
 {

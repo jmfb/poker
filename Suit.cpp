@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "Suit.h"
-#include <stdexcept>
-using namespace std;
 
 string ToString(Suit value)
 {

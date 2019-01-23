@@ -1,10 +1,7 @@
+#include "pch.h"
 #include "AllHands.h"
 #include "Hand.h"
 #include "Deck.h"
-#include <array>
-#include <iostream>
-#include <algorithm>
-using namespace std;
 
 AllHands::AllHands()
 {

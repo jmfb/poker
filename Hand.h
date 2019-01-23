@@ -2,10 +2,6 @@
 #include "HandValue.h"
 #include "HandSize.h"
 #include "Card.h"
-#include <array>
-#include <string>
-#include <optional>
-using namespace std;
 
 class Hand
 {

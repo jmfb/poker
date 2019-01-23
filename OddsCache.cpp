@@ -1,8 +1,5 @@
+#include "pch.h"
 #include "OddsCache.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-using namespace std;
 
 void OddsCache::AddIfMissing(const AllHands& allHands, const HoleCards& hole1, const HoleCards& hole2)
 {

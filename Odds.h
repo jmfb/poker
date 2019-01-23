@@ -1,8 +1,6 @@
 #pragma once
 #include "AllHands.h"
 #include "HoleCards.h"
-#include <string>
-using namespace std;
 
 class Odds
 {

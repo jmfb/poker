@@ -1,6 +1,5 @@
+#include "pch.h"
 #include "HandValue.h"
-#include <stdexcept>
-using namespace std;
 
 HandValue::HandValue(HandType type, const array<Face, HandSize>& faces)
 	: type{ type }, faces{ faces }

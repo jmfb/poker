@@ -1,9 +1,6 @@
 #pragma once
 #include "Card.h"
 #include "Suit.h"
-#include <map>
-#include <string>
-using namespace std;
 
 class HoleCards
 {

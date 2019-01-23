@@ -1,8 +1,6 @@
 #pragma once
 #include "Suit.h"
 #include "Face.h"
-#include <string>
-using namespace std;
 
 class Card
 {

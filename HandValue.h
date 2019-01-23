@@ -2,9 +2,6 @@
 #include "HandType.h"
 #include "HandSize.h"
 #include "Face.h"
-#include <array>
-#include <string>
-using namespace std;
 
 class HandValue
 {

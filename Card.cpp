@@ -1,9 +1,8 @@
+#include "pch.h"
 #include "Card.h"
 #include "Face.h"
 #include "Suit.h"
 #include "Deck.h"
-#include <stdexcept>
-using namespace std;
 
 Card::Card(int id)
 {
