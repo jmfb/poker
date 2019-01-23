@@ -3,11 +3,7 @@
 #include "Deck.h"
 #include "HoleCards.h"
 #include "AllHands.h"
-
-bool IsDisjoint(const vector<HoleCards>& holes, const HoleCards& hole)
-{
-	return all_of(holes.begin(), holes.end(), [&](const HoleCards& other) { return other.IsDisjoint(hole); });
-}
+#include "LargeOdds.h"
 
 LargeInteger ComputeTwoCardOverlap(
 	const vector<HoleCards>& holes,
@@ -18,12 +14,11 @@ LargeInteger ComputeTwoCardOverlap(
 {
 	if (opponentCards <= 0)
 		return 0;
-
 	auto overlapPerPair = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
 	LargeInteger overlap = 0;
 	for (auto iter = begin; iter != end; ++iter)
 	{
-		if (!IsDisjoint(holes, *iter))
+		if (!all_of(holes.begin(), holes.end(), [&](const HoleCards& other) { return other.IsDisjoint(*iter); }))
 			continue;
 		overlap += overlapPerPair;
 		vector<HoleCards> newHoles{ holes };
@@ -33,62 +28,28 @@ LargeInteger ComputeTwoCardOverlap(
 	return overlap;
 }
 
-void Compute(const AllHands& allHands, const HoleCards& hole, int c1, int c2, int c3, int c4, int c5, int opponents, LargeInteger& lose, LargeInteger& winOrDraw)
+LargeOdds Compute(
+	const AllHands& allHands,
+	const HoleCards& hole,
+	int c1,
+	int c2,
+	int c3,
+	int c4,
+	int c5,
+	int opponents)
 {
-	vector<int> cards;
-	for (auto card = 0; card < DeckSize; ++card)
-		cards.push_back(card);
-
-	auto end = remove(cards.begin(), cards.end(), hole.GetCard1());
-	end = remove(cards.begin(), end, hole.GetCard2());
-	end = remove(cards.begin(), end, c1);
-	end = remove(cards.begin(), end, c2);
-	end = remove(cards.begin(), end, c3);
-	end = remove(cards.begin(), end, c4);
-	end = remove(cards.begin(), end, c5);
-
+	Deck cards;
+	cards.NewDeck();
+	cards.Remove(hole, c1, c2, c3, c4, c5);
 	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
-
-	//All 1-card hands that beat you
-	set<int> oneCards;
-	for (auto c = cards.begin(); c != end; )
-	{
-		auto nextBestHand = allHands.GetBestHandRank(*c, c1, c2, c3, c4, c5);
-		if (nextBestHand > bestHand)
-		{
-			oneCards.insert(*c);
-			rotate(c, c + 1, end);
-			--end;
-		}
-		else
-			++c;
-	}
-
-	//All 2-card hands that beat you (grouped by first card)
-	vector<HoleCards> twoCards;
-	for (auto o1 = cards.begin(); o1 != end; ++o1)
-		for (auto o2 = o1 + 1; o2 != end; ++o2)
-			if (allHands.GetBestHandRank(*o1, *o2, c1, c2, c3, c4, c5) > bestHand)
-				twoCards.emplace_back(*o1, *o2);
-
+	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
 	auto opponentCards = opponents * 2;
-
-	LargeInteger remaining = DeckSize - 2 - 5;
-	auto total = ComputeTotalCombinations(remaining, opponentCards);
-
-	remaining -= static_cast<long long>(oneCards.size());
-	auto excludingOneCardLosses = ComputeTotalCombinations(remaining, opponentCards);
-
-	auto twoCardCount = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
-	auto twoCardLosses = twoCardCount * static_cast<long long>(twoCards.size());
-
-	LargeInteger twoCardOverlap = 0;
+	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
+		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-		twoCardOverlap += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, remaining - 2, opponentCards - 2);
-	auto twoCardTotal = twoCardLosses - twoCardOverlap;
-
-	winOrDraw = excludingOneCardLosses - twoCardTotal;
-	lose = total - winOrDraw;
+		winOrDraw += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
+	return LargeOdds::Create(winOrDraw, opponents);
 }
 
 int main()
@@ -99,27 +60,22 @@ int main()
 		AllHands allHands;
 		cout << "done.\n";
 
-		vector<int> cards;
-		for (auto card = 0; card < DeckSize; ++card)
-			cards.push_back(card);
+		Deck deck;
+		deck.NewDeck();
 		
 		HoleCards hole{ Card{ Face::Ace, Suit::Spades }, Card{ Face::Jack, Suit::Spades } };
-		auto end = remove(cards.begin(), cards.end(), hole.GetCard1());
-		end = remove(cards.begin(), end, hole.GetCard2());
-
-		LargeInteger winOrDraw = 0;
-		LargeInteger lose = 0;
+		deck.Remove(hole);
 
 		Card c1{ Face::Two, Suit::Hearts };
 		Card c2{ Face::Three, Suit::Hearts };
 		Card c3{ Face::Four, Suit::Hearts };
 		Card c4{ Face::Eight, Suit::Hearts };
 		Card c5{ Face::Nine, Suit::Clubs };
-		Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), 8, lose, winOrDraw);
+		auto result = Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), 8);
 
-		cout << "Win or draw: " << winOrDraw << '\n';
-		cout << "Lose: " << lose << '\n';
-		cout << "Total: " << (winOrDraw + lose) << '\n';
+		cout << "Win or draw: " << result.GetWinOrDraw() << '\n';
+		cout << "Lose: " << result.GetLose() << '\n';
+		cout << "Total: " << result.GetTotal() << '\n';
 
 		//for (auto c1 = cards.begin(); c1 != end; ++c1)
 		//	for (auto c2 = c1 + 1; c2 != end; ++c2)

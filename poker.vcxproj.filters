@@ -46,6 +46,12 @@
     <ClCompile Include="pch.cpp">
       <Filter>Headers</Filter>
     </ClCompile>
+    <ClCompile Include="Deck.cpp">
+      <Filter>Classes\Deck</Filter>
+    </ClCompile>
+    <ClCompile Include="LargeOdds.cpp">
+      <Filter>Classes\LargeOdds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -96,6 +102,9 @@
     <Filter Include="Classes\Math">
       <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\LargeOdds">
+      <UniqueIdentifier>{5d26f2ab-fbe7-40c2-abd7-3db2fd2c4826}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -139,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LargeOdds.h">
+      <Filter>Classes\LargeOdds</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
