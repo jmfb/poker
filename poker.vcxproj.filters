@@ -7,6 +7,9 @@
     <None Include=".gitignore">
       <Filter>Resources</Filter>
     </None>
+    <None Include="packages.config">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -39,9 +42,6 @@
     </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Classes\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="LargeInteger.cpp">
-      <Filter>Classes\LargeInteger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
