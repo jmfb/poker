@@ -47,8 +47,16 @@ LargeOdds Compute(
 	auto opponentCards = opponents * 2;
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
+	//TODO: remove when done optimizing
+	cout << twoCards.size() << " 2-card losses to compute overlap\n";
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
+	{
+		//TODO: remove when done optimizing
+		cout << distance(iter, twoCards.end()) << ": " << iter->ToString() << "...";
 		winOrDraw += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
+		//TODO: remove when done optimizing
+		cout << '\n';
+	}
 	return LargeOdds::Create(winOrDraw, opponents);
 }
 
@@ -56,9 +64,7 @@ int main()
 {
 	try
 	{
-		cout << "Computing best hands...";
 		AllHands allHands;
-		cout << "done.\n";
 
 		Deck deck;
 		deck.NewDeck();
@@ -66,27 +72,41 @@ int main()
 		HoleCards hole{ Card{ Face::Ace, Suit::Spades }, Card{ Face::Jack, Suit::Spades } };
 		deck.Remove(hole);
 
-		Card c1{ Face::Two, Suit::Hearts };
-		Card c2{ Face::Three, Suit::Hearts };
-		Card c3{ Face::Four, Suit::Hearts };
-		Card c4{ Face::Eight, Suit::Hearts };
-		Card c5{ Face::Nine, Suit::Clubs };
-		auto result = Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), 8);
+		//55 2-card losses takes an exhorbitant amount of time
+		auto result = Compute(allHands, hole, 0, 1, 2, 13, 26, 8);
+		cout << "Win or draw " << result.GetWinOrDraw() << ", Lose " << result.GetLose() << '\n';
 
-		cout << "Win or draw: " << result.GetWinOrDraw() << '\n';
-		cout << "Lose: " << result.GetLose() << '\n';
-		cout << "Total: " << result.GetTotal() << '\n';
+		//Card c1{ Face::Two, Suit::Hearts };
+		//Card c2{ Face::Three, Suit::Hearts };
+		//Card c3{ Face::Four, Suit::Hearts };
+		//Card c4{ Face::Eight, Suit::Hearts };
+		//Card c5{ Face::Nine, Suit::Clubs };
+		//auto result = Compute(allHands, hole, c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId(), 8);
 
-		//for (auto c1 = cards.begin(); c1 != end; ++c1)
+		//cout << "Win or draw: " << result.GetWinOrDraw() << '\n';
+		//cout << "Lose: " << result.GetLose() << '\n';
+		//cout << "Total: " << result.GetTotal() << '\n';
+
+		//LargeOdds odds;
+		//auto count = 0;
+		//auto end = deck.end();
+		//for (auto c1 = deck.begin(); c1 != end; ++c1)
 		//	for (auto c2 = c1 + 1; c2 != end; ++c2)
 		//		for (auto c3 = c2 + 1; c3 != end; ++c3)
 		//			for (auto c4 = c3 + 1; c4 != end; ++c4)
 		//				for (auto c5 = c4 + 1; c5 != end; ++c5)
 		//				{
-		//					Compute(allHands, hole, *c1, *c2, *c3, *c4, *c5, win, draw, lose); return 0;
-		//				}
+		//					cout << '.';
+		//					++count;
+		//					if (count > 350)
+		//					{
+		//						cout << *c1 << ' ' << *c2 << ' ' << *c3 << ' ' << *c4 << ' ' << *c5 << endl;
+		//					}
 
-		//cout << hole.ToString() << ": Win " << win << ", Draw " << draw << ", Lose " << lose << '\n';
+		//					odds += Compute(allHands, hole, *c1, *c2, *c3, *c4, *c5, 8);
+		//				}
+		//cout << '\n';
+		//cout << hole.ToString() << ": Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << '\n';
 	}
 	catch (const exception& exception)
 	{

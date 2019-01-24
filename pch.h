@@ -15,6 +15,7 @@
 #include <functional>
 #include <exception>
 #include <stdexcept>
+#include <filesystem>
 using namespace std;
 
 #include <boost/multiprecision/cpp_int.hpp>

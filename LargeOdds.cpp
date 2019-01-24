@@ -27,3 +27,10 @@ LargeOdds LargeOdds::Create(const LargeInteger& winOrDraw, int opponents)
 {
 	return { winOrDraw, ComputeTotalCombinations(DeckSize - 5 - 2, 2 * opponents) - winOrDraw };
 }
+
+LargeOdds& LargeOdds::operator+=(const LargeOdds& rhs)
+{
+	winOrDraw += rhs.winOrDraw;
+	lose += rhs.lose;
+	return *this;
+}

@@ -18,6 +18,8 @@ public:
 
 	static LargeOdds Create(const LargeInteger& winOrDraw, int opponents);
 
+	LargeOdds& operator+=(const LargeOdds& rhs);
+
 private:
 	LargeInteger winOrDraw = 0;
 	LargeInteger lose = 0;
