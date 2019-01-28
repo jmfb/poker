@@ -27,6 +27,9 @@ LargeInteger ComputeTwoCardOverlap(
 	return overlap;
 }
 
+using duration = std::chrono::microseconds;
+duration dNewDeck, dBestHand, dSingleCard, dTwoCard, dWinOrDraw, dOverlap;
+
 LargeOdds Compute(
 	const AllHands& allHands,
 	const HoleCards& hole,
@@ -37,15 +40,21 @@ LargeOdds Compute(
 	int c5,
 	int opponents)
 {
+	auto t1 = std::chrono::system_clock::now();
 	Deck cards;
 	cards.NewDeck();
 	cards.Remove(hole, c1, c2, c3, c4, c5);
+	auto t2 = std::chrono::system_clock::now();
 	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
+	auto t3 = std::chrono::system_clock::now();
 	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	auto t4 = std::chrono::system_clock::now();
 	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	auto t5 = std::chrono::system_clock::now();
 	auto opponentCards = opponents * 2;
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
+	auto t6 = std::chrono::system_clock::now();
 	//TODO: remove when done optimizing
 	//cout << twoCards.size() << " 2-card losses to compute overlap\n";
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
@@ -56,6 +65,13 @@ LargeOdds Compute(
 		//TODO: remove when done optimizing
 		//cout << '\n';
 	}
+	auto t7 = std::chrono::system_clock::now();
+	dNewDeck += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
+	dBestHand += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
+	dSingleCard += std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3);
+	dTwoCard += std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4);
+	dWinOrDraw += std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5);
+	dOverlap += std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6);
 	return LargeOdds::Create(winOrDraw, opponents);
 }
 
@@ -87,6 +103,8 @@ int main()
 		//cout << "Total: " << result.GetTotal() << '\n';
 
 		LargeOdds odds;
+		auto opponents = 1;
+		cout << "Computing odds for " << opponents << " opponents.\n";
 		auto count = 0;
 		auto end = deck.end();
 		for (auto c1 = deck.begin(); c1 != end; ++c1)
@@ -106,11 +124,31 @@ int main()
 				//				cout << *c1 << ' ' << *c2 << ' ' << *c3 << ' ' << *c4 << ' ' << *c5 << endl;
 					//		}
 
-							odds += Compute(allHands, hole, *c1, *c2, *c3, *c4, *c5, 1);
+							odds += Compute(allHands, hole, *c1, *c2, *c3, *c4, *c5, opponents);
 						}
 		cout << '\n';
 		cout << hole.ToString() << ": Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << '\n';
 		//1-opponent: Js As: Win or draw 1392530857, Lose 705041543
+		cout << "Profiling metrics (time by function in Compute):\n";
+		cout << "NewDeck:    " << dNewDeck.count() << "us\n";
+		cout << "BestHand:   " << dBestHand.count() << "us\n";
+		cout << "SingleCard: " << dSingleCard.count() << "us\n";
+		cout << "TwoCard:    " << dTwoCard.count() << "us\n";
+		cout << "WinOrDraw:  " << dWinOrDraw.count() << "us\n";
+		cout << "Overlap:    " << dOverlap.count() << "us\n";
+
+		/*
+		Profiling metrics (time by function in Compute):
+		NewDeck:    20628us (<1s)
+		BestHand:   52830us (<1s)
+		SingleCard: 9701579us (9s)
+		>           7409371 (7s) -> 2s faster
+		TwoCard:    594730269us (9.9m)
+		>           331732454 (5.5m) -> 4.4m faster
+		>           307024324 (5.1m) -> 0.4m faster
+		WinOrDraw:  4672us (<1s)
+		Overlap:    15560us (<1s)
+		*/
 	}
 	catch (const exception& exception)
 	{

@@ -44,7 +44,7 @@ void Deck::Remove(const HoleCards& hole, int c1, int c2, int c3, int c4, int c5)
 void Deck::RemoveSingleCardLosses(const AllHands& allHands, int bestHand, int c1, int c2, int c3, int c4, int c5)
 {
 	for (auto iter = begin(); iter != end(); )
-		if (allHands.GetBestHandRank(*iter, c1, c2, c3, c4, c5) > bestHand)
+		if (allHands.BeatenByOneCard(bestHand, *iter, c1, c2, c3, c4, c5))
 			Remove(iter);
 		else
 			++iter;
@@ -53,9 +53,10 @@ void Deck::RemoveSingleCardLosses(const AllHands& allHands, int bestHand, int c1
 vector<HoleCards> Deck::FindTwoCardLosses(const AllHands& allHands, int bestHand, int c1, int c2, int c3, int c4, int c5)
 {
 	vector<HoleCards> losses;
-	for (auto o1 = begin(); o1 != end(); ++o1)
-		for (auto o2 = o1 + 1; o2 != end(); ++o2)
-			if (allHands.GetBestHandRank(*o1, *o2, c1, c2, c3, c4, c5) > bestHand)
+	auto end = this->end();
+	for (auto o1 = begin(); o1 != end; ++o1)
+		for (auto o2 = o1 + 1; o2 != end; ++o2)
+			if (allHands.BeatenByTwoCards(bestHand, *o1, *o2, c1, c2, c3, c4, c5))
 				losses.emplace_back(*o1, *o2);
 	return losses;
 }

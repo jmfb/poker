@@ -13,7 +13,8 @@ public:
 	AllHands& operator=(AllHands&& rhs) = default;
 
 	int GetBestHandRank(int c1, int c2, int m1, int m2, int m3, int m4, int m5) const;
-	int GetBestHandRank(int c, int m1, int m2, int m3, int m4, int m5) const;
+	bool BeatenByOneCard(int bestHand, int c, int m1, int m2, int m3, int m4, int m5) const;
+	bool BeatenByTwoCards(int bestHand, int c1, int c2, int m1, int m2, int m3, int m4, int m5) const;
 
 private:
 	void Compute();

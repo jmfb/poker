@@ -79,15 +79,27 @@ int AllHands::GetBestHandRank(int c1, int c2, int m1, int m2, int m3, int m4, in
 	return rank;
 }
 
-int AllHands::GetBestHandRank(int c, int m1, int m2, int m3, int m4, int m5) const
+bool AllHands::BeatenByOneCard(int bestHand, int c, int m1, int m2, int m3, int m4, int m5) const
 {
-	auto rank = GetRank(m1, m2, m3, m4, m5);
-	rank = max(rank, GetRank(c, m1, m2, m3, m4));
-	rank = max(rank, GetRank(c, m1, m2, m3, m5));
-	rank = max(rank, GetRank(c, m1, m2, m4, m5));
-	rank = max(rank, GetRank(c, m1, m3, m4, m5));
-	rank = max(rank, GetRank(c, m2, m3, m4, m5));
-	return rank;
+	return GetRank(c, m1, m2, m3, m4) > bestHand ||
+		GetRank(c, m1, m2, m3, m5) > bestHand ||
+		GetRank(c, m1, m2, m4, m5) > bestHand ||
+		GetRank(c, m1, m3, m4, m5) > bestHand ||
+		GetRank(c, m2, m3, m4, m5) > bestHand;
+}
+
+bool AllHands::BeatenByTwoCards(int bestHand, int c1, int c2, int m1, int m2, int m3, int m4, int m5) const
+{
+	return GetRank(c1, c2, m1, m2, m3) > bestHand ||
+		GetRank(c1, c2, m1, m2, m4) > bestHand ||
+		GetRank(c1, c2, m1, m2, m5) > bestHand ||
+		GetRank(c1, c2, m1, m3, m4) > bestHand ||
+		GetRank(c1, c2, m1, m3, m5) > bestHand ||
+		GetRank(c1, c2, m1, m4, m5) > bestHand ||
+		GetRank(c1, c2, m2, m3, m4) > bestHand ||
+		GetRank(c1, c2, m2, m3, m5) > bestHand ||
+		GetRank(c1, c2, m2, m4, m5) > bestHand ||
+		GetRank(c1, c2, m3, m4, m5) > bestHand;
 }
 
 int AllHands::GetRank(int c1, int c2, int c3, int c4, int c5) const
