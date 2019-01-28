@@ -105,24 +105,26 @@ int main()
 		LargeOdds odds;
 		auto opponents = 1;
 		cout << "Computing odds for " << opponents << " opponents.\n";
-		auto count = 0;
+		LargeInteger count = 0;
 		auto end = deck.end();
+		auto communityCount = Combinations(deck.GetSize(), 5);
+		auto onePercent = communityCount / 100;
+		LargeInteger percent = 0;
 		for (auto c1 = deck.begin(); c1 != end; ++c1)
 			for (auto c2 = c1 + 1; c2 != end; ++c2)
 				for (auto c3 = c2 + 1; c3 != end; ++c3)
 					for (auto c4 = c3 + 1; c4 != end; ++c4)
 						for (auto c5 = c4 + 1; c5 != end; ++c5)
 						{
-//							cout << '.';
 							++count;
-							if (count > 1000)
+							auto currentPercent = count / onePercent;
+							if (currentPercent > percent)
 							{
+								percent = currentPercent;
 								cout << '.';
-								count = 0;
+								if (percent % 10 == 0)
+									cout << percent;
 							}
-			//				{
-				//				cout << *c1 << ' ' << *c2 << ' ' << *c3 << ' ' << *c4 << ' ' << *c5 << endl;
-					//		}
 
 							odds += Compute(allHands, hole, *c1, *c2, *c3, *c4, *c5, opponents);
 						}
