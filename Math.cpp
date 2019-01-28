@@ -9,9 +9,23 @@ LargeInteger Combinations(LargeInteger total, LargeInteger take)
 	return result;
 }
 
+//2 = 1
+//4 = 3
+//6 = 15
+//8 = 105
+//10 = 945
+//12 = 10,395
+//14 = 135,135
+//16 = 2,027,025
 LargeInteger Partitions(LargeInteger count)
 {
-	return count == 2 ? 1 : (count - 1) * Partitions(count - 2);
+	//Partitions(n) = Product(2k+1) for k=0..n-1 where n is number of opponents
+	//count = opponent cards -> opponents = opponent cards / 2
+	auto n = count / 2;
+	LargeInteger product = 1;
+	for (LargeInteger k = 0; k < n; ++k)
+		product *= 2 * k + 1;
+	return product;
 }
 
 map<pair<LargeInteger, LargeInteger>, LargeInteger> totalCombinationCache;
