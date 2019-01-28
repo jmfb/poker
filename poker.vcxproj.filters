@@ -52,6 +52,9 @@
     <ClCompile Include="LargeOdds.cpp">
       <Filter>Classes\LargeOdds</Filter>
     </ClCompile>
+    <ClCompile Include="CardSet.cpp">
+      <Filter>Classes\CardSet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -105,6 +108,9 @@
     <Filter Include="Classes\LargeOdds">
       <UniqueIdentifier>{5d26f2ab-fbe7-40c2-abd7-3db2fd2c4826}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\CardSet">
+      <UniqueIdentifier>{b9335837-f673-4015-8876-aab8735484c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -151,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="LargeOdds.h">
       <Filter>Classes\LargeOdds</Filter>
+    </ClInclude>
+    <ClInclude Include="CardSet.h">
+      <Filter>Classes\CardSet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

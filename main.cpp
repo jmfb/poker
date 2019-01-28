@@ -4,9 +4,10 @@
 #include "HoleCards.h"
 #include "AllHands.h"
 #include "LargeOdds.h"
+#include "CardSet.h"
 
 LargeInteger ComputeTwoCardOverlap(
-	const vector<HoleCards>& holes,
+	const CardSet& holes,
 	vector<HoleCards>::const_iterator begin,
 	vector<HoleCards>::const_iterator end,
 	LargeInteger remaining,
@@ -18,12 +19,10 @@ LargeInteger ComputeTwoCardOverlap(
 	LargeInteger overlap = 0;
 	for (auto iter = begin; iter != end; ++iter)
 	{
-		if (!all_of(holes.begin(), holes.end(), [&](const HoleCards& other) { return other.IsDisjoint(*iter); }))
+		if (holes.Intersect(*iter))
 			continue;
 		overlap += overlapPerPair;
-		vector<HoleCards> newHoles{ holes };
-		newHoles.push_back(*iter);
-		overlap -= ComputeTwoCardOverlap(newHoles, begin, iter, remaining - 2, opponentCards - 2);
+		overlap -= ComputeTwoCardOverlap(holes.Union(*iter), begin, iter, remaining - 2, opponentCards - 2);
 	}
 	return overlap;
 }
@@ -111,6 +110,7 @@ int main()
 						}
 		cout << '\n';
 		cout << hole.ToString() << ": Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << '\n';
+		//1-opponent: Js As: Win or draw 1392530857, Lose 705041543
 	}
 	catch (const exception& exception)
 	{

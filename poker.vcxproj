@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="AllHands.cpp" />
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardSet.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="Hand.cpp" />
@@ -163,6 +164,7 @@
   <ItemGroup>
     <ClInclude Include="AllHands.h" />
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CardSet.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Face.h" />
     <ClInclude Include="Hand.h" />
