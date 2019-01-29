@@ -20,5 +20,5 @@
 using namespace std;
 
 #include <boost/multiprecision/cpp_int.hpp>
-//using LargeInteger = boost::multiprecision::int128_t;
-using LargeInteger = long long;
+using LargeInteger = boost::multiprecision::int128_t;
+//using LargeInteger = long long;
