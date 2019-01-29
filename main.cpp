@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Math.h"
 #include "Deck.h"
+#include "Hand.h"
 #include "HoleCards.h"
 #include "AllHands.h"
 #include "LargeOdds.h"
@@ -28,7 +29,9 @@ LargeInteger ComputeTwoCardOverlap(
 }
 
 using duration = std::chrono::microseconds;
-duration dNewDeck, dBestHand, dSingleCard, dTwoCard, dWinOrDraw, dOverlap;
+duration dLookup, dNewDeck, dBestHand, dSingleCard, dTwoCard, dWinOrDraw, dOverlap;
+
+map<int, LargeOdds> computeCache;
 
 LargeOdds Compute(
 	const AllHands& allHands,
@@ -40,6 +43,14 @@ LargeOdds Compute(
 	int c5,
 	int opponents)
 {
+	auto t0 = std::chrono::system_clock::now();
+	auto hash = Hand::GetHash(c1, c2, c3, c4, c5);
+	auto cacheIter = computeCache.find(hash);
+	if (cacheIter != computeCache.end())
+	{
+		dLookup += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - t0);
+		return cacheIter->second;
+	}
 	auto t1 = std::chrono::system_clock::now();
 	Deck cards;
 	cards.NewDeck();
@@ -66,13 +77,16 @@ LargeOdds Compute(
 		//cout << '\n';
 	}
 	auto t7 = std::chrono::system_clock::now();
+	dLookup += std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0);
 	dNewDeck += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
 	dBestHand += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
 	dSingleCard += std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3);
 	dTwoCard += std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4);
 	dWinOrDraw += std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5);
 	dOverlap += std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6);
-	return LargeOdds::Create(winOrDraw, opponents);
+	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
+	computeCache.emplace(hash, largeOdds);
+	return largeOdds;
 }
 
 int main()
@@ -132,6 +146,7 @@ int main()
 		cout << hole.ToString() << ": Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << '\n';
 		//1-opponent: Js As: Win or draw 1392530857, Lose 705041543
 		cout << "Profiling metrics (time by function in Compute):\n";
+		cout << "Lookup:     " << dLookup.count() << "us\n";
 		cout << "NewDeck:    " << dNewDeck.count() << "us\n";
 		cout << "BestHand:   " << dBestHand.count() << "us\n";
 		cout << "SingleCard: " << dSingleCard.count() << "us\n";
@@ -141,6 +156,14 @@ int main()
 
 		/*
 		Profiling metrics (time by function in Compute):
+		Lookup:     5285us
+		NewDeck:    15868us
+		BestHand:   53943us
+		SingleCard: 7486113us
+		TwoCard:    304092458us
+		WinOrDraw:  6739us
+		Overlap:    11932us
+
 		NewDeck:    20628us (<1s)
 		BestHand:   52830us (<1s)
 		SingleCard: 9701579us (9s)
