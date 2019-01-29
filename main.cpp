@@ -29,9 +29,101 @@ LargeInteger ComputeTwoCardOverlap(
 }
 
 using duration = std::chrono::microseconds;
-duration dLookup, dNewDeck, dBestHand, dSingleCard, dTwoCard, dWinOrDraw, dOverlap;
+duration dLookup, dNewDeck, dBestHand, dSingleCard, dTwoCard, dWinOrDraw, dOverlap, dSuits;
 
 map<int, LargeOdds> computeCache;
+
+void AddSuitCombination(Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds, const map<Suit, Suit>& suitMap)
+{
+	for (auto suits : suitMap)
+	{
+		c1.SwitchSuit(suits.first, suits.second);
+		c2.SwitchSuit(suits.first, suits.second);
+		c3.SwitchSuit(suits.first, suits.second);
+		c4.SwitchSuit(suits.first, suits.second);
+		c5.SwitchSuit(suits.first, suits.second);
+	}
+	array<int, HandSize> cards{ c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId() };
+	sort(cards.begin(), cards.end());
+	auto hash = Hand::GetHash(cards[0], cards[1], cards[2], cards[3], cards[4]);
+	computeCache.emplace(hash, largeOdds);
+}
+
+void SuitCombinations(const HoleCards& hole, Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds)
+{
+	set<Suit> holeSuits;
+	Card h1{ hole.GetCard1() };
+	Card h2{ hole.GetCard2() };
+	holeSuits.insert(h1.GetSuit());
+	holeSuits.insert(h2.GetSuit());
+
+	set<Suit> communitySuits;
+	communitySuits.insert(c1.GetSuit());
+	communitySuits.insert(c2.GetSuit());
+	communitySuits.insert(c3.GetSuit());
+	communitySuits.insert(c4.GetSuit());
+	communitySuits.insert(c5.GetSuit());
+
+	set<Suit> freeSuits{ Suit::Spades, Suit::Hearts, Suit::Clubs, Suit::Diamonds };
+
+	for (auto suit : holeSuits)
+	{
+		communitySuits.erase(suit);
+		freeSuits.erase(suit);
+	}
+	for (auto suit : communitySuits)
+		freeSuits.erase(suit);
+
+	if (communitySuits.empty())
+		return;
+
+	if (holeSuits.size() == 1)
+	{
+		if (communitySuits.size() == 1)
+		{
+			auto suit1 = *communitySuits.begin();
+			auto suit2 = *freeSuits.begin();
+			auto suit3 = *next(freeSuits.begin());
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit3 } });
+		}
+		else if (communitySuits.size() == 2)
+		{
+			auto suit1 = *communitySuits.begin();
+			auto suit2 = *next(communitySuits.begin());
+			auto suit3 = *freeSuits.begin();
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit3 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit2, suit3 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 }, { suit2, suit3 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit3 }, { suit2, suit1 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 }, { suit2, suit1 } });
+		}
+		else //3
+		{
+			auto suit1 = *communitySuits.begin();
+			auto suit2 = *next(communitySuits.begin());
+			auto suit3 = *next(communitySuits.begin(), 2);
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 }, { suit2, suit1 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit3 }, { suit3, suit1 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit2, suit3 }, { suit3, suit2 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 }, { suit2, suit3 }, { suit3, suit1 } });
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit3 }, { suit2, suit1 }, { suit3, suit2 } });
+		}
+	}
+	else //2
+	{
+		if (communitySuits.size() == 1)
+		{
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { *communitySuits.begin(), *freeSuits.begin() } });
+		}
+		else //2
+		{
+			auto suit1 = *communitySuits.begin();
+			auto suit2 = *next(communitySuits.begin());
+			AddSuitCombination(c1, c2, c3, c4, c5, largeOdds, { { suit1, suit2 }, { suit2, suit1 } });
+		}
+	}
+}
 
 LargeOdds Compute(
 	const AllHands& allHands,
@@ -77,6 +169,10 @@ LargeOdds Compute(
 		//cout << '\n';
 	}
 	auto t7 = std::chrono::system_clock::now();
+	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
+	computeCache.emplace(hash, largeOdds);
+	SuitCombinations(hole, c1, c2, c3, c4, c5, largeOdds);
+	auto t8 = std::chrono::system_clock::now();
 	dLookup += std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0);
 	dNewDeck += std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
 	dBestHand += std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2);
@@ -84,8 +180,7 @@ LargeOdds Compute(
 	dTwoCard += std::chrono::duration_cast<std::chrono::microseconds>(t5 - t4);
 	dWinOrDraw += std::chrono::duration_cast<std::chrono::microseconds>(t6 - t5);
 	dOverlap += std::chrono::duration_cast<std::chrono::microseconds>(t7 - t6);
-	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
-	computeCache.emplace(hash, largeOdds);
+	dSuits += std::chrono::duration_cast<std::chrono::microseconds>(t8 - t7);
 	return largeOdds;
 }
 
@@ -153,6 +248,7 @@ int main()
 		cout << "TwoCard:    " << dTwoCard.count() << "us\n";
 		cout << "WinOrDraw:  " << dWinOrDraw.count() << "us\n";
 		cout << "Overlap:    " << dOverlap.count() << "us\n";
+		cout << "Suits:      " << dSuits.count() << "us\n";
 
 		/*
 		Profiling metrics (time by function in Compute):
@@ -163,6 +259,15 @@ int main()
 		TwoCard:    304092458us
 		WinOrDraw:  6739us
 		Overlap:    11932us
+
+		Lookup:     7144us
+		NewDeck:    10137us
+		BestHand:   29810us
+		SingleCard: 4891224us (2.6s faster)
+		TwoCard:    191823527us (1.8m faster, still takes 3.2m)
+		WinOrDraw:  3677us
+		Overlap:    7805us
+		Suits:      7010770us (7s slower)
 
 		NewDeck:    20628us (<1s)
 		BestHand:   52830us (<1s)

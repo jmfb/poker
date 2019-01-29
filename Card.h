@@ -23,6 +23,7 @@ public:
 	void SetFace(Face value);
 	Suit GetSuit() const;
 	Face GetFace() const;
+	void SwitchSuit(Suit original, Suit replacement);
 
 	bool operator==(const Card& rhs) const;
 	bool operator!=(const Card& rhs) const;
