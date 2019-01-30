@@ -21,7 +21,7 @@ void Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponen
 	auto count = FaceCount * FaceCount;
 	auto start = std::chrono::system_clock::now();
 	auto hole = CreateHole(f1, f2);
-	cout << index << " of " << count << ": Computing " << hole.ToString() << "...";
+	cout << opponents << ": " << index << " of " << count << ": Computing " << hole.ToString() << "...";
 	LargeOddsComputer computer{ allHands, hole, opponents };
 	auto odds = computer.GetOdds();
 	auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
@@ -44,55 +44,12 @@ void Compute(int opponents)
 			Compute(out, allHands, f1, f2, opponents);
 }
 
-struct Data
-{
-	int card1;
-	int card2;
-	string name;
-	LargeInteger winOrDraw;
-	LargeInteger lose;
-	LargeInteger total;
-
-	friend istream& operator>>(istream& in, Data& data)
-	{
-		char comma = ',';
-		in >> data.card1 >> comma >> data.card2 >> comma;
-		getline(in, data.name, ',');
-		in >> data.winOrDraw >> comma >> data.lose >> comma >> data.total;
-		return in;
-	}
-
-	LargeInteger GetWinPercent() const
-	{
-		return ((winOrDraw * 1000 / total) + 5) / 10;
-	}
-
-	LargeInteger GetScore(LargeInteger max, LargeInteger min) const
-	{
-		return ((winOrDraw - min) * 100) / (max - min);
-	}
-};
-
 int main()
 {
 	try
 	{
-
-		ifstream in{ "8-opponent-odds.txt" };
-		string line;
-		vector<Data> hands;
-		while (getline(in, line))
-		{
-			Data data;
-			istringstream{ line } >> data;
-			hands.push_back(data);
-		}
-
-		sort(hands.begin(), hands.end(), [](auto lhs, auto rhs) { return lhs.winOrDraw > rhs.winOrDraw; });
-		auto max = hands.front().winOrDraw;
-		auto min = hands.back().winOrDraw;
-		for (auto& data : hands)
-			cout << data.name << " Win " << data.GetWinPercent() << "% (Score " << data.GetScore(max, min) << ")\n";
+		for (auto opponents = 1; opponents < 8; ++opponents)
+			Compute(opponents);
 	}
 	catch (const exception& exception)
 	{
