@@ -144,6 +144,7 @@
     <ClCompile Include="HandValue.cpp" />
     <ClCompile Include="HoleCards.cpp" />
     <ClCompile Include="LargeOdds.cpp" />
+    <ClCompile Include="LargeOddsComputer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Odds.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="HandValue.h" />
     <ClInclude Include="HoleCards.h" />
     <ClInclude Include="LargeOdds.h" />
+    <ClInclude Include="LargeOddsComputer.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Odds.h" />
     <ClInclude Include="OddsCache.h" />
