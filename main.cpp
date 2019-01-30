@@ -34,16 +34,65 @@ void Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponen
 		<< odds.GetTotal() << endl;
 }
 
+//About 10hours to compute odds for a given opponent spread
+void Compute(int opponents)
+{
+	AllHands allHands;
+	ofstream out{ to_string(opponents) + "-opponent-odds.txt" };
+	for (auto f1 = 0; f1 < FaceCount; ++f1)
+		for (auto f2 = 0; f2 < FaceCount; ++f2)
+			Compute(out, allHands, f1, f2, opponents);
+}
+
+struct Data
+{
+	int card1;
+	int card2;
+	string name;
+	LargeInteger winOrDraw;
+	LargeInteger lose;
+	LargeInteger total;
+
+	friend istream& operator>>(istream& in, Data& data)
+	{
+		char comma = ',';
+		in >> data.card1 >> comma >> data.card2 >> comma;
+		getline(in, data.name, ',');
+		in >> data.winOrDraw >> comma >> data.lose >> comma >> data.total;
+		return in;
+	}
+
+	LargeInteger GetWinPercent() const
+	{
+		return ((winOrDraw * 1000 / total) + 5) / 10;
+	}
+
+	LargeInteger GetScore(LargeInteger max, LargeInteger min) const
+	{
+		return ((winOrDraw - min) * 100) / (max - min);
+	}
+};
+
 int main()
 {
 	try
 	{
-		const auto opponents = 8;
-		AllHands allHands;
-		ofstream out{ to_string(opponents) + "-opponent-odds.txt" };
-		for (auto f1 = 0; f1 < FaceCount; ++f1)
-			for (auto f2 = 0; f2 < FaceCount; ++f2)
-				Compute(out, allHands, f1, f2, opponents);
+
+		ifstream in{ "8-opponent-odds.txt" };
+		string line;
+		vector<Data> hands;
+		while (getline(in, line))
+		{
+			Data data;
+			istringstream{ line } >> data;
+			hands.push_back(data);
+		}
+
+		sort(hands.begin(), hands.end(), [](auto lhs, auto rhs) { return lhs.winOrDraw > rhs.winOrDraw; });
+		auto max = hands.front().winOrDraw;
+		auto min = hands.back().winOrDraw;
+		for (auto& data : hands)
+			cout << data.name << " Win " << data.GetWinPercent() << "% (Score " << data.GetScore(max, min) << ")\n";
 	}
 	catch (const exception& exception)
 	{
