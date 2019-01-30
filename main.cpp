@@ -6,14 +6,44 @@
 #include "Face.h"
 #include "LargeOddsComputer.h"
 
+HoleCards CreateHole(int f1, int f2)
+{
+	if (f1 == f2)
+		return { Card{ static_cast<Face>(f1), Suit::Spades }, Card{ static_cast<Face>(f2), Suit::Hearts } };
+	if (f1 < f2)
+		return { Card{ static_cast<Face>(f1), Suit::Spades }, Card{ static_cast<Face>(f2), Suit::Spades } };
+	return { Card{ static_cast<Face>(f2), Suit::Spades }, Card{ static_cast<Face>(f1), Suit::Hearts } };
+}
+
+void Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponents)
+{
+	auto index = f1 * FaceCount + f2 + 1;
+	auto count = FaceCount * FaceCount;
+	auto start = std::chrono::system_clock::now();
+	auto hole = CreateHole(f1, f2);
+	cout << index << " of " << count << ": Computing " << hole.ToString() << "...";
+	LargeOddsComputer computer{ allHands, hole, opponents };
+	auto odds = computer.GetOdds();
+	auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
+	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << duration << " seconds\n";
+	out << hole.GetCard1() << ','
+		<< hole.GetCard2() << ','
+		<< hole.ToString() << ','
+		<< odds.GetWinOrDraw() << ','
+		<< odds.GetLose() << ','
+		<< odds.GetTotal() << endl;
+}
+
 int main()
 {
 	try
 	{
+		const auto opponents = 8;
 		AllHands allHands;
-		HoleCards hole{ Card{ Face::Ace, Suit::Spades }, Card{ Face::Jack, Suit::Spades } };
-		LargeOddsComputer computer{ allHands, hole, 8 };
-		cout << hole.ToString() << ": Win or draw " << computer.GetOdds().GetWinOrDraw() << ", Lose " << computer.GetOdds().GetLose() << '\n';
+		ofstream out{ to_string(opponents) + "-opponent-odds.txt" };
+		for (auto f1 = 0; f1 < FaceCount; ++f1)
+			for (auto f2 = 0; f2 < FaceCount; ++f2)
+				Compute(out, allHands, f1, f2, opponents);
 	}
 	catch (const exception& exception)
 	{
