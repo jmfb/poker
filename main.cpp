@@ -212,7 +212,7 @@ int main()
 		//cout << "Total: " << result.GetTotal() << '\n';
 
 		LargeOdds odds;
-		auto opponents = 3;
+		auto opponents = 8;
 		cout << "Computing odds for " << opponents << " opponents.\n";
 		LargeInteger count = 0;
 		auto end = deck.end();
@@ -251,6 +251,30 @@ int main()
 		cout << "Suits:      " << dSuits.count() << "us\n";
 
 		/*
+		5-opponent
+		Js As: Win or draw 1680753304654557525, Lose 4706729642656107675
+		Profiling metrics (time by function in Compute):
+		Lookup:     7782us
+		NewDeck:    11703us
+		BestHand:   33261us
+		SingleCard: 4868621us
+		TwoCard:    190165164us
+		WinOrDraw:  12091us
+		Overlap:    14246427us
+		Suits:      7513303us
+
+		4-opponent
+		Js As: Win or draw 15149906882314455, Lose 32804169298696545
+		Profiling metrics (time by function in Compute):
+		Lookup:     8194us
+		NewDeck:    13536us
+		BestHand:   33766us
+		SingleCard: 4942005us
+		TwoCard:    190423648us
+		WinOrDraw:  14581us
+		Overlap:    14044587us
+		Suits:      7480872us
+
 		3-opponent (int128)
 		Js As: Win or draw 99914292102666, Lose 158947117781334
 		Profiling metrics (time by function in Compute):
