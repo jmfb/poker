@@ -44,24 +44,60 @@ void Compute(int opponents)
 			Compute(out, allHands, f1, f2, opponents);
 }
 
+int Compute(int argc, char** argv)
+{
+	if (argc < 2)
+	{
+		cout << "Enter the number of players.\n";
+		return -1;
+	}
+
+	auto opponents = stoi(argv[1]);
+	if (opponents < 1 || opponents > 8)
+	{
+		cout << "Please enter a number of opponents between 1 and 8.\n";
+		return -1;
+	}
+
+	Compute(opponents);
+	return 0;
+}
+
+
+
 int main(int argc, char** argv)
 {
 	try
 	{
-		if (argc < 2)
+		//return Compute(argc, argv);
+		map<pair<int, int>, map<int, LargeOdds>> allOdds;
+		for (auto opponents = 1; opponents <= 8; ++opponents)
 		{
-			cout << "Enter the number of players.\n";
-			return 0;
+			ifstream in{ to_string(opponents) + "-opponent-odds.txt" };
+			string line;
+			while (getline(in, line))
+			{
+				istringstream parts{ line };
+				int card1 = 0, card2 = 0;
+				char comma;
+				string name;
+				LargeInteger winOrDraw = 0, lose = 0;
+				parts >> card1 >> comma >> card2 >> comma;
+				getline(parts, name, ',');
+				parts >> winOrDraw >> comma >> lose;
+				allOdds[{ card1, card2 }][opponents] = { winOrDraw, lose };
+			}
 		}
 
-		auto opponents = stoi(argv[1]);
-		if (opponents < 1 || opponents > 8)
+		ofstream out{ "all-odds.txt" };
+		out << "hand,1,2,3,4,5,6,7,8\n";
+		for (auto& hand : allOdds)
 		{
-			cout << "Please enter a number of opponents between 1 and 8.\n";
-			return 0;
+			out << HoleCards{ { hand.first.first }, { hand.first.second } }.ToHandString();
+			for (auto& odds : hand.second)
+				out << ',' << odds.second.GetWinOrDrawPercent();
+			out << '\n';
 		}
-
-		Compute(opponents);
 	}
 	catch (const exception& exception)
 	{

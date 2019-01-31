@@ -93,3 +93,19 @@ string HoleCards::ToString() const
 {
 	return Card{ card1 }.ToString() + " " + Card{ card2 }.ToString();
 }
+
+string HoleCards::ToHandString() const
+{
+	Card c1{ card1 };
+	Card c2{ card2 };
+	auto face1 = static_cast<int>(c1.GetFace());
+	auto face2 = static_cast<int>(c2.GetFace());
+	auto biggerFace = static_cast<Face>(max(face1, face2));
+	auto smallerFace = static_cast<Face>(min(face1, face2));
+	auto faces = ::ToString(biggerFace) + ::ToString(smallerFace);
+	if (biggerFace == smallerFace)
+		return faces + " pair";
+	if (c1.GetSuit() == c2.GetSuit())
+		return faces + " suited";
+	return faces + " offsuit";
+}

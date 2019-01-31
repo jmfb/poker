@@ -31,6 +31,7 @@ public:
 	bool operator!=(const HoleCards& rhs) const;
 
 	string ToString() const;
+	string ToHandString() const;
 
 private:
 	int card1 = 0;

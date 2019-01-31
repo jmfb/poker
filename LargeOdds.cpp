@@ -23,6 +23,11 @@ LargeInteger LargeOdds::GetTotal() const
 	return winOrDraw + lose;
 }
 
+double LargeOdds::GetWinOrDrawPercent() const
+{
+	return static_cast<int>(winOrDraw * 10000 / (winOrDraw + lose)) / 100.0;
+}
+
 LargeOdds LargeOdds::Create(const LargeInteger& winOrDraw, int opponents)
 {
 	return { winOrDraw, ComputeTotalCombinations(DeckSize - 5 - 2, 2 * opponents) - winOrDraw };

@@ -15,6 +15,7 @@ public:
 	const LargeInteger& GetWinOrDraw() const;
 	const LargeInteger& GetLose() const;
 	LargeInteger GetTotal() const;
+	double GetWinOrDrawPercent() const;
 
 	static LargeOdds Create(const LargeInteger& winOrDraw, int opponents);
 
