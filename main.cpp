@@ -44,12 +44,24 @@ void Compute(int opponents)
 			Compute(out, allHands, f1, f2, opponents);
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	try
 	{
-		for (auto opponents = 1; opponents < 8; ++opponents)
-			Compute(opponents);
+		if (argc < 2)
+		{
+			cout << "Enter the number of players.\n";
+			return 0;
+		}
+
+		auto opponents = stoi(argv[1]);
+		if (opponents < 1 || opponents > 8)
+		{
+			cout << "Please enter a number of opponents between 1 and 8.\n";
+			return 0;
+		}
+
+		Compute(opponents);
 	}
 	catch (const exception& exception)
 	{
