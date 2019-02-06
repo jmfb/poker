@@ -23,6 +23,8 @@ public:
 	static void Compute(int opponents);
 	static int Compute(int argc, char** argv);
 
+	static void CombineOpponentOdds();
+
 private:
 	LargeOdds ComputeCommunity(
 		const AllHands& allHands,
