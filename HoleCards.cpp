@@ -78,6 +78,8 @@ void HoleCards::SetCard1(int value)
 void HoleCards::SetCard2(int value)
 {
 	card2 = value;
+	if (card2 < card1)
+		::swap(card1, card2);
 }
 
 bool HoleCards::IsDisjoint(const HoleCards& rhs) const
@@ -114,8 +116,8 @@ string HoleCards::ToHandString() const
 	auto smallerFace = static_cast<Face>(min(face1, face2));
 	auto faces = ::ToString(biggerFace) + ::ToString(smallerFace);
 	if (biggerFace == smallerFace)
-		return faces + " pair";
+		return faces + ",pair";
 	if (c1.GetSuit() == c2.GetSuit())
-		return faces + " suited";
-	return faces + " offsuit";
+		return faces + ",suited";
+	return faces + ",offsuit";
 }

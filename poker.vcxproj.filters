@@ -58,6 +58,9 @@
     <ClCompile Include="LargeOddsComputer.cpp">
       <Filter>Classes\LargeOddsComputer</Filter>
     </ClCompile>
+    <ClCompile Include="PreflopOdds.cpp">
+      <Filter>Classes\PreflopOdds</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -117,6 +120,9 @@
     <Filter Include="Classes\LargeOddsComputer">
       <UniqueIdentifier>{af75951e-525c-49c1-8ea9-36b4a675de13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\PreflopOdds">
+      <UniqueIdentifier>{62fe598b-d347-413a-be55-a6f2f3412728}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -170,5 +176,37 @@
     <ClInclude Include="LargeOddsComputer.h">
       <Filter>Classes\LargeOddsComputer</Filter>
     </ClInclude>
+    <ClInclude Include="PreflopOdds.h">
+      <Filter>Classes\PreflopOdds</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="1-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="2-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="3-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="4-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="5-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="6-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="7-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="8-opponent-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="all-odds.txt">
+      <Filter>Resources</Filter>
+    </Text>
   </ItemGroup>
 </Project>

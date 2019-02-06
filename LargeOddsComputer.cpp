@@ -249,7 +249,7 @@ void LargeOddsComputer::CombineOpponentOdds()
 	out << "hand,1,2,3,4,5,6,7,8\n";
 	for (auto& hand : allOdds)
 	{
-		out << HoleCards{ { hand.first.first }, { hand.first.second } }.ToHandString();
+		out << hand.first.first << ',' << hand.first.second << ',' << HoleCards{ { hand.first.first }, { hand.first.second } }.ToHandString();
 		for (auto& odds : hand.second)
 			out << ',' << odds.second.GetWinOrDrawPercent();
 		out << '\n';
