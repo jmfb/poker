@@ -84,3 +84,15 @@ void Deck::NewDeck()
 		cards[card] = card;
 	size = DeckSize;
 }
+
+void Deck::Shuffle()
+{
+	::shuffle(begin(), end(), random_device{});
+}
+
+int Deck::DealCard()
+{
+	auto result = *begin();
+	Remove(begin());
+	return result;
+}

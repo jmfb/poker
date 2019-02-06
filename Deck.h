@@ -30,6 +30,8 @@ public:
 	int GetSize() const;
 	void Clear();
 	void NewDeck();
+	void Shuffle();
+	int DealCard();
 
 private:
 	int size = 0;

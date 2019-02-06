@@ -24,6 +24,8 @@ public:
 	void SetCards(const Card& card1, const Card& card2);
 	int GetCard1() const;
 	int GetCard2() const;
+	void SetCard1(int value);
+	void SetCard2(int value);
 	bool IsDisjoint(const HoleCards& rhs) const;
 	bool Contains(int card) const;
 

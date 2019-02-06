@@ -40,7 +40,7 @@ string HandValue::ToString() const
 	case HandType::FullHouse:
 		return "Full house, " + ::ToString(faces[0]) + "s full of " + ::ToString(faces[1]) + "s";
 	case HandType::FourOfAKind:
-		return "Four of a kind " + ::ToString(faces[0]) + "s, " + ::ToString(faces[1]) + " kicker.";
+		return "Four of a kind " + ::ToString(faces[0]) + "s, " + ::ToString(faces[1]) + " kicker";
 	case HandType::StraightFlush:
 		return "Straight flush to the " + ::ToString(faces[0]);
 	case HandType::RoyalFlush:

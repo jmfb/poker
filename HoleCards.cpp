@@ -70,6 +70,16 @@ int HoleCards::GetCard2() const
 	return card2;
 }
 
+void HoleCards::SetCard1(int value)
+{
+	card1 = value;
+}
+
+void HoleCards::SetCard2(int value)
+{
+	card2 = value;
+}
+
 bool HoleCards::IsDisjoint(const HoleCards& rhs) const
 {
 	return !rhs.Contains(card1) && !rhs.Contains(card2);
