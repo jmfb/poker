@@ -216,6 +216,33 @@ private:
 	optional<BurnAndTurn> river;
 };
 
+/* TODO: First example takes some time.  Second example took all night.  Need to optimize overlap algorithm.
+
+Flop{ 3c 8h Qs } Turn{ Ts } River{ Th }
+Player0 = 4h 7c, preflop 6.68 (8.89), flop (2.76), turn (0), river (0) best hand Pair of Ts, Q87 kicker
+Player1 = 9s 9c, preflop 15.44 (10.45), flop (0.92), turn (7.69), river (6.91) best hand Two pair Ts and 9s, Q kicker
+Player2 = 7s 8c, preflop 8.9 (7.21), flop (11.38), turn (7.69), river (5.01) best hand Two pair Ts and 8s, Q kicker
+Player3 = 2s 8s, preflop 8.46 (13.08), flop (16.92), turn (34.61), river (5.01) best hand Two pair Ts and 8s, Q kicker
+Player4 = 2h 4c, preflop 5.91 (6.64), flop (2.76), turn (0), river (0) best hand Pair of Ts, Q84 kicker
+Player5 = 6c Tc, preflop 10.56 (21.06), flop (5.84), turn (11.53), river (64.43) best hand Three of kind Ts, Q8 kicker (winner)
+Player6 = Qh 5d, preflop 5.62 (10.78), flop (16.61), turn (7.69), river (21.49) best hand Two pair Qs and Ts, 8 kicker
+Player7 = Jh Qd, preflop 10.76 (30.83), flop (52.3), turn (34.61), river (26.48) best hand Two pair Qs and Ts, J kicker
+Player8 = 9h 9d, preflop 15.44 (9.41), flop (0.92), turn (7.69), river (6.91) best hand Two pair Ts and 9s, Q kicker
+1 way split.
+
+Flop{ 2s Tc 3s } Turn{ 8s } River{ Jc }
+Player0 = 9h Jd, preflop 9.31 (24.75), flop (12.92), turn (15.38), river (15.46) best hand Pair of Js, T98 kicker (winner)
+Player1 = 5h Ad, preflop 6.99 (10.76), flop (21.53), turn (11.53), river (0) best hand High card AJT85
+Player2 = As 6c, preflop 6.53 (8.01), flop (12.92), turn (26.92), river (0) best hand High card AJT86
+Player3 = 6s Ah, preflop 6.53 (7.59), flop (8.3), turn (3.84), river (0) best hand High card AJT86
+Player4 = 3h 7d, preflop 5.52 (9.93), flop (19.38), turn (7.69), river (0.13) best hand Pair of 3s, JT8 kicker
+Player5 = 4s 7h, preflop 6.68 (11.88), flop (4), turn (0), river (0) best hand High card JT874
+Player6 = Qs 2c, preflop 4.69 (10.13), flop (10.76), turn (3.84), river (0.02) best hand Pair of 2s, QJT kicker
+Player7 = 8c Kc, preflop 11.31 (28.68), flop (18.46), turn (34.61), river (1.43) best hand Pair of 8s, KJT kicker
+Player8 = Qc 2d, preflop 4.69 (10.1), flop (10.76), turn (3.84), river (0.02) best hand Pair of 2s, QJT kicker
+1 way split.
+*/
+
 int main(int argc, char** argv)
 {
 	try
