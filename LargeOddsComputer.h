@@ -19,6 +19,10 @@ public:
 
 	const LargeOdds& GetOdds() const;
 
+	static void Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponents);
+	static void Compute(int opponents);
+	static int Compute(int argc, char** argv);
+
 private:
 	LargeOdds ComputeCommunity(
 		const AllHands& allHands,

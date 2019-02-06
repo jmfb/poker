@@ -165,3 +165,61 @@ void LargeOddsComputer::AddSuitCombination(Card c1, Card c2, Card c3, Card c4, C
 	auto hash = Hand::GetHash(cards[0], cards[1], cards[2], cards[3], cards[4]);
 	cache.emplace(hash, largeOdds);
 }
+
+void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponents)
+{
+	auto index = f1 * FaceCount + f2 + 1;
+	auto count = FaceCount * FaceCount;
+	auto start = std::chrono::system_clock::now();
+
+	auto createHole = [](int f1, int f2) -> HoleCards
+	{
+		if (f1 == f2)
+			return { Card{ static_cast<Face>(f1), Suit::Spades }, Card{ static_cast<Face>(f2), Suit::Hearts } };
+		if (f1 < f2)
+			return { Card{ static_cast<Face>(f1), Suit::Spades }, Card{ static_cast<Face>(f2), Suit::Spades } };
+		return { Card{ static_cast<Face>(f2), Suit::Spades }, Card{ static_cast<Face>(f1), Suit::Hearts } };
+	};
+
+	auto hole = createHole(f1, f2);
+	cout << opponents << ": " << index << " of " << count << ": Computing " << hole.ToString() << "...";
+	LargeOddsComputer computer{ allHands, hole, opponents };
+	auto odds = computer.GetOdds();
+	auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
+	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << duration << " seconds\n";
+	out << hole.GetCard1() << ','
+		<< hole.GetCard2() << ','
+		<< hole.ToString() << ','
+		<< odds.GetWinOrDraw() << ','
+		<< odds.GetLose() << ','
+		<< odds.GetTotal() << endl;
+}
+
+//About 10hours to compute odds for a given opponent spread
+void LargeOddsComputer::Compute(int opponents)
+{
+	AllHands allHands;
+	ofstream out{ to_string(opponents) + "-opponent-odds.txt" };
+	for (auto f1 = 0; f1 < FaceCount; ++f1)
+		for (auto f2 = 0; f2 < FaceCount; ++f2)
+			Compute(out, allHands, f1, f2, opponents);
+}
+
+int LargeOddsComputer::Compute(int argc, char** argv)
+{
+	if (argc < 2)
+	{
+		cout << "Enter the number of players.\n";
+		return -1;
+	}
+
+	auto opponents = stoi(argv[1]);
+	if (opponents < 1 || opponents > 8)
+	{
+		cout << "Please enter a number of opponents between 1 and 8.\n";
+		return -1;
+	}
+
+	Compute(opponents);
+	return 0;
+}
