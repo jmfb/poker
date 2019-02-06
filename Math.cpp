@@ -39,14 +39,8 @@ LargeInteger ComputeTotalCombinations(LargeInteger cards, LargeInteger opponentC
 	auto key = make_pair(cards, opponentCards);
 	auto iter = totalCombinationCache.find(key);
 	if (iter != totalCombinationCache.end())
-	{
-		if (iter->second == 0)
-			cout << "WTF!\n";
 		return iter->second;
-	}
 	auto result = Combinations(cards, opponentCards) * Partitions(opponentCards);
 	totalCombinationCache.emplace(key, result);
-	if (result == 0)
-		cout << "OMFGWTF!\n";
 	return result;
 }

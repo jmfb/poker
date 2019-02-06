@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "CardSet.h"
 
+CardSet::CardSet()
+{
+	fill(cards.begin(), cards.end(), false);
+}
+
 CardSet::CardSet(const HoleCards& hole)
+	: CardSet()
 {
 	AddCards(hole);
 }

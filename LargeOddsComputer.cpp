@@ -45,28 +45,8 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 	auto opponentCards = opponents * 2;
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
-	cout << "Initial Win or Draw: " << winOrDraw << '\n';
-	cout << "Cards.GetSize: " << cards.GetSize() << " (minus two = " << (cards.GetSize() - 2) << ")\n";
-	cout << "Opponent Cards: " << opponentCards << " (minus two = " << (opponentCards - 2) << ")\n";
-	auto x1 = ComputeTotalCombinations(cards.GetSize(), opponentCards);
-	cout << "Total:      " << x1 << '\n';
-	auto x2 = ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2);
-	cout << "Per 2-card: " << x2 << '\n';
-	cout << "2-cards: " << twoCards.size() << '\n';
-	auto x3 = x2 * static_cast<long long>(twoCards.size());
-	cout << "Casting problem?: " << x3 << '\n';
-	LargeInteger totalOverlap = 0;
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-	{
-		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
-		cout << ' ' << iter->ToString() << " overlap " << overlap << '\n';
-		totalOverlap += overlap;
-		winOrDraw += overlap;
-	}
-	cout << "Total overlap: " << totalOverlap << '\n';
-	cout << "Win or Draw (old way): " << winOrDraw << '\n';
-	auto x4 = (x1 + totalOverlap) - x3;
-	cout << "Win or Draw (new way): " << x4 << '\n';
+		winOrDraw += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
 	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
 	cache.emplace(hash, largeOdds);
 	AddSuitCombinations(hole, c1, c2, c3, c4, c5, largeOdds);

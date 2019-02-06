@@ -5,7 +5,7 @@
 class CardSet
 {
 public:
-	CardSet() = default;
+	CardSet();
 	CardSet(const HoleCards& hole);
 	CardSet(const CardSet& rhs) = default;
 	CardSet(CardSet&& rhs) = default;

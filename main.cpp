@@ -222,40 +222,6 @@ int main(int argc, char** argv)
 	{
 		AllHands allHands;
 		PreflopOdds preflopOdds;
-
-		LargeOddsComputer computer;
-		HoleCards hole{ Card{ Face::Queen, Suit::Diamonds }, Card{ Face::King, Suit::Diamonds } };
-		array<int, 5> community
-		{
-			Card{ Face::Six, Suit::Hearts }.GetId(),
-			Card{ Face::Queen, Suit::Hearts }.GetId(),
-			Card{ Face::Five, Suit::Hearts }.GetId(),
-			Card{ Face::Nine, Suit::Spades }.GetId(),
-			Card{ Face::Seven, Suit::Hearts }.GetId()
-		};
-		::sort(community.begin(), community.end());
-		auto odds = computer.ComputeCommunity(allHands, hole, community[0], community[1], community[2], community[3], community[4], 8);
-		cout << odds.GetWinOrDrawPercent() << '\n';
-		cout << "Win or draw: " << odds.GetWinOrDraw() << '\n';
-		cout << "Lose:        " << odds.GetLose() << '\n';
-		cout << "Total:       " << odds.GetTotal() << '\n';
-
-		/*
-		Preflop odds loaded: 1326
-		Flop{ 6h Qh 5h } Turn{ 9s } River{ 7h }
-		Player0 = 5s Jh, preflop 5.65 (9.86), flop (0.92), turn (0), river (39.92) best hand Flush QJ765
-		Player1 = Qd Kd, preflop 15.05 (5.75), flop (0.92), turn (0), river (-0.08) best hand Pair of Qs, K97 kicker
-		Player2 = 6c 6d, preflop 13.31 (15.78), flop (50.46), turn (61.53), river (0.13) best hand Three of kind 6s, Q9 kicker
-		Player3 = 4c 2d, preflop 5.91 (8.59), flop (4.61), turn (3.84), river (0) best hand High card Q9765
-		Player4 = Ts Tc, preflop 16.49 (20.67), flop (6.76), turn (3.84), river (0) best hand Pair of Ts, Q97 kicker
-		Player5 = 3s Ah, preflop 6.11 (6.99), flop (24.3), turn (15.38), river (97.57) best hand Flush AQ765 (winner)
-		Player6 = 9h 3d, preflop 4.88 (6.88), flop (4.3), turn (0), river (15.62) best hand Flush Q9765
-		Player7 = Ks Kh, preflop 19.45 (18.17), flop (5.84), turn (3.84), river (62.8) best hand Flush KQ765
-		Player8 = 7d Ad, preflop 11.66 (11.36), flop (4.3), turn (11.53), river (0) best hand Pair of 7s, AQ9 kicker
-		*/
-
-		return 0;
-
 		for (;;)
 		{
 			Game game;
