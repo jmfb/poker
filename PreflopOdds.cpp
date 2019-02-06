@@ -41,7 +41,6 @@ PreflopOdds::PreflopOdds()
 		else
 			throw runtime_error{ "Unrecognized hand type: " + type };
 	}
-	cout << "Preflop odds loaded: " << odds.size() << '\n';
 }
 
 double PreflopOdds::GetOdds(const HoleCards& hole, int opponents) const

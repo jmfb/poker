@@ -9,6 +9,7 @@
 class LargeOddsComputer
 {
 public:
+	LargeOddsComputer() = default;
 	LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, int opponents);
 	LargeOddsComputer(const LargeOddsComputer& rhs) = default;
 	LargeOddsComputer(LargeOddsComputer&& rhs) = default;
@@ -25,7 +26,6 @@ public:
 
 	static void CombineOpponentOdds();
 
-private:
 	LargeOdds ComputeCommunity(
 		const AllHands& allHands,
 		const HoleCards& hole,
