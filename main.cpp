@@ -243,12 +243,42 @@ Player8 = Qc 2d, preflop 4.69 (10.1), flop (10.76), turn (3.84), river (0.02) be
 1 way split.
 */
 
+#include "Math.h"
+
 int main(int argc, char** argv)
 {
 	try
 	{
 		AllHands allHands;
 		PreflopOdds preflopOdds;
+
+		HoleCards hole{ { Face::Nine, Suit::Hearts }, { Face::Jack, Suit::Diamonds } };
+		cout << "Hole: " << hole.ToString() << '\n';
+		array<int, 5> community
+		{
+			Card{ Face::Two, Suit::Spades }.GetId(),
+			Card{ Face::Ten, Suit::Clubs }.GetId(),
+			Card{ Face::Three, Suit::Spades }.GetId(),
+			Card{ Face::Eight, Suit::Spades }.GetId(),
+			Card{ Face::Jack, Suit::Clubs }.GetId()
+		};
+		::sort(community.begin(), community.end());
+		//for (auto opponents = 1; opponents < 9; ++opponents)
+		const auto opponents = 5;
+		{
+			cout << "Computing " << opponents << "-opponents odds...";
+			auto start = std::chrono::system_clock::now();
+			LargeOddsComputer computer;
+			auto odds = computer.ComputeCommunity(allHands, hole, community[0], community[1], community[2], community[3], community[4], opponents);
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
+			cout << "done in " << duration.count() << "ms\n";
+			cout << "Win or draw: " << odds.GetWinOrDrawPercent() << '\n';
+			cout << "Lose: " << odds.GetLose() << '\n';
+			cout << "Total: " << odds.GetTotal() << '\n';
+		}
+
+		return 0;
+
 		for (;;)
 		{
 			Game game;

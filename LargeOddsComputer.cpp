@@ -41,12 +41,22 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 	cards.Remove(hole, c1, c2, c3, c4, c5);
 	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
 	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	cout << "Remaining cards: " << cards.GetSize() << '\n';
 	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	cout << "2-card losses: " << twoCards.size() << '\n';
 	auto opponentCards = opponents * 2;
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
+	cout << "Initial loss (includes overlap): " << (ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size())) << '\n';
+	LargeInteger totalOverlap = 0;
+	cout << "Win or Draw before overlap: " << winOrDraw << '\n';
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-		winOrDraw += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
+	{
+		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
+		winOrDraw += overlap;
+		totalOverlap += overlap;
+	}
+	cout << "Total Overlap: " << totalOverlap << '\n';
 	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
 	cache.emplace(hash, largeOdds);
 	AddSuitCombinations(hole, c1, c2, c3, c4, c5, largeOdds);
