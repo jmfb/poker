@@ -245,12 +245,122 @@ Player8 = Qc 2d, preflop 4.69 (10.1), flop (10.76), turn (3.84), river (0.02) be
 
 #include "Math.h"
 
+LargeInteger ComputeTwoCardOverlap(
+	const CardSet& holes,
+	vector<HoleCards>::const_iterator begin,
+	vector<HoleCards>::const_iterator end,
+	LargeInteger remaining,
+	LargeInteger opponentCards)
+{
+	if (opponentCards <= 0)
+		return 0;
+	auto overlapPerPair = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
+	LargeInteger overlap = 0;
+	for (auto iter = begin; iter != end; ++iter)
+	{
+		if (holes.Intersect(*iter))
+			continue;
+		overlap += overlapPerPair;
+		overlap -= ComputeTwoCardOverlap(holes.Union(*iter), begin, iter, remaining - 2, opponentCards - 2);
+	}
+	return overlap;
+}
+
+LargeOdds ComputeCommunity(
+	const AllHands& allHands,
+	const HoleCards& hole,
+	int c1,
+	int c2,
+	int c3,
+	int c4,
+	int c5,
+	int opponents)
+{
+	Deck cards;
+	cards.NewDeck();
+	cards.Remove(hole, c1, c2, c3, c4, c5);
+	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
+	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	cout << "Remaining cards: " << cards.GetSize() << '\n';
+	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
+	cout << "2-card losses: " << twoCards.size() << '\n';
+	auto opponentCards = opponents * 2;
+	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
+		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
+	cout << "Initial loss (includes overlap): " << (ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size())) << '\n';
+	LargeInteger totalOverlap = 0;
+	cout << "Win or Draw before overlap: " << winOrDraw << '\n';
+
+	vector<LargeInteger> combos;
+	for (auto remainingOpponents = opponents - 2; remainingOpponents >= 0; --remainingOpponents)
+	{
+		auto overlapPer = ComputeTotalCombinations(cards.GetSize() - 2 * (opponents - remainingOpponents), remainingOpponents * 2);
+		combos.push_back(overlapPer);
+		cout << "Overlap Per " << remainingOpponents << " = " << overlapPer << '\n';
+	}
+	if (!combos.empty())
+	{
+		array<array<LargeInteger, 8>, 1326> fuckTonOfData;
+		for (auto series = 0; series < 8; ++series)
+			for (auto n = 0; n < 1326; ++n)
+				fuckTonOfData[n][series] = series == 0 ? 1 : n == 0 ? 0 : fuckTonOfData[n - 1][series] + fuckTonOfData[n - 1][series - 1];
+
+		for (auto index = 0; index < (opponents - 1); ++index)
+		{
+			auto x = fuckTonOfData[twoCards.size()][index + 2];
+
+			cout << "  Index = " << index << '\n';
+			cout << "  Multiplier = " << combos[index] << '\n';
+			cout << "  X = " << x << '\n';
+			cout << "  Value = " << (x * combos[index]) << '\n';
+
+			totalOverlap += (x * combos[index]);
+		}
+		cout << "Overlap so far: " << totalOverlap << '\n';
+
+		auto countOverlap = 0;
+		CardSet cardsEncountered;
+		for (auto& twoCard : twoCards)
+		{
+			if (cardsEncountered.Intersect(twoCard))
+				++countOverlap;
+			cardsEncountered.AddCards(twoCard);
+		}
+		cout << "2-Card Overlap Count: " << countOverlap << '\n';
+		cout << "Backing off by: " << (countOverlap * combos.front()) << '\n';
+		totalOverlap -= countOverlap * combos.front();
+	}
+
+
+/* The following is correct but slow for large opponents/two-card set combinations.
+	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
+	{
+		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
+		winOrDraw += overlap;
+		totalOverlap += overlap;
+	}
+*/
+	LargeInteger expectedOverlap = 0;
+	istringstream{ "935935416883" } >> expectedOverlap;
+
+	cout << "Total Overlap:    " << totalOverlap << '\n';
+	cout << "Expected Overlap: " << expectedOverlap << '\n';
+	winOrDraw -= totalOverlap;
+
+	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
+	return largeOdds;
+}
+
+
 int main(int argc, char** argv)
 {
 	try
 	{
 		AllHands allHands;
 		PreflopOdds preflopOdds;
+
+		LargeInteger expectedLose = 0;
+		istringstream{ "2048339780657" } >> expectedLose;
 
 		HoleCards hole{ { Face::Nine, Suit::Hearts }, { Face::Jack, Suit::Diamonds } };
 		cout << "Hole: " << hole.ToString() << '\n';
@@ -268,13 +378,30 @@ int main(int argc, char** argv)
 		{
 			cout << "Computing " << opponents << "-opponents odds...";
 			auto start = std::chrono::system_clock::now();
-			LargeOddsComputer computer;
-			auto odds = computer.ComputeCommunity(allHands, hole, community[0], community[1], community[2], community[3], community[4], opponents);
+			auto odds = ComputeCommunity(allHands, hole, community[0], community[1], community[2], community[3], community[4], opponents);
 			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
 			cout << "done in " << duration.count() << "ms\n";
 			cout << "Win or draw: " << odds.GetWinOrDrawPercent() << '\n';
 			cout << "Lose: " << odds.GetLose() << '\n';
+			cout << "Expected Lose: " << expectedLose << '\n';
 			cout << "Total: " << odds.GetTotal() << '\n';
+
+			if (odds.GetLose() != expectedLose)
+				cout << "Off by: " << (odds.GetLose() - expectedLose) << '\n';
+			else
+				cout << "Success!\n";
+
+			/*
+			Hole: 9h Jd
+			Computing 5-opponents odds...Remaining cards: 45
+
+			2-card losses: 196
+
+			Total:                           3014726985270
+			Initial loss (includes overlap): 2984275197540
+			Total Overlap:                    935935416883
+			Lose:                            2048339780657
+			*/
 		}
 
 		return 0;
