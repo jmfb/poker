@@ -29,3 +29,8 @@ void CardSet::AddCards(const HoleCards& hole)
 	cards[hole.GetCard1()] = true;
 	cards[hole.GetCard2()] = true;
 }
+
+int CardSet::GetSize() const
+{
+	return static_cast<int>(count(cards.begin(), cards.end(), true));
+}

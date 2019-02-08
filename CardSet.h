@@ -18,6 +18,8 @@ public:
 	CardSet Union(const HoleCards& hole) const;
 	void AddCards(const HoleCards& hole);
 
+	int GetSize() const;
+
 private:
 	array<bool, DeckSize> cards;
 };
