@@ -245,325 +245,311 @@ Player8 = Qc 2d, preflop 4.69 (10.1), flop (10.76), turn (3.84), river (0.02) be
 
 #include "Math.h"
 
-LargeInteger ComputeTwoCardOverlap(
-	const CardSet& holes,
-	vector<HoleCards>::const_iterator begin,
-	vector<HoleCards>::const_iterator end,
-	LargeInteger remaining,
-	LargeInteger opponentCards)
-{
-	if (opponentCards <= 0)
-		return 0;
-
-	if (holes.GetSize() > 4)
-		return 0; //TODO: This will only approximate the overlap
-
-	auto overlapPerPair = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
-	LargeInteger overlap = 0;
-	for (auto iter = begin; iter != end; ++iter)
-	{
-		if (holes.Intersect(*iter))
-			continue;
-		overlap += overlapPerPair;
-		auto subOverlap = ComputeTwoCardOverlap(holes.Union(*iter), begin, iter, remaining - 2, opponentCards - 2);
-		overlap -= subOverlap;
-	}
-	return overlap;
-}
-
-LargeOdds ComputeCommunity(
-	const AllHands& allHands,
-	const HoleCards& hole,
-	int c1,
-	int c2,
-	int c3,
-	int c4,
-	int c5,
-	int opponents)
-{
-	Deck cards;
-	cards.NewDeck();
-	cards.Remove(hole, c1, c2, c3, c4, c5);
-	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
-	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
-	cout << "Remaining cards: " << cards.GetSize() << '\n';
-	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
-	cout << "2-card losses: " << twoCards.size() << '\n';
-
-	//Debugging file for possible overlap computation
-	if (false)
-	{
-		//lose
-		//remaining cards
-		//c1,c2,name
-		//...
-		ofstream out{ "two-card-losses.txt" };
-		out << "2048339780657\n";
-		for (auto card : cards)
-			out << card << ' ';
-		out << '\n';
-		for (auto& twoCard : twoCards)
-			out << twoCard.GetCard1() << ',' << twoCard.GetCard2() << ',' << twoCard.ToString() << '\n';
-		cout << "DONE!\n";
-		exit(0);
-	}
-
-	auto opponentCards = opponents * 2;
-	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
-		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
-	cout << "Initial loss (includes overlap): " << (ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size())) << '\n';
-	LargeInteger totalOverlap = 0;
-	cout << "Win or Draw before overlap: " << winOrDraw << '\n';
-
-	vector<LargeInteger> combos;
-	for (auto remainingOpponents = opponents - 2; remainingOpponents >= 0; --remainingOpponents)
-	{
-		auto overlapPer = ComputeTotalCombinations(cards.GetSize() - 2 * (opponents - remainingOpponents), remainingOpponents * 2);
-		combos.push_back(overlapPer);
-		cout << "Overlap Per " << remainingOpponents << " = " << overlapPer << '\n';
-	}
-	if (!combos.empty())
-	{
-		array<array<LargeInteger, 8>, 1326> fuckTonOfData;
-		for (auto series = 0; series < 8; ++series)
-			for (auto n = 0; n < 1326; ++n)
-				fuckTonOfData[n][series] = series == 0 ? 1 : n == 0 ? 0 : fuckTonOfData[n - 1][series] + fuckTonOfData[n - 1][series - 1];
-
-		for (auto index = 0; index < (opponents - 1); ++index)
-		{
-			auto x = fuckTonOfData[twoCards.size()][index + 2];
-
-			cout << "  Index = " << index << '\n';
-			cout << "  Multiplier = " << combos[index] << '\n';
-			cout << "  X = " << x << '\n';
-			cout << "  Value = " << (x * combos[index]) << '\n';
-
-			totalOverlap += (x * combos[index]);
-		}
-		cout << "Overlap so far: " << totalOverlap << '\n';
-
-		auto countOverlap = 0;
-		CardSet cardsEncountered;
-		for (auto& twoCard : twoCards)
-		{
-			if (cardsEncountered.Intersect(twoCard))
-				++countOverlap;
-			cardsEncountered.AddCards(twoCard);
-		}
-		cout << "2-Card Overlap Count: " << countOverlap << '\n';
-		cout << "Backing off by: " << (countOverlap * combos.front()) << '\n';
-		totalOverlap -= countOverlap * combos.front();
-	}
-
-
-/* The following is correct but slow for large opponents/two-card set combinations.
-	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-	{
-		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
-		winOrDraw += overlap;
-		totalOverlap += overlap;
-	}
-*/
-	LargeInteger expectedOverlap = 0;
-	istringstream{ "935935416883" } >> expectedOverlap;
-
-	cout << "Total Overlap:    " << totalOverlap << '\n';
-	cout << "Expected Overlap: " << expectedOverlap << '\n';
-	winOrDraw -= totalOverlap;
-
-	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
-	return largeOdds;
-}
-
-
-
-
 void Test()
 {
-	ifstream in{ "two-card-losses.txt" };
-	string line;
-	
-	getline(in, line);
-	LargeInteger expectedLose = 0;
-	istringstream{ line } >> expectedLose;
-	cout << "Expected lose: " << expectedLose << '\n';
-	const auto opponents = 8;
-
-	getline(in, line);
-	istringstream remainingCards{ line };
-	Deck deck;
-	for (auto card = 0; remainingCards >> card; )
-		deck.Add(card);
-	cout << deck.GetSize() << " cards remaining in the deck.\n";
-
-	vector<HoleCards> twoCards;
-	while (getline(in, line))
+	vector<pair<int, int>> twoCards
 	{
-		istringstream cards{ line };
-		int card1 = 0, card2 = 0;
-		char comma = ',';
-		cards >> card1 >> comma >> card2;
-		twoCards.emplace_back(card1, card2);
-	}
-	cout << twoCards.size() << " 2-card losses.\n";
+		{ 2, 3 },
+		{ 2, 4 },
+		{ 2, 5 },
+		{ 2, 7 },
+		{ 2, 8 },
+		{ 2, 9 },
+		{ 2, 10 },
+		{ 2, 11 },
+		{ 2, 12 },
+		{ 3, 4 },
+		{ 3, 5 },
+		{ 3, 7 },
+		{ 3, 8 },
+		{ 3, 9 },
+		{ 3, 10 },
+		{ 3, 11 },
+		{ 3, 12 },
+		{ 4, 5 },
+		{ 4, 7 },
+		{ 4, 8 },
+		{ 4, 9 },
+		{ 4, 10 },
+		{ 4, 11 },
+		{ 4, 12 },
+		{ 5, 7 },
+		{ 5, 8 },
+		{ 5, 9 },
+		{ 5, 10 },
+		{ 5, 11 },
+		{ 5, 12 },
+		{ 5, 33 },
+		{ 5, 46 },
+		{ 7, 8 },
+		{ 7, 9 },
+		{ 7, 10 },
+		{ 7, 11 },
+		{ 7, 12 },
+		{ 7, 18 },
+		{ 7, 23 },
+		{ 7, 31 },
+		{ 7, 36 },
+		{ 7, 44 },
+		{ 7, 49 },
+		{ 8, 9 },
+		{ 8, 10 },
+		{ 8, 11 },
+		{ 8, 12 },
+		{ 8, 13 },
+		{ 8, 14 },
+		{ 8, 19 },
+		{ 8, 21 },
+		{ 8, 22 },
+		{ 8, 26 },
+		{ 8, 27 },
+		{ 8, 32 },
+		{ 8, 39 },
+		{ 8, 40 },
+		{ 8, 45 },
+		{ 8, 47 },
+		{ 9, 10 },
+		{ 9, 11 },
+		{ 9, 12 },
+		{ 9, 13 },
+		{ 9, 14 },
+		{ 9, 19 },
+		{ 9, 21 },
+		{ 9, 22 },
+		{ 9, 23 },
+		{ 9, 24 },
+		{ 9, 25 },
+		{ 9, 26 },
+		{ 9, 27 },
+		{ 9, 32 },
+		{ 9, 36 },
+		{ 9, 37 },
+		{ 9, 38 },
+		{ 9, 39 },
+		{ 9, 40 },
+		{ 9, 45 },
+		{ 9, 47 },
+		{ 9, 49 },
+		{ 9, 50 },
+		{ 9, 51 },
+		{ 10, 11 },
+		{ 10, 12 },
+		{ 10, 22 },
+		{ 10, 23 },
+		{ 10, 33 },
+		{ 10, 36 },
+		{ 10, 46 },
+		{ 10, 49 },
+		{ 11, 12 },
+		{ 11, 22 },
+		{ 11, 24 },
+		{ 11, 37 },
+		{ 11, 50 },
+		{ 12, 22 },
+		{ 12, 25 },
+		{ 12, 38 },
+		{ 12, 51 },
+		{ 13, 14 },
+		{ 13, 19 },
+		{ 13, 21 },
+		{ 13, 22 },
+		{ 13, 26 },
+		{ 13, 27 },
+		{ 13, 32 },
+		{ 13, 39 },
+		{ 13, 40 },
+		{ 13, 45 },
+		{ 13, 47 },
+		{ 14, 19 },
+		{ 14, 21 },
+		{ 14, 22 },
+		{ 14, 26 },
+		{ 14, 27 },
+		{ 14, 32 },
+		{ 14, 39 },
+		{ 14, 40 },
+		{ 14, 45 },
+		{ 14, 47 },
+		{ 18, 33 },
+		{ 18, 46 },
+		{ 19, 21 },
+		{ 19, 22 },
+		{ 19, 26 },
+		{ 19, 27 },
+		{ 19, 32 },
+		{ 19, 39 },
+		{ 19, 40 },
+		{ 19, 45 },
+		{ 19, 47 },
+		{ 21, 22 },
+		{ 21, 26 },
+		{ 21, 27 },
+		{ 21, 32 },
+		{ 21, 39 },
+		{ 21, 40 },
+		{ 21, 45 },
+		{ 21, 47 },
+		{ 22, 23 },
+		{ 22, 24 },
+		{ 22, 25 },
+		{ 22, 26 },
+		{ 22, 27 },
+		{ 22, 32 },
+		{ 22, 36 },
+		{ 22, 37 },
+		{ 22, 38 },
+		{ 22, 39 },
+		{ 22, 40 },
+		{ 22, 45 },
+		{ 22, 47 },
+		{ 22, 49 },
+		{ 22, 50 },
+		{ 22, 51 },
+		{ 23, 33 },
+		{ 23, 36 },
+		{ 23, 46 },
+		{ 23, 49 },
+		{ 24, 37 },
+		{ 24, 50 },
+		{ 25, 38 },
+		{ 25, 51 },
+		{ 26, 27 },
+		{ 26, 32 },
+		{ 26, 39 },
+		{ 26, 40 },
+		{ 26, 45 },
+		{ 26, 47 },
+		{ 27, 32 },
+		{ 27, 39 },
+		{ 27, 40 },
+		{ 27, 45 },
+		{ 27, 47 },
+		{ 31, 33 },
+		{ 31, 46 },
+		{ 32, 39 },
+		{ 32, 40 },
+		{ 32, 45 },
+		{ 32, 47 },
+		{ 33, 36 },
+		{ 33, 44 },
+		{ 33, 49 },
+		{ 36, 46 },
+		{ 36, 49 },
+		{ 37, 50 },
+		{ 38, 51 },
+		{ 39, 40 },
+		{ 39, 45 },
+		{ 39, 47 },
+		{ 40, 45 },
+		{ 40, 47 },
+		{ 44, 46 },
+		{ 45, 47 },
+		{ 46, 49 }
+	};
 
-	auto opponentCards = opponents * 2;
-	auto total = ComputeTotalCombinations(deck.GetSize(), opponentCards);
-	auto lossPerTwoCard = ComputeTotalCombinations(deck.GetSize() - 2, opponentCards - 2);
-	auto upperLoss = lossPerTwoCard * static_cast<long long>(twoCards.size());
-	LargeInteger totalOverlap = 0;
-	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-		totalOverlap += ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, deck.GetSize() - 2, opponentCards - 2);
-	auto lose = upperLoss - totalOverlap;
-	auto winOrDraw = total - lose;
-	LargeOdds odds{ winOrDraw, lose };
-	cout << "Calculated Lose: " << odds.GetLose() << '\n'; //Should be same as expectedLose
-	cout << "Win or Draw: " << odds.GetWinOrDrawPercent() << '\n'; //Should be 32.05
-	cout << (expectedLose == lose ? "Correct" : "Incorrect") << '\n';
+	auto per1 = ComputeTotalCombinations(43, 8);
+	auto per2 = ComputeTotalCombinations(41, 6);
+	auto per3 = ComputeTotalCombinations(39, 4);
+	auto per4 = ComputeTotalCombinations(37, 2);
+	auto per5 = ComputeTotalCombinations(35, 0);
+	cout << "Per: " << per1 << ' ' << per2 << ' ' << per3 << ' ' << per4 << ' ' << per5 << '\n';
+	LargeInteger count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+
+	auto isDisjoint = [](const pair<int, int>& lhs, const pair<int, int>& rhs)
+	{
+		return lhs.first != rhs.first && lhs.first != rhs.second &&
+			lhs.second != rhs.first && lhs.second != rhs.second;
+	};
+
+	auto start = std::chrono::system_clock::now();
+
+	for (auto i1 = twoCards.begin(); i1 != twoCards.end(); ++i1)
+	{
+		++count1;
+		for (auto i2 = twoCards.begin(); i2 != i1; ++i2)
+		{
+			if (!isDisjoint(*i1, *i2))
+				continue;
+			++count2;
+			for (auto i3 = twoCards.begin(); i3 != i2; ++i3)
+			{
+				if (!isDisjoint(*i1, *i3) ||
+					!isDisjoint(*i2, *i3))
+					continue;
+				++count3;
+				for (auto i4 = twoCards.begin(); i4 != i3; ++i4)
+				{
+					if (!isDisjoint(*i1, *i4) ||
+						!isDisjoint(*i2, *i4) ||
+						!isDisjoint(*i3, *i4))
+						continue;
+					++count4;
+					for (auto i5 = twoCards.begin(); i5 != i4; ++i5)
+					{
+						if (!isDisjoint(*i1, *i5) ||
+							!isDisjoint(*i2, *i5) ||
+							!isDisjoint(*i3, *i5) ||
+							!isDisjoint(*i4, *i5))
+							continue;
+						++count5;
+					}
+				}
+			}
+		}
+	}
+
+	cout << "Count: " << count1 << ' ' << count2 << ' ' << count3 << ' ' << count4 << ' ' << count5 << '\n';
+	auto lose = count1 * per1 - count2 * per2 + count3 * per3 - count4 * per4 + count5 * per5;
+	cout << "Lose: " << lose << '\n';
+
+	auto durationMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count();
+	cout << "Duration: " << durationMs << "ms\n";
+
+	//Per: 15225893865 67445820 246753 666 1
+	//Count: 196 16569 800361 24670043 513145502
+	//Lose: 2048339780657
+	//Duration: 5503ms
 }
 
 void Test2()
 {
-	vector<HoleCards> twoCards
-	{
-		{ 0, 1 },
-		{ 0, 2 },
-		{ 1, 2 },
-		{ 1, 3 },
-		{ 2, 3 },
-		{ 2, 4 },
-		{ 3, 5 },
-		{ 4, 5 },
-		{ 6, 7 },
-		{ 8, 9 }
-	};
-	const auto remainingCards = 12;
-	const auto opponents = 4;
-	const auto opponentCards = opponents * 2;
-	cout << twoCards.size() << " 2-card losses.\n";
-	cout << remainingCards << " remaining cards.\n";
-	cout << opponents << " opponents.\n";
-	cout << opponentCards << " opponent cards.\n";
-
-	auto total = ComputeTotalCombinations(remainingCards, opponentCards);
-	cout << "Total: " << total << '\n';
-	auto lossPerTwoCard = ComputeTotalCombinations(remainingCards - 2, opponentCards - 2);
-	cout << "Loss per 2-card: " << lossPerTwoCard << '\n';
-	for (auto x = 0; x <= opponents; ++x)
-		cout << "CT" << x << " = " << ComputeTotalCombinations(remainingCards - 2 * x, opponentCards - 2 * x) << '\n';
-	auto upperLoss = lossPerTwoCard * static_cast<long long>(twoCards.size());
-	cout << "Upper: " << upperLoss << '\n';
-	LargeInteger totalOverlap = 0;
-	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-	{
-		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, remainingCards - 2, opponentCards - 2);
-		cout << " " << iter->ToString() << " overlap " << overlap << '\n';
-		totalOverlap += overlap;
-	}
-	cout << "Total Overlap: " << totalOverlap << '\n';
-	auto lose = upperLoss - totalOverlap;
-	cout << "Lose: " << lose << '\n';
-	auto winOrDraw = total - lose;
-	cout << "Win or Draw: " << winOrDraw << '\n';
-
-	cout << "Fuck ton data (perpetual sum of series)\n";
-	array<array<LargeInteger, 8>, 1326> fuckTonOfData;
+	array<array<LargeInteger, 8>, 1326> sumsOfSums;
 	for (auto series = 0; series < 8; ++series)
 		for (auto n = 0; n < 1326; ++n)
-			fuckTonOfData[n][series] = series == 0 ? 1 : n == 0 ? 0 : fuckTonOfData[n - 1][series] + fuckTonOfData[n - 1][series - 1];
-	for (auto pair = 0; pair < 11; ++pair)
-	{
-		for (auto opp = 0; opp < 4; ++opp)
-		{
-			cout << fuckTonOfData[pair][opp] << ' ';
-		}
-		cout << '\n';
-	}
-	cout << '\n';
+			sumsOfSums[n][series] =
+				series == 0 ? 1 :
+				n == 0 ? 0 :
+				sumsOfSums[n - 1][series] + sumsOfSums[n - 1][series - 1];
+	for (auto series = 1; series <= 5; ++series)
+		cout << "(" << series << ") = " << sumsOfSums[196][series] << '\n';
 
-	cout << "Previous overlap table:\n";
-	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-	{
-		auto count = 0;
-		for (auto prev = twoCards.begin(); prev != iter; ++prev)
-		{
-			if (!prev->IsDisjoint(*iter))
-				++count;
-		}
-		cout << count << '\n';
-	}
-
-	/*
-	10 2-card losses.
-	12 remaining cards.
-	4 opponents.
-	8 opponent cards.
-	Total: 51975
-	Loss per 2-card: 3150
-	Upper: 31500
-	Total Overlap: 5764
-	Lose: 25736
-	Win or Draw: 26239
-	*/
+	//(1) = 196 - 196 = 0
+	//(2) = 19110 - 16569 = 2541
+	//(3) = 1235780 - 800361 = 435419
+	//(4) = 59626385 - 24670043 = 34956342
+	//(5) = 2289653184 - 513145502 = 1776507682
+	//2541 * 67445820 = 171379828620
+	//435419 * 246753 = 107440944507
+	//34956342 * 666 = 23280923772
+	//1776507682 * 1 = 1776507682
+	//-171379828620 + 107440944507 - 23280923772 + 1776507682
+	//-85443300203 (4% error from correct loss)
+	//2-hand: 2541 intersect
+	//3-hand: 435419 intersect
+	//4-hand: 34956342 intersect
+	//5-hand: 1776507682 intersect
 }
 
 int main(int argc, char** argv)
 {
 	try
 	{
-		Test();
-		//Test2();
+		//Test();
+		Test2();
 		return 0;
 
 		AllHands allHands;
 		PreflopOdds preflopOdds;
-
-		LargeInteger expectedLose = 0;
-		istringstream{ "2048339780657" } >> expectedLose;
-
-		HoleCards hole{ { Face::Nine, Suit::Hearts }, { Face::Jack, Suit::Diamonds } };
-		cout << "Hole: " << hole.ToString() << '\n';
-		array<int, 5> community
-		{
-			Card{ Face::Two, Suit::Spades }.GetId(),
-			Card{ Face::Ten, Suit::Clubs }.GetId(),
-			Card{ Face::Three, Suit::Spades }.GetId(),
-			Card{ Face::Eight, Suit::Spades }.GetId(),
-			Card{ Face::Jack, Suit::Clubs }.GetId()
-		};
-		::sort(community.begin(), community.end());
-		//for (auto opponents = 1; opponents < 9; ++opponents)
-		const auto opponents = 5;
-		{
-			cout << "Computing " << opponents << "-opponents odds...";
-			auto start = std::chrono::system_clock::now();
-			auto odds = ComputeCommunity(allHands, hole, community[0], community[1], community[2], community[3], community[4], opponents);
-			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
-			cout << "done in " << duration.count() << "ms\n";
-			cout << "Win or draw: " << odds.GetWinOrDrawPercent() << '\n';
-			cout << "Lose: " << odds.GetLose() << '\n';
-			cout << "Expected Lose: " << expectedLose << '\n';
-			cout << "Total: " << odds.GetTotal() << '\n';
-
-			if (odds.GetLose() != expectedLose)
-				cout << "Off by: " << (odds.GetLose() - expectedLose) << '\n';
-			else
-				cout << "Success!\n";
-
-			/*
-			Hole: 9h Jd
-			Computing 5-opponents odds...Remaining cards: 45
-
-			2-card losses: 196
-
-			Total:                           3014726985270
-			Initial loss (includes overlap): 2984275197540
-			Total Overlap:                    935935416883
-			Lose:                            2048339780657
-			*/
-		}
-
-		return 0;
 
 		for (;;)
 		{
