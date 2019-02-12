@@ -419,12 +419,100 @@ void Test2()
 	//Duration: 2128ms
 }
 
+#include <atomic>
+#include <execution>
+using namespace std;
+
+void Test3()
+{
+	auto start = std::chrono::system_clock::now();
+
+	auto twoCardsOriginal = CreateTwoCards();
+	auto per1 = ComputeTotalCombinations(43, 8);
+	auto per2 = ComputeTotalCombinations(41, 6);
+	auto per3 = ComputeTotalCombinations(39, 4);
+	auto per4 = ComputeTotalCombinations(37, 2);
+	auto per5 = ComputeTotalCombinations(35, 0);
+	cout << "Per: " << per1 << ' ' << per2 << ' ' << per3 << ' ' << per4 << ' ' << per5 << '\n';
+
+	struct TwoCard
+	{
+		unsigned long long Bits = 0;
+		LargeInteger Count1 = 0;
+		LargeInteger Count2 = 0;
+		LargeInteger Count3 = 0;
+		LargeInteger Count4 = 0;
+		LargeInteger Count5 = 0;
+	};
+
+	vector<TwoCard> twoCards;
+	for (auto& twoCard : twoCardsOriginal)
+		twoCards.push_back({ (1ull << twoCard.first) | (1ull << twoCard.second) });
+	auto begin = twoCards.data();
+	auto end = begin + twoCards.size();
+
+	for_each(execution::par_unseq, begin, end, [&](TwoCard& i1)
+	{
+		++i1.Count1;
+		for (auto i2 = begin; i2 != &i1; ++i2)
+		{
+			if ((i1.Bits & i2->Bits) != 0)
+				continue;
+			auto s2 = i1.Bits | i2->Bits;
+			++i1.Count2;
+			for (auto i3 = begin; i3 != i2; ++i3)
+			{
+				if ((s2 & i3->Bits) != 0)
+					continue;
+				auto s3 = s2 | i3->Bits;
+				++i1.Count3;
+				for (auto i4 = begin; i4 != i3; ++i4)
+				{
+					if ((s3 & i4->Bits) != 0)
+						continue;
+					auto s4 = s3 | i4->Bits;
+					++i1.Count4;
+					for (auto i5 = begin; i5 != i4; ++i5)
+					{
+						if ((s4 & i5->Bits) != 0)
+							continue;
+						++i1.Count5;
+					}
+				}
+			}
+		}
+	});
+
+	LargeInteger count1 = 0, count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+	for (auto& twoCard : twoCards)
+	{
+		count1 += twoCard.Count1;
+		count2 += twoCard.Count2;
+		count3 += twoCard.Count3;
+		count4 += twoCard.Count4;
+		count5 += twoCard.Count5;
+	}
+
+	cout << "Count: " << count1 << ' ' << count2 << ' ' << count3 << ' ' << count4 << ' ' << count5 << '\n';
+	auto lose = count1 * per1 - count2 * per2 + count3 * per3 - count4 * per4 + count5 * per5;
+	cout << "Lose: " << lose << '\n';
+
+	auto durationMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count();
+	cout << "Duration: " << durationMs << "ms\n";
+
+	//Per: 15225893865 67445820 246753 666 1
+	//Count: 196 16569 800361 24670043 513145502
+	//Lose: 2048339780657
+	//Duration: 484ms
+}
+
 int main(int argc, char** argv)
 {
 	try
 	{
 		Test();
 		Test2();
+		Test3();
 		return 0;
 
 		AllHands allHands;
