@@ -419,10 +419,6 @@ void Test2()
 	//Duration: 2128ms
 }
 
-#include <atomic>
-#include <execution>
-using namespace std;
-
 void Test3()
 {
 	auto start = std::chrono::system_clock::now();
@@ -506,13 +502,51 @@ void Test3()
 	//Duration: 484ms
 }
 
+#include "TwoCardOverlap.h"
+
+void Test4()
+{
+	for (auto opponents = 1; opponents <= 8; ++opponents)
+	{
+		auto start = std::chrono::system_clock::now();
+
+		auto twoCards = CreateTwoCards();
+		vector<HoleCards> holes;
+		for (auto& twoCard : twoCards)
+			holes.emplace_back(twoCard.first, twoCard.second);
+		auto overlap = TwoCardOverlap::Compute(holes, 45, opponents);
+
+		auto lose = ComputeTotalCombinations(43, 2 * opponents - 2) * static_cast<long long>(twoCards.size()) - overlap;
+		cout << "Lose: " << lose << " (" << opponents << " opponents)\n";
+
+		auto durationMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start).count();
+		cout << "Duration: " << durationMs << "ms\n";
+	}
+
+	//Lose: 196 (1 opponents)
+	//Duration: 0ms
+	//Lose: 160419 (2 opponents)
+	//Duration: 0ms
+	//Lose: 59778861 (3 opponents)
+	//Duration: 1ms
+	//Lose: 13458144328 (4 opponents)
+	//Duration: 25ms
+	//Lose: 2048339780657 (5 opponents)
+	//Duration: 450ms
+	//Lose: 223478205275433 (6 opponents)
+	//Duration: 7478ms (7s)
+	//Lose: 18084284371723401 (7 opponents)
+	//Duration: 103488ms (1.7m)
+}
+
 int main(int argc, char** argv)
 {
 	try
 	{
-		Test();
-		Test2();
-		Test3();
+		//Test();
+		//Test2();
+		//Test3();
+		Test4();
 		return 0;
 
 		AllHands allHands;

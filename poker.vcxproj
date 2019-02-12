@@ -157,6 +157,7 @@
     </ClCompile>
     <ClCompile Include="PreflopOdds.cpp" />
     <ClCompile Include="Suit.cpp" />
+    <ClCompile Include="TwoCardOverlap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -182,6 +183,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
     <ClInclude Include="Suit.h" />
+    <ClInclude Include="TwoCardOverlap.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="1-opponent-odds.txt" />

@@ -2,6 +2,7 @@
 #include "LargeOddsComputer.h"
 #include "Math.h"
 #include "Hand.h"
+#include "TwoCardOverlap.h"
 
 LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, int opponents)
 {
@@ -48,6 +49,8 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
 	cout << "Initial loss (includes overlap): " << (ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size())) << '\n';
+	
+	/*
 	LargeInteger totalOverlap = 0;
 	cout << "Win or Draw before overlap: " << winOrDraw << '\n';
 	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
@@ -56,6 +59,9 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 		winOrDraw += overlap;
 		totalOverlap += overlap;
 	}
+	*/
+	auto totalOverlap = TwoCardOverlap::Compute(twoCards, cards.GetSize(), opponents);
+	
 	cout << "Total Overlap: " << totalOverlap << '\n';
 	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
 	cache.emplace(hash, largeOdds);

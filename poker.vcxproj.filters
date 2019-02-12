@@ -61,6 +61,9 @@
     <ClCompile Include="PreflopOdds.cpp">
       <Filter>Classes\PreflopOdds</Filter>
     </ClCompile>
+    <ClCompile Include="TwoCardOverlap.cpp">
+      <Filter>Classes\TwoCardOverlap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -123,6 +126,9 @@
     <Filter Include="Classes\PreflopOdds">
       <UniqueIdentifier>{62fe598b-d347-413a-be55-a6f2f3412728}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\TwoCardOverlap">
+      <UniqueIdentifier>{4b063c88-7957-41c9-8e9e-aa9223d2c980}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -178,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="PreflopOdds.h">
       <Filter>Classes\PreflopOdds</Filter>
+    </ClInclude>
+    <ClInclude Include="TwoCardOverlap.h">
+      <Filter>Classes\TwoCardOverlap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
