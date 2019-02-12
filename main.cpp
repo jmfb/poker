@@ -537,6 +537,8 @@ void Test4()
 	//Duration: 7478ms (7s)
 	//Lose: 18084284371723401 (7 opponents)
 	//Duration: 103488ms (1.7m)
+	//Lose: 1108007012317984113 (8 opponents)
+	//Duration: 948550ms (15.8m)
 }
 
 int main(int argc, char** argv)
