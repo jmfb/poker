@@ -195,6 +195,7 @@
     <Text Include="7-opponent-odds.txt" />
     <Text Include="8-opponent-odds.txt" />
     <Text Include="all-odds.txt" />
+    <Text Include="Max-2-card-loss-counts.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
