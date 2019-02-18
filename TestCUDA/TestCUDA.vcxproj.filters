@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CudaCompile Include="kernel.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{6a2594f4-fa98-4e10-beb7-37dba054ca89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CudaError">
+      <UniqueIdentifier>{d2bbe3dc-ca48-47c5-b73e-662b205c8c42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CudaMemory">
+      <UniqueIdentifier>{4653970b-da7e-4384-a260-9b55dd01163d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CudaDevice">
+      <UniqueIdentifier>{d4a07f6b-9841-47df-bcbb-ef5a5112a9d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{c2128feb-ebfe-46a4-8bde-982fcb95c370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{678c15df-547d-4f1d-a0c9-3462612eb03d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Timer">
+      <UniqueIdentifier>{0c334e68-1faf-4791-a7c7-583bf78d5006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\ExceptionCount">
+      <UniqueIdentifier>{ccfde2ce-aa89-4720-a6b1-890c0a36aff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CudaManagedMemory">
+      <UniqueIdentifier>{2264f91d-5f9c-4bf6-b12c-0f997ee79190}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CudaError.h">
+      <Filter>Classes\CudaError</Filter>
+    </ClInclude>
+    <ClInclude Include="CudaMemory.h">
+      <Filter>Classes\CudaMemory</Filter>
+    </ClInclude>
+    <ClInclude Include="CudaDevice.h">
+      <Filter>Classes\CudaDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Classes\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="ExceptionCount.h">
+      <Filter>Classes\ExceptionCount</Filter>
+    </ClInclude>
+    <ClInclude Include="CudaManagedMemory.h">
+      <Filter>Classes\CudaManagedMemory</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Headers</Filter>
+    </ClCompile>
+    <ClCompile Include="CudaError.cpp">
+      <Filter>Classes\CudaError</Filter>
+    </ClCompile>
+    <ClCompile Include="CudaMemory.cpp">
+      <Filter>Classes\CudaMemory</Filter>
+    </ClCompile>
+    <ClCompile Include="CudaDevice.cpp">
+      <Filter>Classes\CudaDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Classes\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="ExceptionCount.cpp">
+      <Filter>Classes\ExceptionCount</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="CudaManagedMemory.cpp">
+      <Filter>Classes\CudaManagedMemory</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+</Project>
