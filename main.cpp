@@ -611,6 +611,78 @@ void Test5()
 */
 }
 
+HoleCards MakeHole(int c1, int c2)
+{
+	auto f1 = static_cast<Face>(c1);
+	auto f2 = static_cast<Face>(c2);
+	if (c1 == c2)
+		return { { f1, Suit::Spades }, { f2, Suit::Hearts } };
+	if (c1 < c2)
+		return { { f1, Suit::Spades }, { f2, Suit::Spades } };
+	return { { f2, Suit::Spades }, { f1, Suit::Hearts } };
+}
+
+class Timer
+{
+public:
+	Timer()
+		: start{ system_clock::now() }
+	{
+	}
+
+	double GetDurationMs() const
+	{
+		return duration_cast<microseconds>(system_clock::now() - start).count() / 1000.0;
+	}
+
+private:
+	time_point<system_clock> start;
+};
+
+void Test6()
+{
+	AllHands allHands;
+	auto maxOfAll = 0;
+	for (auto c1 = 0; c1 < FaceCount; ++c1)
+	{
+		for (auto c2 = 0; c2 < FaceCount; ++c2)
+		{
+			auto hole = MakeHole(c1, c2);
+			auto maxOfHand = 0;
+			Timer timer;
+
+			Deck deck;
+			deck.NewDeck();
+			deck.Remove(hole);
+			auto begin = deck.begin();
+			auto end = deck.end();
+			for (auto m1 = begin + 4; m1 != end; ++m1)
+				for (auto m2 = begin + 3; m2 != m1; ++m2)
+					for (auto m3 = begin + 2; m3 != m2; ++m3)
+						for (auto m4 = begin + 1; m4 != m3; ++m4)
+						{
+							vector<int> sizes(m4 - begin, 0);
+							transform(execution::par_unseq, begin, m4, sizes.begin(), [&](int m5) -> int
+							{
+								Deck remaining;
+								remaining.NewDeck();
+								remaining.Remove(hole, *m1, *m2, *m3, *m4, m5);
+								auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), *m1, *m2, *m3, *m4, m5);
+								remaining.RemoveSingleCardLosses(allHands, bestHand, *m1, *m2, *m3, *m4, m5);
+								auto twoCards = remaining.FindTwoCardLosses(allHands, bestHand, *m1, *m2, *m3, *m4, m5);
+								return static_cast<int>(twoCards.size());
+							});
+							auto maxOfCard4 = reduce(execution::par_unseq, sizes.begin(), sizes.end(), 0, [](int x, int y){ return max(x, y); });
+							maxOfHand = max(maxOfHand, maxOfCard4);
+						}
+
+			cout << hole.ToHandString() << " max 2-card loss count: " << maxOfHand << ", duration "<< timer.GetDurationMs() << "ms\n";
+			maxOfAll = max(maxOfAll, maxOfHand);
+		}
+	}
+	cout << "Final max 2-card loss count: " << maxOfAll << '\n';
+}
+
 int main(int argc, char** argv)
 {
 	try
@@ -619,7 +691,8 @@ int main(int argc, char** argv)
 		//Test2();
 		//Test3();
 		//Test4();
-		Test5();
+		//Test5();
+		Test6();
 		return 0;
 
 		AllHands allHands;
