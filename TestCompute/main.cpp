@@ -279,7 +279,7 @@ __kernel void test(__global struct Overlap* data, int size)
 {
 	int index1 = get_global_id(0);
 	int index2 = get_global_id(1);
-	int id = index1 * size + index2;
+	int id = index2 * size + index1;
 	int index = id % 990;
 	if (index2 >= index1)
 		return;
