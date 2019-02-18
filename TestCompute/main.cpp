@@ -68,33 +68,40 @@ using count_t = unsigned long long;
 class Overlap
 {
 public:
-	Overlap() = default;
-	Overlap(int card1, int card2)
-		: bits{ (1ull << card1) | (1ull << card2) }
+	Overlap()
 	{
+		fill(count2, count2 + 990, 0);
+		fill(count3, count3 + 990, 0);
+		fill(count4, count4 + 990, 0);
+		fill(count5, count5 + 990, 0);
+	}
+	Overlap(int card1, int card2)
+		: Overlap{}
+	{
+		bits = (1ull << card1) | (1ull << card2);
 	}
 
 	bits_t bits = 0;
-	count_t count2 = 0;
-	count_t count3 = 0;
-	count_t count4 = 0;
-	count_t count5 = 0;
+	count_t count2[990];
+	count_t count3[990];
+	count_t count4[990];
+	count_t count5[990];
 
 	Overlap& operator+=(const Overlap& rhs)
 	{
-		count2 += rhs.count2;
-		count3 += rhs.count3;
-		count4 += rhs.count4;
-		count5 += rhs.count5;
+		count2[0] += accumulate(rhs.count2, rhs.count2 + 990, 0ull);
+		count3[0] += accumulate(rhs.count3, rhs.count3 + 990, 0ull);
+		count4[0] += accumulate(rhs.count4, rhs.count4 + 990, 0ull);
+		count5[0] += accumulate(rhs.count5, rhs.count5 + 990, 0ull);
 		return *this;
 	}
 
 	LargeInteger GetTotalOverlap(LargeInteger remainingCards, LargeInteger opponentCards) const
 	{
-		return count2 * ComputeTotalCombinations(remainingCards, opponentCards) -
-			count3 * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
-			count4 * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
-			count5 * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6);
+		return count2[0] * ComputeTotalCombinations(remainingCards, opponentCards) -
+			count3[0] * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
+			count4[0] * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
+			count5[0] * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6);
 	}
 };
 
@@ -150,6 +157,112 @@ vector<Overlap> CreateOverlaps()
 	return overlaps;
 }
 
+const char* sourceA = R"(
+//NOTE: int = 4 bytes, long = 8 bytes, long long = 16 bytes!
+typedef unsigned long bits_t;
+typedef unsigned long count_t;
+
+struct Overlap
+{
+	bits_t bits;
+	count_t count2;
+	count_t count3;
+	count_t count4;
+	count_t count5;
+};
+
+__kernel void test(__global struct Overlap* data, int size)
+{
+	int id = get_global_id(0);
+	if (id < size)
+	{
+		__global struct Overlap* i1 = data + id;
+		for (__global struct Overlap* i2 = data; i2 != i1; ++i2)
+		{
+			if ((i1->bits & i2->bits) != 0)
+				continue;
+			bits_t s2 = i1->bits | i2->bits;
+			++i1->count2;
+			for (__global struct Overlap* i3 = data; i3 != i2; ++i3)
+			{
+				if ((s2 & i3->bits) != 0)
+					continue;
+				bits_t s3 = s2 | i3->bits;
+				++i1->count3;
+				for (__global struct Overlap* i4 = data; i4 != i3; ++i4)
+				{
+					if ((s3 & i4->bits) != 0)
+						continue;
+					bits_t s4 = s3 | i4->bits;
+					++i1->count4;
+					//Inner 5th loop causes invalid command queue most likely due
+					//to exceeding OS limit for video card response times.
+					//for (__global struct Overlap* i5 = data; i5 != i4; ++i5)
+					//{
+					//	if ((s4 & i5->bits) != 0)
+					//		continue;
+					//	++i1->count5;
+					//}
+				}
+			}
+		}
+	}
+}
+)";
+
+const char* sourceB = R"(
+//#pragma OPENCL EXTENSION cl_khr_int64_base_atomics : enable
+
+typedef unsigned long bits_t;
+typedef unsigned long count_t;
+
+struct Overlap
+{
+	bits_t bits;
+	count_t count2[990];
+	count_t count3[990];
+	count_t count4[990];
+	count_t count5[990];
+};
+
+__kernel void test(__global struct Overlap* data, int size)
+{
+	int id = get_global_id(0);
+	int index = id % 990;
+	int index1 = (id / size) % size;
+	int index2 = id % size;
+	if (index2 >= index1)
+		return;
+	__global struct Overlap* i1 = data + index1;
+	__global struct Overlap* i2 = data + index2;
+	if ((i1->bits & i2->bits) != 0)
+		return;
+	bits_t s2 = i1->bits | i2->bits;
+	++i1->count2[index];
+	for (__global struct Overlap* i3 = data; i3 != i2; ++i3)
+	{
+		if ((s2 & i3->bits) != 0)
+			continue;
+		bits_t s3 = s2 | i3->bits;
+		++i1->count3[index];
+		for (__global struct Overlap* i4 = data; i4 != i3; ++i4)
+		{
+			if ((s3 & i4->bits) != 0)
+				continue;
+			bits_t s4 = s3 | i4->bits;
+			++i1->count4[index];
+			for (__global struct Overlap* i5 = data; i5 != i4; ++i5)
+			{
+				if ((s4 & i5->bits) != 0)
+					continue;
+				++i1->count5[index];
+			}
+		}
+	}
+}
+)";
+
+
 int main()
 {
 	try
@@ -158,10 +271,25 @@ int main()
 		//Duration: 2170.98ms (host, single threaded)
 		//Duration: 488.725ms (host, for_each(par_unseq))
 
+		//Using sourceA
 		//Counts: 16569 800361 24670043 0
 		//Overlap: 936448562385
 		//Lose: 2047826635155
 		//Duration: 548.37ms
+
+		//Using sourceB with atomic_inc
+		//Counts: 16569 800361 24670043 513145502
+		//Overlap: 935935416883
+		//Lose: 2048339780657
+		//Duration: 2153.51ms
+
+		//Using sourceB with size * size workload to unwrap top two loops
+		//NOTE: race condition in countX[...] arrays.
+		DurationA: 719.232ms
+		Counts: 16569 800361 24670043 513145502
+		Overlap: 935935416883
+		Lose: 2048339780657
+		DurationB: 722.456ms
 
 		auto hostData = CreateOverlaps();
 
@@ -169,73 +297,23 @@ int main()
 		compute::context deviceContext{ device };
 		compute::command_queue commandQueue{ deviceContext, device };
 
-		const char* source = R"(
-			//NOTE: int = 4 bytes, long = 8 bytes, long long = 16 bytes!
-			typedef unsigned long bits_t;
-			typedef unsigned long count_t;
-
-			struct Overlap
-			{
-				bits_t bits;
-				count_t count2;
-				count_t count3;
-				count_t count4;
-				count_t count5;
-			};
-
-			__kernel void test(__global struct Overlap* data, int size)
-			{
-				int id = get_global_id(0);
-				if (id < size)
-				{
-					__global struct Overlap* i1 = data + id;
-					for (__global struct Overlap* i2 = data; i2 != i1; ++i2)
-					{
-						if ((i1->bits & i2->bits) != 0)
-							continue;
-						bits_t s2 = i1->bits | i2->bits;
-						++i1->count2;
-						for (__global struct Overlap* i3 = data; i3 != i2; ++i3)
-						{
-							if ((s2 & i3->bits) != 0)
-								continue;
-							bits_t s3 = s2 | i3->bits;
-							++i1->count3;
-							for (__global struct Overlap* i4 = data; i4 != i3; ++i4)
-							{
-								if ((s3 & i4->bits) != 0)
-									continue;
-								bits_t s4 = s3 | i4->bits;
-								++i1->count4;
-								//Inner 5th loop causes invalid command queue most likely due
-								//to exceeding OS limit for video card response times.
-								//for (__global struct Overlap* i5 = data; i5 != i4; ++i5)
-								//{
-								//	if ((s4 & i5->bits) != 0)
-								//		continue;
-								//	++i1->count5;
-								//}
-							}
-						}
-					}
-				}
-			}
-			)";
 
 		compute::vector<Overlap> deviceData{ hostData.size(), deviceContext };
 		compute::copy(hostData.begin(), hostData.end(), deviceData.begin(), commandQueue);
 
-		auto program = compute::program::build_with_source(source, deviceContext);
+		auto program = compute::program::build_with_source(sourceB, deviceContext);
 		auto kernel = program.create_kernel("test");
 
 		kernel.set_args(deviceData.get_buffer(), static_cast<int>(deviceData.size()));
 
 		Timer timer;
 
-		commandQueue.enqueue_1d_range_kernel(kernel, 0, deviceData.size(), 0);
+		commandQueue.enqueue_1d_range_kernel(kernel, 0, deviceData.size() * deviceData.size(), 0);
 		commandQueue.finish();
 
 		compute::copy(deviceData.begin(), deviceData.end(), hostData.begin(), commandQueue);
+
+		cout << "DurationA: " << timer.GetDurationMs() << "ms\n";
 
 		Overlap total;
 		for (auto& x : hostData)
@@ -244,10 +322,10 @@ int main()
 		auto overlap = total.GetTotalOverlap(41, 6);
 		auto lose = ComputeTotalCombinations(43, 8) * static_cast<long long>(hostData.size()) - overlap;
 
-		cout << "Counts: " << total.count2 << ' ' << total.count3 << ' ' << total.count4 << ' ' << total.count5 << '\n';
+		cout << "Counts: " << total.count2[0] << ' ' << total.count3[0] << ' ' << total.count4[0] << ' ' << total.count5[0] << '\n';
 		cout << "Overlap: " << overlap << '\n';
 		cout << "Lose: " << lose << '\n';
-		cout << "Duration: " << timer.GetDurationMs() << "ms\n";
+		cout << "DurationB: " << timer.GetDurationMs() << "ms\n";
 	}
 	catch (const compute::program_build_failure& failure)
 	{
