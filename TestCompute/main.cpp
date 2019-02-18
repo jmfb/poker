@@ -262,6 +262,55 @@ __kernel void test(__global struct Overlap* data, int size)
 }
 )";
 
+const char* sourceC = R"(
+typedef unsigned long bits_t;
+typedef unsigned long count_t;
+
+struct Overlap
+{
+	bits_t bits;
+	count_t count2[990];
+	count_t count3[990];
+	count_t count4[990];
+	count_t count5[990];
+};
+
+__kernel void test(__global struct Overlap* data, int size)
+{
+	int index1 = get_global_id(0);
+	int index2 = get_global_id(1);
+	int id = index1 * size + index2;
+	int index = id % 990;
+	if (index2 >= index1)
+		return;
+	__global struct Overlap* i1 = data + index1;
+	__global struct Overlap* i2 = data + index2;
+	if ((i1->bits & i2->bits) != 0)
+		return;
+	bits_t s2 = i1->bits | i2->bits;
+	++i1->count2[index];
+	for (__global struct Overlap* i3 = data; i3 != i2; ++i3)
+	{
+		if ((s2 & i3->bits) != 0)
+			continue;
+		bits_t s3 = s2 | i3->bits;
+		++i1->count3[index];
+		for (__global struct Overlap* i4 = data; i4 != i3; ++i4)
+		{
+			if ((s3 & i4->bits) != 0)
+				continue;
+			bits_t s4 = s3 | i4->bits;
+			++i1->count4[index];
+			for (__global struct Overlap* i5 = data; i5 != i4; ++i5)
+			{
+				if ((s4 & i5->bits) != 0)
+					continue;
+				++i1->count5[index];
+			}
+		}
+	}
+}
+)";
 
 int main()
 {
@@ -285,11 +334,11 @@ int main()
 
 		//Using sourceB with size * size workload to unwrap top two loops
 		//NOTE: race condition in countX[...] arrays.
-		DurationA: 719.232ms
-		Counts: 16569 800361 24670043 513145502
-		Overlap: 935935416883
-		Lose: 2048339780657
-		DurationB: 722.456ms
+		//DurationA: 719.232ms
+		//Counts: 16569 800361 24670043 513145502
+		//Overlap: 935935416883
+		//Lose: 2048339780657
+		//DurationB: 722.456ms
 
 		auto hostData = CreateOverlaps();
 
@@ -297,18 +346,17 @@ int main()
 		compute::context deviceContext{ device };
 		compute::command_queue commandQueue{ deviceContext, device };
 
-
 		compute::vector<Overlap> deviceData{ hostData.size(), deviceContext };
 		compute::copy(hostData.begin(), hostData.end(), deviceData.begin(), commandQueue);
 
-		auto program = compute::program::build_with_source(sourceB, deviceContext);
+		auto program = compute::program::build_with_source(sourceC, deviceContext);
 		auto kernel = program.create_kernel("test");
 
 		kernel.set_args(deviceData.get_buffer(), static_cast<int>(deviceData.size()));
 
 		Timer timer;
 
-		commandQueue.enqueue_1d_range_kernel(kernel, 0, deviceData.size() * deviceData.size(), 0);
+		commandQueue.enqueue_nd_range_kernel<2>(kernel, { 0, 0 }, { deviceData.size(), deviceData.size() }, { 1, 1 });
 		commandQueue.finish();
 
 		compute::copy(deviceData.begin(), deviceData.end(), hostData.begin(), commandQueue);
