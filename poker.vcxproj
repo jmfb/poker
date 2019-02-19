@@ -157,6 +157,7 @@
     </ClCompile>
     <ClCompile Include="PreflopOdds.cpp" />
     <ClCompile Include="Suit.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TwoCardOverlap.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +184,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
     <ClInclude Include="Suit.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="TwoCardOverlap.h" />
   </ItemGroup>
   <ItemGroup>

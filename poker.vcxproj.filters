@@ -64,6 +64,9 @@
     <ClCompile Include="TwoCardOverlap.cpp">
       <Filter>Classes\TwoCardOverlap</Filter>
     </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Classes\Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -129,6 +132,9 @@
     <Filter Include="Classes\TwoCardOverlap">
       <UniqueIdentifier>{4b063c88-7957-41c9-8e9e-aa9223d2c980}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Timer">
+      <UniqueIdentifier>{9b3c87ec-d922-4f8a-8271-3bb814e23ca3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -187,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="TwoCardOverlap.h">
       <Filter>Classes\TwoCardOverlap</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Classes\Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
