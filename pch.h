@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <bitset>
 #include <array>
 #include <set>
 #include <map>

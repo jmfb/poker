@@ -1,23 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <algorithm>
-#include <execution>
-#include <memory>
-using namespace std;
-using namespace chrono;
-
-#include <boost/compute.hpp>
-namespace compute = boost::compute;
-
-#include <boost/multiprecision/cpp_int.hpp>
-using LargeInteger = boost::multiprecision::int128_t;
-
-#include <CL/cl.h>
-
-#pragma comment(lib, "OpenCL.lib")
-
-#include "int128.h"
+#include "pch.h"
 
 class Timer
 {
@@ -312,10 +293,44 @@ __kernel void test(__global struct Overlap* data, int size)
 }
 )";
 
+void test()
+{
+	vector<unsigned long long> hostData{ 0, 0 };
+	hostData[0] = (1ull << 51) | (1ull << 32) | (1ull << 31) | (1ull << 16) | (1ull << 15) | 1ull;
+
+	auto device = compute::system::default_device();
+	compute::context deviceContext{ device };
+	compute::command_queue commandQueue{ deviceContext, device };
+
+	compute::vector<unsigned long long> deviceData{ hostData.size(), deviceContext };
+	compute::copy(hostData.begin(), hostData.end(), deviceData.begin(), commandQueue);
+
+	auto program = compute::program::build_with_source(R"(
+__kernel void test(__global ulong* data)
+{
+	//WTF?  Can't call popcount - get some garbage runtime error.
+	data[1] = popcount(data[0]);
+	//data[1] = 12345;
+}
+	)", deviceContext);
+	auto kernel = program.create_kernel("test");
+	kernel.set_args(deviceData.get_buffer());
+	commandQueue.enqueue_task(kernel);
+	commandQueue.finish();
+
+	compute::copy(deviceData.begin(), deviceData.end(), hostData.begin(), commandQueue);
+
+	cout << hostData[0] << '\n';
+	cout << hostData[1] << '\n';
+}
+
 int main()
 {
 	try
 	{
+		test();
+		return 0;
+
 		//Lose: 2048339780657 (5 opponents)
 		//Duration: 2170.98ms (host, single threaded)
 		//Duration: 488.725ms (host, for_each(par_unseq))
