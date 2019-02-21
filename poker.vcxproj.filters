@@ -7,9 +7,7 @@
     <None Include=".gitignore">
       <Filter>Resources</Filter>
     </None>
-    <None Include="packages.config">
-      <Filter>Resources</Filter>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

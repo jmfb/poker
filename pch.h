@@ -25,3 +25,8 @@ using namespace chrono;
 
 #include <boost/multiprecision/cpp_int.hpp>
 using LargeInteger = boost::multiprecision::int128_t;
+
+#include <boost/compute.hpp>
+namespace compute = boost::compute;
+
+#pragma comment(lib, "OpenCL.lib")
