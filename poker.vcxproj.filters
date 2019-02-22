@@ -67,7 +67,13 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Classes\Timer</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="test9.cpp" />
+    <ClCompile Include="test10.cpp" />
+    <ClCompile Include="test4.cpp" />
+    <ClCompile Include="test5.cpp" />
+    <ClCompile Include="test6.cpp" />
+    <ClCompile Include="test7.cpp" />
+    <ClCompile Include="test8.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

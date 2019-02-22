@@ -170,7 +170,13 @@
     </ClCompile>
     <ClCompile Include="PreflopOdds.cpp" />
     <ClCompile Include="Suit.cpp" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="test10.cpp" />
+    <ClCompile Include="test4.cpp" />
+    <ClCompile Include="test5.cpp" />
+    <ClCompile Include="test6.cpp" />
+    <ClCompile Include="test7.cpp" />
+    <ClCompile Include="test8.cpp" />
+    <ClCompile Include="test9.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TwoCardOverlap.cpp" />
   </ItemGroup>
