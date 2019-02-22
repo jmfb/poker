@@ -7,7 +7,9 @@
     <None Include=".gitignore">
       <Filter>Resources</Filter>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -65,6 +67,7 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Classes\Timer</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

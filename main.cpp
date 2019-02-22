@@ -800,6 +800,7 @@ __kernel void test(__global struct row_t* m, __global struct counts_t* c, int ro
 	)";
 
 	auto device = compute::system::default_device();
+	cout << "Using device: " << device.name() << '\n';
 	compute::context deviceContext{ device };
 	compute::command_queue commandQueue{ deviceContext, device };
 
@@ -896,6 +897,8 @@ void ComputeMaxTwoCardLossCount()
 	cout << "Final max 2-card loss count: " << maxOfAll << '\n';
 }
 
+void Test9();
+
 int main(int argc, char** argv)
 {
 	try
@@ -904,7 +907,8 @@ int main(int argc, char** argv)
 		//Test5();
 		//Test6();
 		//Test7();
-		Test8();
+		//Test8();
+		Test9();
 		return 0;
 
 		AllHands allHands;

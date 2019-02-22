@@ -20,6 +20,8 @@
 #include <stdexcept>
 #include <filesystem>
 #include <execution>
+#include <cstdint>
+#include <limits>
 using namespace std;
 using namespace chrono;
 
@@ -28,5 +30,8 @@ using LargeInteger = boost::multiprecision::int128_t;
 
 #include <boost/compute.hpp>
 namespace compute = boost::compute;
+
+#include <boost/iterator/counting_iterator.hpp>
+using boost::iterators::make_counting_iterator;
 
 #pragma comment(lib, "OpenCL.lib")
