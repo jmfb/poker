@@ -162,6 +162,7 @@
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Odds.cpp" />
     <ClCompile Include="OddsCache.cpp" />
+    <ClCompile Include="OpenClInt128.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -172,6 +173,7 @@
     <ClCompile Include="Suit.cpp" />
     <ClCompile Include="test10.cpp" />
     <ClCompile Include="test11.cpp" />
+    <ClCompile Include="test12.cpp" />
     <ClCompile Include="test4.cpp" />
     <ClCompile Include="test5.cpp" />
     <ClCompile Include="test6.cpp" />
@@ -202,6 +204,7 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="Odds.h" />
     <ClInclude Include="OddsCache.h" />
+    <ClInclude Include="OpenClInt128.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
     <ClInclude Include="Suit.h" />

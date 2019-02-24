@@ -91,6 +91,12 @@
     <ClCompile Include="test11.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="test12.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenClInt128.cpp">
+      <Filter>Classes\OpenClInt128</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -162,6 +168,9 @@
     <Filter Include="Tests">
       <UniqueIdentifier>{3fb86f4f-7cb9-46f0-99ec-324209c15820}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\OpenClInt128">
+      <UniqueIdentifier>{1d49a6a4-7dde-4c2e-ae40-96be11e3c1e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -223,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Classes\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenClInt128.h">
+      <Filter>Classes\OpenClInt128</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
