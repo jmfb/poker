@@ -44,8 +44,9 @@ void Test14()
 	cout << "3-loop parallel size: " << countsSize << '\n';
 	vector<counts_t> counts(countsSize);
 
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(countsSize), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(countsSize), [&](uint64_t reverseIndex)
 	{
+		auto index = countsSize - reverseIndex - 1;
 		auto& count = counts[index];
 		auto remainder = index;
 		auto index1 = remainder % size;
