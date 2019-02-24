@@ -350,6 +350,7 @@ void Test7();
 void Test8();
 void Test9();
 void Test10();
+void Test11();
 
 int main(int argc, char** argv)
 {
@@ -361,7 +362,8 @@ int main(int argc, char** argv)
 		//Test7();
 		//Test8();
 		//Test9();
-		Test10();
+		//Test10();
+		Test11();
 		return 0;
 
 		AllHands allHands;

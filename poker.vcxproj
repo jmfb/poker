@@ -171,6 +171,7 @@
     <ClCompile Include="PreflopOdds.cpp" />
     <ClCompile Include="Suit.cpp" />
     <ClCompile Include="test10.cpp" />
+    <ClCompile Include="test11.cpp" />
     <ClCompile Include="test4.cpp" />
     <ClCompile Include="test5.cpp" />
     <ClCompile Include="test6.cpp" />

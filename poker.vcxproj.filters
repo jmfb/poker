@@ -88,6 +88,9 @@
     <ClCompile Include="test10.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="test11.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

@@ -3,16 +3,16 @@
 
 vector<pair<int, int>> CreateTwoCards();
 
-//3-loop parallel size: 7529536
+//2-loop parallel size: 38416
 //Count2: 16569
 //Count3: 800361
 //Count4: 24670043
 //Count5: 513145502
-//Duration: 867.726ms
-void Test10()
+//Duration: 463.116ms
+void Test11()
 {
 	Timer timer;
-	cout << "Test10: Standard combinations using bitfields and 3-loop parallelization.\n";
+	cout << "Test11: Standard combinations using bitfields and 2-loop parallelization.\n";
 
 	vector<uint64_t> data;
 	for (auto& twoCard : CreateTwoCards())
@@ -45,8 +45,8 @@ void Test10()
 	};
 	auto size = data.size();
 	auto begin = data.begin();
-	auto countsSize = size * size * size;
-	cout << "3-loop parallel size: " << countsSize << '\n';
+	auto countsSize = size * size;
+	cout << "2-loop parallel size: " << countsSize << '\n';
 	vector<counts_t> counts(countsSize);
 
 	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(countsSize), [&](uint64_t index)
@@ -56,39 +56,35 @@ void Test10()
 		auto index1 = remainder % size;
 		remainder /= size;
 		auto index2 = remainder % size;
-		remainder /= size;
-		auto index3 = remainder % size;
 
 		auto i1 = begin + index1;
 		auto i2 = begin + index2;
-		auto i3 = begin + index3;
 
 		if (index2 >= index1)
 			return;
 		if ((*i1 & *i2) != 0)
 			return;
 		auto b2 = *i1 | *i2;
-		if (index3 == 0)
-			++count.count2;
+		++count.count2;
 
-		if (index3 >= index2)
-			return;
-		if ((b2 & *i3) != 0)
-			return;
-		auto b3 = b2 | *i3;
-		++count.count3;
-
-		for (auto i4 = begin; i4 != i3; ++i4)
+		for (auto i3 = begin; i3 != i2; ++i3)
 		{
-			if ((b3 & *i4) != 0)
+			if ((b2 & *i3) != 0)
 				continue;
-			auto b4 = b3 | *i4;
-			++count.count4;
-			for (auto i5 = begin; i5 != i4; ++i5)
+			auto b3 = b2 | *i3;
+			++count.count3;
+			for (auto i4 = begin; i4 != i3; ++i4)
 			{
-				if ((b4 & *i5) != 0)
+				if ((b3 & *i4) != 0)
 					continue;
-				++count.count5;
+				auto b4 = b3 | *i4;
+				++count.count4;
+				for (auto i5 = begin; i5 != i4; ++i5)
+				{
+					if ((b4 & *i5) != 0)
+						continue;
+					++count.count5;
+				}
 			}
 		}
 	});
