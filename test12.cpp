@@ -90,15 +90,15 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 
 	auto size = data.size();
 	auto countsSize = size * size * size;
+	cout << "Count Size: " << countsSize << '\n';
 	vector<counts_t> counts(countsSize);
 	
 	Timer copyToDeviceTimer;
 	compute::vector<uint64_t> deviceData(data.size(), context);
 	compute::copy(data.begin(), data.end(), deviceData.begin(), commandQueue);
-
-	compute::vector<counts_t> deviceCounts(counts.size(), context);
-	compute::copy(counts.begin(), counts.end(), deviceCounts.begin(), commandQueue);
 	cout << "Copy to device: " << copyToDeviceTimer.GetDurationMs() << "ms\n";
+
+	compute::vector<uint32_t> deviceCounts(counts.size() * 4 * 4, context);
 
 	Timer compileTimer;
 	auto program = compute::program::build_with_source(source, context);
@@ -112,7 +112,7 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 
 	Timer copyToHostTimer;
-	compute::copy(deviceCounts.begin(), deviceCounts.end(), counts.begin(), commandQueue);
+	compute::copy(deviceCounts.begin(), deviceCounts.end(), reinterpret_cast<uint32_t*>(counts.data()), commandQueue);
 	cout << "Copy to host: " << copyToHostTimer.GetDurationMs() << "ms\n";
 
 	Timer sumTimer;
