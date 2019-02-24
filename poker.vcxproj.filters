@@ -97,6 +97,9 @@
     <ClCompile Include="OpenClInt128.cpp">
       <Filter>Classes\OpenClInt128</Filter>
     </ClCompile>
+    <ClCompile Include="test13.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

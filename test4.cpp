@@ -8,7 +8,9 @@ vector<pair<int, int>> CreateTwoCards();
 
 void Test4()
 {
-	for (auto opponents = 1; opponents <= 8; ++opponents)
+	cout << "Test4\n";
+	auto opponents = 5;
+	//for (auto opponents = 1; opponents <= 8; ++opponents)
 	{
 		Timer timer;
 
@@ -23,6 +25,7 @@ void Test4()
 
 		cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	}
+	cout << '\n';
 
 	//Lose: 196 (1 opponents)
 	//Duration: 0ms

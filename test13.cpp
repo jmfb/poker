@@ -4,9 +4,9 @@
 
 vector<pair<int, int>> CreateTwoCards();
 
-void Test12()
+void Test13()
 {
-	cout << "Test12: 128-bit increment in OpenCL.\n";
+	cout << "Test12: 128-bit increment in OpenCL - 2 loop.\n";
 
 	vector<uint64_t> data;
 	for (auto& twoCard : CreateTwoCards())
@@ -39,31 +39,26 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 		return;
 	unsigned long b2 = *i1 | *i2;
 	__global struct counts_t* count = counts + id;
+	increment(&count->count2);
 
-	remainder /= size;
-	unsigned long index3 = remainder % size;
-
-	if (index3 == 0)
-		increment(&count->count2);
-	if (index3 >= index2)
-		return;
-	__global unsigned long* i3 = data + index3;
-	if ((b2 & *i3) != 0)
-		return;
-	unsigned long b3 = b2 | *i3;
-	increment(&count->count3);
-
-	for (__global unsigned long* i4 = data; i4 != i3; ++i4)
+	for (__global unsigned long* i3 = data; i3 != i2; ++i3)
 	{
-		if ((b3 & *i4) != 0)
+		if ((b2 & *i3) != 0)
 			continue;
-		unsigned long b4 = b3 | *i4;
-		increment(&count->count4);
-		for (__global unsigned long* i5 = data; i5 != i4; ++i5)
+		unsigned long b3 = b2 | *i3;
+		increment(&count->count3);
+		for (__global unsigned long* i4 = data; i4 != i3; ++i4)
 		{
-			if ((b4 & *i5) != 0)
+			if ((b3 & *i4) != 0)
 				continue;
-			increment(&count->count5);
+			unsigned long b4 = b3 | *i4;
+			increment(&count->count4);
+			for (__global unsigned long* i5 = data; i5 != i4; ++i5)
+			{
+				if ((b4 & *i5) != 0)
+					continue;
+				increment(&count->count5);
+			}
 		}
 	}
 }
@@ -89,10 +84,10 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	};
 
 	auto size = data.size();
-	auto countsSize = size * size * size;
+	auto countsSize = size * size;
 	cout << "Count Size: " << countsSize << '\n';
 	vector<counts_t> counts(countsSize);
-	
+
 	Timer copyToDeviceTimer;
 	compute::vector<uint64_t> deviceData(data.size(), context);
 	compute::copy(data.begin(), data.end(), deviceData.begin(), commandQueue);

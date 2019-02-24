@@ -6,6 +6,8 @@ vector<pair<int, int>> CreateTwoCards();
 
 void Test7()
 {
+	cout << "Test7\n";
+
 	//Size: 196
 	//Count2: 16569
 	//Count3: 800361
@@ -127,4 +129,5 @@ void Test7()
 	cout << "Count4: " << count4 << '\n';
 	cout << "Count5: " << count5 << '\n';
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
+	cout << '\n';
 }

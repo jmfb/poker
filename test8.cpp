@@ -5,6 +5,7 @@ vector<pair<int, int>> CreateTwoCards();
 
 void Test8()
 {
+	cout << "Test8\n";
 	//Execute duration: 3689.61ms
 	//Size: 196
 	//Count2: 16569
@@ -174,4 +175,5 @@ __kernel void test(__global struct row_t* m, __global struct counts_t* c, int ro
 	cout << "Count5: " << count5 << '\n';
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << "Sum Duration: " << sumTimer.GetDurationMs() << "ms\n";
+	cout << '\n';
 }

@@ -99,4 +99,5 @@ void Test10()
 	}).Dump();
 
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
+	cout << '\n';
 }
