@@ -7,7 +7,7 @@ TwoCardOverlap::TwoCardOverlap(const HoleCards& hole)
 {
 }
 
-unsigned long long TwoCardOverlap::GetBits() const
+uint64_t TwoCardOverlap::GetBits() const
 {
 	return bits;
 }
@@ -47,15 +47,15 @@ void TwoCardOverlap::AddCount8()
 	++count8;
 }
 
-LargeInteger TwoCardOverlap::GetTotalOverlap(LargeInteger remainingCards, LargeInteger opponentCards) const
+uint128_t TwoCardOverlap::GetTotalOverlap(uint128_t remainingCards, uint128_t opponentCards) const
 {
-	return count2 * ComputeTotalCombinations(remainingCards, opponentCards) -
-		count3 * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
-		count4 * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
-		count5 * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6) +
-		count6 * ComputeTotalCombinations(remainingCards - 8, opponentCards - 8) -
-		count7 * ComputeTotalCombinations(remainingCards - 10, opponentCards - 10) +
-		count8 * ComputeTotalCombinations(remainingCards - 12, opponentCards - 12);
+	return count2.Get() * ComputeTotalCombinations(remainingCards, opponentCards) -
+		count3.Get() * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
+		count4.Get() * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
+		count5.Get() * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6) +
+		count6.Get() * ComputeTotalCombinations(remainingCards - 8, opponentCards - 8) -
+		count7.Get() * ComputeTotalCombinations(remainingCards - 10, opponentCards - 10) +
+		count8.Get() * ComputeTotalCombinations(remainingCards - 12, opponentCards - 12);
 }
 
 TwoCardOverlap& TwoCardOverlap::operator+=(const TwoCardOverlap& rhs)
@@ -70,7 +70,7 @@ TwoCardOverlap& TwoCardOverlap::operator+=(const TwoCardOverlap& rhs)
 	return *this;
 }
 
-LargeInteger TwoCardOverlap::Compute(const vector<HoleCards>& twoCards, int remaining, int opponents)
+uint128_t TwoCardOverlap::Compute(const vector<HoleCards>& twoCards, int remaining, int opponents)
 {
 	if (opponents == 1)
 		return 0;

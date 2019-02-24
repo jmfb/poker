@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "Math.h"
+#include "Deck.h"
 
-LargeInteger Combinations(LargeInteger total, LargeInteger take)
+uint128_t Combinations(uint128_t total, uint128_t take)
 {
-	LargeInteger result{ 1 };
-	for (LargeInteger index{ 0 }; index < take; ++index)
+	uint128_t result{ 1 };
+	for (uint128_t index{ 0 }; index < take; ++index)
 		result = result * (total - index) / (index + 1);
 	return result;
 }
@@ -17,22 +18,22 @@ LargeInteger Combinations(LargeInteger total, LargeInteger take)
 //12 = 10,395
 //14 = 135,135
 //16 = 2,027,025
-LargeInteger Partitions(LargeInteger count)
+uint128_t Partitions(uint128_t count)
 {
 	//Partitions(n) = Product(2k+1) for k=0..n-1 where n is number of opponents
 	//count = opponent cards -> opponents = opponent cards / 2
 	auto n = count / 2;
-	LargeInteger product = 1;
-	for (LargeInteger k = 0; k < n; ++k)
+	uint128_t product{ 1 };
+	for (uint128_t k{ 0 }; k < n; ++k)
 		product *= 2 * k + 1;
 	return product;
 }
 
-map<pair<LargeInteger, LargeInteger>, LargeInteger> totalCombinationCache;
+map<pair<uint128_t, uint128_t>, uint128_t> totalCombinationCache;
 
-LargeInteger ComputeTotalCombinations(LargeInteger cards, LargeInteger opponentCards)
+uint128_t ComputeTotalCombinations(uint128_t cards, uint128_t opponentCards)
 {
-	if (opponentCards < 0)
+	if (opponentCards > DeckSize)
 		return 0;
 	if (opponentCards == 0)
 		return 1;

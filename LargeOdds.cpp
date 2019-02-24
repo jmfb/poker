@@ -3,22 +3,22 @@
 #include "Deck.h"
 #include "Math.h"
 
-LargeOdds::LargeOdds(const LargeInteger& winOrDraw, const LargeInteger& lose)
+LargeOdds::LargeOdds(uint128_t winOrDraw, uint128_t lose)
 	: winOrDraw{ winOrDraw }, lose{ lose }
 {
 }
 
-const LargeInteger& LargeOdds::GetWinOrDraw() const
+uint128_t LargeOdds::GetWinOrDraw() const
 {
 	return winOrDraw;
 }
 
-const LargeInteger& LargeOdds::GetLose() const
+uint128_t LargeOdds::GetLose() const
 {
 	return lose;
 }
 
-LargeInteger LargeOdds::GetTotal() const
+uint128_t LargeOdds::GetTotal() const
 {
 	return winOrDraw + lose;
 }
@@ -28,7 +28,7 @@ double LargeOdds::GetWinOrDrawPercent() const
 	return static_cast<int>(winOrDraw * 10000 / (winOrDraw + lose)) / 100.0;
 }
 
-LargeOdds LargeOdds::Create(const LargeInteger& winOrDraw, int opponents)
+LargeOdds LargeOdds::Create(uint128_t winOrDraw, int opponents)
 {
 	return { winOrDraw, ComputeTotalCombinations(DeckSize - 5 - 2, 2 * opponents) - winOrDraw };
 }

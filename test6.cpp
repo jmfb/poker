@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
+#include "Counter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -17,7 +18,7 @@ void Test6()
 
 	Timer timer;
 	auto twoCards = CreateTwoCards();
-	LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+	Counter count2, count3, count4, count5;
 
 	struct row_t
 	{
@@ -113,10 +114,10 @@ void Test6()
 	}
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2 << '\n';
-	cout << "Count3: " << count3 << '\n';
-	cout << "Count4: " << count4 << '\n';
-	cout << "Count5: " << count5 << '\n';
+	cout << "Count2: " << count2.Get() << '\n';
+	cout << "Count3: " << count3.Get() << '\n';
+	cout << "Count4: " << count4.Get() << '\n';
+	cout << "Count5: " << count5.Get() << '\n';
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }

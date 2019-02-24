@@ -4,7 +4,7 @@ class LargeOdds
 {
 public:
 	LargeOdds() = default;
-	LargeOdds(const LargeInteger& winOrDraw, const LargeInteger& lose);
+	LargeOdds(uint128_t winOrDraw, uint128_t lose);
 	LargeOdds(const LargeOdds& rhs) = default;
 	LargeOdds(LargeOdds&& rhs) = default;
 	~LargeOdds() = default;
@@ -12,16 +12,16 @@ public:
 	LargeOdds& operator=(const LargeOdds& rhs) = default;
 	LargeOdds& operator=(LargeOdds&& rhs) = default;
 
-	const LargeInteger& GetWinOrDraw() const;
-	const LargeInteger& GetLose() const;
-	LargeInteger GetTotal() const;
+	uint128_t GetWinOrDraw() const;
+	uint128_t GetLose() const;
+	uint128_t GetTotal() const;
 	double GetWinOrDrawPercent() const;
 
-	static LargeOdds Create(const LargeInteger& winOrDraw, int opponents);
+	static LargeOdds Create(uint128_t winOrDraw, int opponents);
 
 	LargeOdds& operator+=(const LargeOdds& rhs);
 
 private:
-	LargeInteger winOrDraw = 0;
-	LargeInteger lose = 0;
+	uint128_t winOrDraw = 0;
+	uint128_t lose = 0;
 };

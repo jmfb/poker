@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
+#include "Counter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -8,11 +9,11 @@ const auto MaxByte = numeric_limits<uint8_t>::max();
 
 struct Counts
 {
-	LargeInteger count1 = 0;
-	LargeInteger count2 = 0;
-	LargeInteger count3 = 0;
-	LargeInteger count4 = 0;
-	LargeInteger count5 = 0;
+	Counter count1;
+	Counter count2;
+	Counter count3;
+	Counter count4;
+	Counter count5;
 
 	Counts& operator+=(const Counts& rhs)
 	{
@@ -26,11 +27,11 @@ struct Counts
 
 	void Dump()
 	{
-		cout << "Count1: " << count1 << '\n';
-		cout << "Count2: " << count2 << '\n';
-		cout << "Count3: " << count3 << '\n';
-		cout << "Count4: " << count4 << '\n';
-		cout << "Count5: " << count5 << '\n';
+		cout << "Count1: " << count1.Get() << '\n';
+		cout << "Count2: " << count2.Get() << '\n';
+		cout << "Count3: " << count3.Get() << '\n';
+		cout << "Count4: " << count4.Get() << '\n';
+		cout << "Count5: " << count5.Get() << '\n';
 	}
 };
 

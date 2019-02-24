@@ -94,14 +94,17 @@
     <ClCompile Include="test12.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="OpenClInt128.cpp">
-      <Filter>Classes\OpenClInt128</Filter>
-    </ClCompile>
     <ClCompile Include="test13.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="test14.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Counter.cpp">
+      <Filter>Classes\Counter</Filter>
+    </ClCompile>
+    <ClCompile Include="OpenClCounter.cpp">
+      <Filter>Classes\OpenClInt128</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +180,9 @@
     <Filter Include="Classes\OpenClInt128">
       <UniqueIdentifier>{1d49a6a4-7dde-4c2e-ae40-96be11e3c1e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Counter">
+      <UniqueIdentifier>{bfd8f0cf-e298-43d7-8350-119f1c90b1e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -239,7 +245,10 @@
     <ClInclude Include="Timer.h">
       <Filter>Classes\Timer</Filter>
     </ClInclude>
-    <ClInclude Include="OpenClInt128.h">
+    <ClInclude Include="Counter.h">
+      <Filter>Classes\Counter</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenClCounter.h">
       <Filter>Classes\OpenClInt128</Filter>
     </ClInclude>
   </ItemGroup>

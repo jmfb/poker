@@ -35,12 +35,6 @@ public:
 		int c4,
 		int c5,
 		int opponents);
-	static LargeInteger ComputeTwoCardOverlap(
-		const CardSet& holes,
-		vector<HoleCards>::const_iterator begin,
-		vector<HoleCards>::const_iterator end,
-		LargeInteger remaining,
-		LargeInteger opponentCards);
 	void AddSuitCombinations(const HoleCards& hole, Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds);
 	void AddSuitCombination(Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds, const map<Suit, Suit>& suitMap);
 

@@ -3,6 +3,7 @@
 #include "Math.h"
 #include "Hand.h"
 #include "TwoCardOverlap.h"
+#include "Timer.h"
 
 LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, int opponents)
 {
@@ -42,52 +43,15 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 	cards.Remove(hole, c1, c2, c3, c4, c5);
 	auto bestHand = allHands.GetBestHandRank(hole.GetCard1(), hole.GetCard2(), c1, c2, c3, c4, c5);
 	cards.RemoveSingleCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
-	cout << "Remaining cards: " << cards.GetSize() << '\n';
 	auto twoCards = cards.FindTwoCardLosses(allHands, bestHand, c1, c2, c3, c4, c5);
-	cout << "2-card losses: " << twoCards.size() << '\n';
 	auto opponentCards = opponents * 2;
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
-	cout << "Initial loss (includes overlap): " << (ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size())) << '\n';
-	
-	/*
-	LargeInteger totalOverlap = 0;
-	cout << "Win or Draw before overlap: " << winOrDraw << '\n';
-	for (auto iter = twoCards.begin(); iter != twoCards.end(); ++iter)
-	{
-		auto overlap = ComputeTwoCardOverlap({ *iter }, twoCards.begin(), iter, cards.GetSize() - 2, opponentCards - 2);
-		winOrDraw += overlap;
-		totalOverlap += overlap;
-	}
-	*/
 	auto totalOverlap = TwoCardOverlap::Compute(twoCards, cards.GetSize(), opponents);
-	
-	cout << "Total Overlap: " << totalOverlap << '\n';
 	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
 	cache.emplace(hash, largeOdds);
 	AddSuitCombinations(hole, c1, c2, c3, c4, c5, largeOdds);
 	return largeOdds;
-}
-
-LargeInteger LargeOddsComputer::ComputeTwoCardOverlap(
-	const CardSet& holes,
-	vector<HoleCards>::const_iterator begin,
-	vector<HoleCards>::const_iterator end,
-	LargeInteger remaining,
-	LargeInteger opponentCards)
-{
-	if (opponentCards <= 0)
-		return 0;
-	auto overlapPerPair = ComputeTotalCombinations(remaining - 2, opponentCards - 2);
-	LargeInteger overlap = 0;
-	for (auto iter = begin; iter != end; ++iter)
-	{
-		if (holes.Intersect(*iter))
-			continue;
-		overlap += overlapPerPair;
-		overlap -= ComputeTwoCardOverlap(holes.Union(*iter), begin, iter, remaining - 2, opponentCards - 2);
-	}
-	return overlap;
 }
 
 void LargeOddsComputer::AddSuitCombinations(const HoleCards& hole, Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds)
@@ -186,7 +150,7 @@ void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, 
 {
 	auto index = f1 * FaceCount + f2 + 1;
 	auto count = FaceCount * FaceCount;
-	auto start = std::chrono::system_clock::now();
+	Timer timer;
 
 	auto createHole = [](int f1, int f2) -> HoleCards
 	{
@@ -201,8 +165,7 @@ void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, 
 	cout << opponents << ": " << index << " of " << count << ": Computing " << hole.ToString() << "...";
 	LargeOddsComputer computer{ allHands, hole, opponents };
 	auto odds = computer.GetOdds();
-	auto duration = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - start).count();
-	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << duration << " seconds\n";
+	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << timer.GetDurationMs() << "ms\n";
 	out << hole.GetCard1() << ','
 		<< hole.GetCard2() << ','
 		<< hole.ToString() << ','
@@ -253,7 +216,7 @@ void LargeOddsComputer::CombineOpponentOdds()
 			int card1 = 0, card2 = 0;
 			char comma;
 			string name;
-			LargeInteger winOrDraw = 0, lose = 0;
+			uint128_t winOrDraw = 0, lose = 0;
 			parts >> card1 >> comma >> card2 >> comma;
 			getline(parts, name, ',');
 			parts >> winOrDraw >> comma >> lose;

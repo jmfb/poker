@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Timer.h"
-#include "OpenClInt128.h"
+#include "OpenClCounter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -17,7 +17,7 @@ void Test12()
 	auto context = compute::context{ device };
 	auto commandQueue = compute::command_queue{ context, device };
 
-	auto source = OpenClInt128::GetSource() + R"(
+	auto source = OpenClCounter::GetSource() + R"(
 struct counts_t
 {
 	struct uint128_t count2, count3, count4, count5;
@@ -71,7 +71,7 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 
 	struct counts_t
 	{
-		OpenClInt128 count2, count3, count4, count5;
+		OpenClCounter count2, count3, count4, count5;
 		counts_t& operator+=(const counts_t& rhs)
 		{
 			count2 += rhs.count2;
@@ -119,9 +119,9 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	auto total = reduce(execution::par_unseq, counts.begin(), counts.end(), counts_t{}, [](auto lhs, auto rhs){ return lhs + rhs; });
 	cout << "Sum: " << sumTimer.GetDurationMs() << "ms\n";
 
-	cout << "Count2: " << total.count2.ToLargeInteger() << '\n';
-	cout << "Count3: " << total.count3.ToLargeInteger() << '\n';
-	cout << "Count4: " << total.count4.ToLargeInteger() << '\n';
-	cout << "Count5: " << total.count5.ToLargeInteger() << '\n';
+	cout << "Count2: " << total.count2.Get() << '\n';
+	cout << "Count3: " << total.count3.Get() << '\n';
+	cout << "Count4: " << total.count4.Get() << '\n';
+	cout << "Count5: " << total.count5.Get() << '\n';
 	cout << '\n';
 }

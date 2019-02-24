@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Timer.h"
+#include "Counter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -20,7 +21,7 @@ void Test11()
 
 	struct counts_t
 	{
-		LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+		Counter count2, count3, count4, count5;
 		counts_t& operator+=(const counts_t& rhs)
 		{
 			count2 += rhs.count2;
@@ -37,10 +38,10 @@ void Test11()
 		}
 		void Dump() const
 		{
-			cout << "Count2: " << count2 << '\n';
-			cout << "Count3: " << count3 << '\n';
-			cout << "Count4: " << count4 << '\n';
-			cout << "Count5: " << count5 << '\n';
+			cout << "Count2: " << count2.Get() << '\n';
+			cout << "Count3: " << count3.Get() << '\n';
+			cout << "Count4: " << count4.Get() << '\n';
+			cout << "Count5: " << count5.Get() << '\n';
 		}
 	};
 	auto size = data.size();

@@ -21,8 +21,6 @@ public:
 
 	string ToString() const;
 
-	int CompareFaces(const array<Face, HandSize>& other) const;
-
 	bool operator==(const HandValue& rhs) const;
 	bool operator!=(const HandValue& rhs) const;
 	bool operator<(const HandValue& rhs) const;

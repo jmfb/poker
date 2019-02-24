@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
+#include "Counter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -22,7 +23,7 @@ void Test7()
 	{
 		int value;
 		vector<int> columns;
-		LargeInteger count2, count3, count4, count5;
+		Counter count2, count3, count4, count5;
 	};
 	using matrix_t = vector<row_t>;
 	map<int, int> rowIndexByValue;
@@ -33,7 +34,7 @@ void Test7()
 		if (iter == rowIndexByValue.end())
 		{
 			rowIndexByValue.emplace(twoCard.first, static_cast<int>(m.size()));
-			m.push_back({ twoCard.first, { twoCard.second }, 0, 0, 0, 0 });
+			m.push_back({ twoCard.first, { twoCard.second }, {}, {}, {}, {} });
 		}
 		else
 			m[iter->second].columns.push_back(twoCard.second);
@@ -114,7 +115,7 @@ void Test7()
 		}
 	});
 
-	LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+	Counter count2, count3, count4, count5;
 	for (auto& r : m)
 	{
 		count2 += r.count2;
@@ -124,10 +125,10 @@ void Test7()
 	}
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2 << '\n';
-	cout << "Count3: " << count3 << '\n';
-	cout << "Count4: " << count4 << '\n';
-	cout << "Count5: " << count5 << '\n';
+	cout << "Count2: " << count2.Get() << '\n';
+	cout << "Count3: " << count3.Get() << '\n';
+	cout << "Count4: " << count4.Get() << '\n';
+	cout << "Count5: " << count5.Get() << '\n';
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }

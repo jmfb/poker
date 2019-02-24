@@ -1,5 +1,6 @@
 #pragma once
 #include "HoleCards.h"
+#include "Counter.h"
 
 class TwoCardOverlap
 {
@@ -13,7 +14,7 @@ public:
 	TwoCardOverlap& operator=(const TwoCardOverlap& rhs) = default;
 	TwoCardOverlap& operator=(TwoCardOverlap&& rhs) = default;
 
-	unsigned long long GetBits() const;
+	uint64_t GetBits() const;
 
 	void AddCount2();
 	void AddCount3();
@@ -23,11 +24,11 @@ public:
 	void AddCount7();
 	void AddCount8();
 
-	LargeInteger GetTotalOverlap(LargeInteger remainingCards, LargeInteger opponentCards) const;
+	uint128_t GetTotalOverlap(uint128_t remainingCards, uint128_t opponentCards) const;
 
 	TwoCardOverlap& operator+=(const TwoCardOverlap& rhs);
 
-	static LargeInteger Compute(const vector<HoleCards>& twoCards, int remaining, int opponents);
+	static uint128_t Compute(const vector<HoleCards>& twoCards, int remaining, int opponents);
 
 private:
 	static void Compute2(TwoCardOverlap* begin, TwoCardOverlap* end);
@@ -39,12 +40,12 @@ private:
 	static void Compute8(TwoCardOverlap* begin, TwoCardOverlap* end);
 
 private:
-	unsigned long long bits = 0;
-	LargeInteger count2 = 0;
-	LargeInteger count3 = 0;
-	LargeInteger count4 = 0;
-	LargeInteger count5 = 0;
-	LargeInteger count6 = 0;
-	LargeInteger count7 = 0;
-	LargeInteger count8 = 0;
+	uint64_t bits = 0;
+	Counter count2;
+	Counter count3;
+	Counter count4;
+	Counter count5;
+	Counter count6;
+	Counter count7;
+	Counter count8;
 };

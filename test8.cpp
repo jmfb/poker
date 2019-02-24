@@ -159,7 +159,7 @@ __kernel void test(__global struct row_t* m, __global struct counts_t* c, int ro
 
 	Timer sumTimer;
 
-	LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+	uint128_t count2 = 0, count3 = 0, count4 = 0, count5 = 0;
 	for (auto& count : counts)
 	{
 		count2 += count.count2;

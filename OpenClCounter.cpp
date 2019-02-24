@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "OpenClInt128.h"
+#include "OpenClCounter.h"
 
-OpenClInt128::OpenClInt128(LargeInteger value)
+OpenClCounter::OpenClCounter(uint128_t value)
 {
 	lowlow = value.convert_to<uint32_t>();
 	value >>= 32;
@@ -12,7 +12,7 @@ OpenClInt128::OpenClInt128(LargeInteger value)
 	highhigh = value.convert_to<uint32_t>();
 }
 
-OpenClInt128& OpenClInt128::operator+=(const OpenClInt128& rhs)
+OpenClCounter& OpenClCounter::operator+=(const OpenClCounter& rhs)
 {
 	auto carry = _addcarry_u32(0, lowlow, rhs.lowlow, &lowlow);
 	carry = _addcarry_u32(carry, lowhigh, rhs.lowhigh, &lowhigh);
@@ -21,16 +21,16 @@ OpenClInt128& OpenClInt128::operator+=(const OpenClInt128& rhs)
 	return *this;
 }
 
-OpenClInt128 OpenClInt128::operator+(const OpenClInt128& rhs) const
+OpenClCounter OpenClCounter::operator+(const OpenClCounter& rhs) const
 {
 	auto result{ *this };
 	result += rhs;
 	return result;
 }
 
-LargeInteger OpenClInt128::ToLargeInteger() const
+uint128_t OpenClCounter::Get() const
 {
-	LargeInteger result{ highhigh };
+	uint128_t result{ highhigh };
 	result <<= 32;
 	result |= highlow;
 	result <<= 32;
@@ -40,7 +40,7 @@ LargeInteger OpenClInt128::ToLargeInteger() const
 	return result;
 }
 
-string OpenClInt128::GetSource()
+string OpenClCounter::GetSource()
 {
 	return R"(
 struct uint128_t

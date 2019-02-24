@@ -89,9 +89,9 @@ public:
 		remaining.NewDeck();
 		for (auto& player : players)
 			remaining.Remove(player.hole);
-		vector<LargeInteger> preflopAudience;
+		vector<uint128_t> preflopAudience;
 		preflopAudience.resize(players.size());
-		LargeInteger preflopCount = 0;
+		uint128_t preflopCount{ 0 };
 		auto end = remaining.end();
 		for (auto c1 = remaining.begin(); c1 != end; ++c1)
 			for (auto c2 = c1 + 1; c2 != end; ++c2)
@@ -116,9 +116,9 @@ public:
 						}
 
 		//Compute flop odds for the audience
-		vector<LargeInteger> flopAudience;
+		vector<uint128_t> flopAudience;
 		flopAudience.resize(players.size());
-		LargeInteger flopCount = 0;
+		uint128_t flopCount{ 0 };
 		deck.Remove(flop->cards[0]);
 		deck.Remove(flop->cards[1]);
 		deck.Remove(flop->cards[2]);
@@ -145,9 +145,9 @@ public:
 			}
 
 		//Compute turn odds for the audience
-		vector<LargeInteger> turnAudience;
+		vector<uint128_t> turnAudience;
 		turnAudience.resize(players.size());
-		LargeInteger turnCount = 0;
+		uint128_t turnCount{ 0 };
 		deck.Remove(turn->cards[0]);
 		end = deck.end();
 		for (auto c5 = deck.begin(); c5 != end; ++c5)
@@ -366,7 +366,7 @@ int main(int argc, char** argv)
 		//Test8();
 		//Test9();
 		//Test10();
-		//Test11();
+		Test11();	//Current fastest solution
 		//Test12();
 		//Test13();
 		Test14();

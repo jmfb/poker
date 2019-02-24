@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
+#include "Counter.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -30,7 +31,7 @@ void Test5()
 	matrix_t m;
 	for (auto& twoCard : twoCards)
 		m[twoCard.first].set(twoCard.second);
-	LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+	Counter count2, count3, count4, count5;
 	for (auto row1 = 0; row1 < DeckSize; ++row1)
 	{
 		auto& r1 = m[row1];
@@ -102,10 +103,10 @@ void Test5()
 	}
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2 << '\n';
-	cout << "Count3: " << count3 << '\n';
-	cout << "Count4: " << count4 << '\n';
-	cout << "Count5: " << count5 << '\n';
+	cout << "Count2: " << count2.Get() << '\n';
+	cout << "Count3: " << count3.Get() << '\n';
+	cout << "Count4: " << count4.Get() << '\n';
+	cout << "Count5: " << count5.Get() << '\n';
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }
