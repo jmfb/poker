@@ -12,12 +12,12 @@ public:
 	OpenClInt128& operator=(const OpenClInt128& rhs) = default;
 	OpenClInt128& operator=(OpenClInt128&& rhs) = default;
 
-	OpenClInt128& operator++();
 	LargeInteger ToLargeInteger() const;
 	static string GetSource();
 
 private:
-	uint8_t top = 0;
-	uint64_t upper = 0;
-	uint64_t lower = 0;
+	uint32_t lowlow = 0;
+	uint32_t lowhigh = 0;
+	uint32_t highlow = 0;
+	uint32_t highhigh = 0;
 };

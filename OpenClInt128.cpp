@@ -3,20 +3,24 @@
 
 OpenClInt128::OpenClInt128(LargeInteger value)
 {
-	lower = 0x7fffffffffffffffull & value.convert_to<uint64_t>();
-	value >>= 63;
-	upper = 0x7fffffffffffffffull & value.convert_to<uint64_t>();
-	value >>= 63;
-	top = value.convert_to<uint8_t>();
+	lowlow = value.convert_to<uint32_t>();
+	value >>= 32;
+	lowhigh = value.convert_to<uint32_t>();
+	value >>= 32;
+	highlow = value.convert_to<uint32_t>();
+	value >>= 32;
+	highhigh = value.convert_to<uint32_t>();
 }
 
 LargeInteger OpenClInt128::ToLargeInteger() const
 {
-	LargeInteger result{ top };
-	result <<= 63;
-	result |= upper;
-	result <<= 63;
-	result |= lower;
+	LargeInteger result{ highhigh };
+	result <<= 32;
+	result |= highlow;
+	result <<= 32;
+	result |= lowhigh;
+	result <<= 32;
+	result |= lowlow;
 	return result;
 }
 
@@ -25,24 +29,15 @@ string OpenClInt128::GetSource()
 	return R"(
 struct uint128_t
 {
-	unsigned char top;
-	unsigned long upper;
-	unsigned long lower;
+	unsigned int lowlow, lowhigh, highlow, highhigh;
 };
 
 void increment(__global struct uint128_t* data)
 {
-	++data->lower;
-	if (data->lower == 0x8000000000000000ul)
-	{
-		data->lower = 0;
-		++data->upper;
-		if (data->upper == 0x8000000000000000ul)
-		{
-			data->upper = 0;
-			++data->top;
-		}
-	}
+	asm("add.cc.u32 %0, %0, 1;" : "+r" (data->lowlow));
+	asm("addc.cc.u32 %0, %0, 0;" : "+r" (data->lowhigh));
+	asm("addc.cc.u32 %0, %0, 0;" : "+r" (data->highlow));
+	asm("addc.u32 %0, %0, 0;" : "+r" (data->highhigh));
 }
 	)";
 }
