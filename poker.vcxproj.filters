@@ -100,6 +100,9 @@
     <ClCompile Include="test13.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="test14.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
