@@ -3,6 +3,35 @@
 
 vector<pair<int, int>> CreateTwoCards();
 
+class Int128
+{
+public:
+	uint64_t low = 0;
+	uint64_t high = 0;
+
+	Int128& operator++()
+	{
+		if (_addcarry_u64(0, low, 1, &low))
+			++high;
+		return *this;
+	}
+
+	Int128& operator+=(const Int128& rhs)
+	{
+		auto carry = _addcarry_u64(0, low, rhs.low, &low);
+		_addcarry_u64(carry, high, rhs.high, &high);
+		return *this;
+	}
+
+	LargeInteger ToLargeInteger() const
+	{
+		LargeInteger result{ high };
+		result <<= 64;
+		result |= low;
+		return result;
+	}
+};
+
 void Test14()
 {
 	Timer timer;
@@ -12,9 +41,11 @@ void Test14()
 	for (auto& twoCard : CreateTwoCards())
 		data.push_back((1ull << twoCard.first) | (1ull << twoCard.second));
 
+	//Int128 Duration: 461.663ms
+	//LargeInteger Duration: 560ms
 	struct counts_t
 	{
-		LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
+		Int128 count2, count3, count4, count5;
 		counts_t& operator+=(const counts_t& rhs)
 		{
 			count2 += rhs.count2;
@@ -31,10 +62,10 @@ void Test14()
 		}
 		void Dump() const
 		{
-			cout << "Count2: " << count2 << '\n';
-			cout << "Count3: " << count3 << '\n';
-			cout << "Count4: " << count4 << '\n';
-			cout << "Count5: " << count5 << '\n';
+			cout << "Count2: " << count2.ToLargeInteger() << '\n';
+			cout << "Count3: " << count3.ToLargeInteger() << '\n';
+			cout << "Count4: " << count4.ToLargeInteger() << '\n';
+			cout << "Count5: " << count5.ToLargeInteger() << '\n';
 		}
 	};
 	auto size = data.size();
