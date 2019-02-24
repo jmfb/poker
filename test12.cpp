@@ -59,12 +59,12 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 			continue;
 		unsigned long b4 = b3 | *i4;
 		increment(&count->count4);
-		for (__global unsigned long* i5 = data; i5 != i4; ++i5)
-		{
-			if ((b4 & *i5) != 0)
-				continue;
-			increment(&count->count5);
-		}
+		//for (__global unsigned long* i5 = data; i5 != i4; ++i5)
+		//{
+		//	if ((b4 & *i5) != 0)
+		//		continue;
+		//	increment(&count->count5);
+		//}
 	}
 }
 	)";
@@ -72,6 +72,20 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	struct counts_t
 	{
 		OpenClInt128 count2, count3, count4, count5;
+		counts_t& operator+=(const counts_t& rhs)
+		{
+			count2 += rhs.count2;
+			count3 += rhs.count3;
+			count4 += rhs.count4;
+			count5 += rhs.count5;
+			return *this;
+		}
+		counts_t operator+(const counts_t& rhs) const
+		{
+			auto result{ *this };
+			result += rhs;
+			return result;
+		}
 	};
 
 	auto size = data.size();
@@ -102,18 +116,11 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	cout << "Copy to host: " << copyToHostTimer.GetDurationMs() << "ms\n";
 
 	Timer sumTimer;
-	LargeInteger count2 = 0, count3 = 0, count4 = 0, count5 = 0;
-	for (auto& count : counts)
-	{
-		count2 += count.count2.ToLargeInteger();
-		count3 += count.count3.ToLargeInteger();
-		count4 += count.count4.ToLargeInteger();
-		count5 += count.count5.ToLargeInteger();
-	}
+	auto total = reduce(execution::par_unseq, counts.begin(), counts.end(), counts_t{}, [](auto lhs, auto rhs){ return lhs + rhs; });
 	cout << "Sum: " << sumTimer.GetDurationMs() << "ms\n";
 
-	cout << "Count2: " << count2 << '\n';
-	cout << "Count3: " << count3 << '\n';
-	cout << "Count4: " << count4 << '\n';
-	cout << "Count5: " << count5 << '\n';
+	cout << "Count2: " << total.count2.ToLargeInteger() << '\n';
+	cout << "Count3: " << total.count3.ToLargeInteger() << '\n';
+	cout << "Count4: " << total.count4.ToLargeInteger() << '\n';
+	cout << "Count5: " << total.count5.ToLargeInteger() << '\n';
 }

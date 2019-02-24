@@ -12,6 +12,22 @@ OpenClInt128::OpenClInt128(LargeInteger value)
 	highhigh = value.convert_to<uint32_t>();
 }
 
+OpenClInt128& OpenClInt128::operator+=(const OpenClInt128& rhs)
+{
+	auto carry = _addcarry_u32(0, lowlow, rhs.lowlow, &lowlow);
+	carry = _addcarry_u32(carry, lowhigh, rhs.lowhigh, &lowhigh);
+	carry = _addcarry_u32(carry, highlow, rhs.highlow, &highlow);
+	_addcarry_u32(carry, highhigh, rhs.highhigh, &highhigh);
+	return *this;
+}
+
+OpenClInt128 OpenClInt128::operator+(const OpenClInt128& rhs) const
+{
+	auto result{ *this };
+	result += rhs;
+	return result;
+}
+
 LargeInteger OpenClInt128::ToLargeInteger() const
 {
 	LargeInteger result{ highhigh };

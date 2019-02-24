@@ -35,3 +35,5 @@ namespace compute = boost::compute;
 using boost::iterators::make_counting_iterator;
 
 #pragma comment(lib, "OpenCL.lib")
+
+#include <intrin.h>
