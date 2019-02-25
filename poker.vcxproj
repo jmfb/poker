@@ -151,6 +151,7 @@
     <ClCompile Include="AllHands.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardSet.cpp" />
+    <ClCompile Include="CombinationSequences.cpp" />
     <ClCompile Include="Counter.cpp" />
     <ClCompile Include="Counts.cpp" />
     <ClCompile Include="Deck.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="AllHands.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardSet.h" />
+    <ClInclude Include="CombinationSequences.h" />
     <ClInclude Include="Counter.h" />
     <ClInclude Include="Counts.h" />
     <ClInclude Include="Deck.h" />

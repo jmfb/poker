@@ -109,6 +109,9 @@
     <ClCompile Include="Counts.cpp">
       <Filter>Classes\Counts</Filter>
     </ClCompile>
+    <ClCompile Include="CombinationSequences.cpp">
+      <Filter>Classes\CombinationSequence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -189,6 +192,9 @@
     <Filter Include="Classes\Counts">
       <UniqueIdentifier>{9956999e-d211-497e-922b-ca2cb1c8f3c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\CombinationSequence">
+      <UniqueIdentifier>{a6c43e64-6387-4d16-9f7c-ab2979bb5029}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -259,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="Counts.h">
       <Filter>Classes\Counts</Filter>
+    </ClInclude>
+    <ClInclude Include="CombinationSequences.h">
+      <Filter>Classes\CombinationSequence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

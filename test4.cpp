@@ -7,21 +7,21 @@
 vector<pair<int, int>> CreateTwoCards();
 
 //Lose: 196 (1 opponents)
-//Duration: 0ms
+//Duration: 0.432ms
 //Lose: 160419 (2 opponents)
-//Duration: 0ms
+//Duration: 1.107ms
 //Lose: 59778861 (3 opponents)
-//Duration: 1ms
+//Duration: 0.875ms
 //Lose: 13458144328 (4 opponents)
-//Duration: 25ms
+//Duration: 14.383ms (down from 25ms)
 //Lose: 2048339780657 (5 opponents)
-//Duration: 450ms (364.691ms)
+//Duration: 317.842mss (down from 450ms)
 //Lose: 223478205275433 (6 opponents)
-//Duration: 7478ms (7s)
+//Duration: 6266.72ms (6s down from 7s)
 //Lose: 18084284371723401 (7 opponents)
-//Duration: 103488ms (1.7m)
+//Duration: 95811.6ms (1.6m down from 1.7m)
 //Lose: 1108007012317984113 (8 opponents)
-//Duration: 948550ms (15.8m)
+//Duration: 875165ms (14.5m down from 15.8m)
 void Test4()
 {
 	cout << "Test4: Standard combinations using bitfields and 1-loop parallelization.\n";

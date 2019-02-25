@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Counts.h"
+#include "CombinationSequences.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
@@ -20,25 +21,18 @@ void Test11()
 	for (auto& twoCard : CreateTwoCards())
 		data.push_back((1ull << twoCard.first) | (1ull << twoCard.second));
 
-	auto size = data.size();
+	auto& sequence = CombinationSequences::Get(data.size());
 	auto begin = data.begin();
-	auto countsSize = size * size;
-	cout << "2-loop parallel size: " << countsSize << '\n';
-	vector<Counts> counts(countsSize);
+	cout << "2-loop parallel size: " << sequence.size() << '\n';
+	vector<Counts> counts(sequence.size());
 
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(countsSize), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
 		auto& count = counts[index];
-		auto remainder = index;
-		auto index1 = remainder % size;
-		remainder /= size;
-		auto index2 = remainder % size;
+		auto& p = sequence[index];
+		auto i1 = begin + p.first;
+		auto i2 = begin + p.second;
 
-		auto i1 = begin + index1;
-		auto i2 = begin + index2;
-
-		if (index2 >= index1)
-			return;
 		if ((*i1 & *i2) != 0)
 			return;
 		auto b2 = *i1 | *i2;

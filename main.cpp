@@ -9,6 +9,7 @@
 #include "PreflopOdds.h"
 #include "Timer.h"
 #include "Math.h"
+#include "CombinationSequences.h"
 
 class GamePlayer
 {
@@ -360,6 +361,10 @@ int main(int argc, char** argv)
 {
 	try
 	{
+		Timer timer;
+		CombinationSequences::Get(0);
+		cout << "Initialize combination sequences: " << timer.GetDurationMs() << "ms\n";
+
 		Test4();
 		//Test5();
 		//Test6();
@@ -367,7 +372,7 @@ int main(int argc, char** argv)
 		//Test8();
 		//Test9();
 		//Test10();
-		Test11();	//Current fastest solution
+		//Test11();
 		//Test12();
 		//Test13();
 		//Test14();
