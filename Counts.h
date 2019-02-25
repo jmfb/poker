@@ -19,6 +19,8 @@ public:
 
 	static Counts GetTotal(const vector<Counts>& counts);
 
+	uint128_t GetTotalOverlap(uint128_t remainingCards, uint128_t opponentCards) const;
+
 public:
 	//Max u32 = 4,294,967,295
 	uint32_t count2 = 0; //Max 35,778

@@ -46,6 +46,11 @@ int HoleCards::GetHash() const
 	return card1 * DeckSize + card2;
 }
 
+uint64_t HoleCards::ToBits() const
+{
+	return (1ull << card1) | (1ull << card2);
+}
+
 void HoleCards::SetHash(int value)
 {
 	card1 = value / DeckSize;
@@ -120,4 +125,11 @@ string HoleCards::ToHandString() const
 	if (c1.GetSuit() == c2.GetSuit())
 		return faces + ",suited";
 	return faces + ",offsuit";
+}
+
+vector<uint64_t> ToBits(const vector<HoleCards>& cards)
+{
+	vector<uint64_t> bits(cards.size());
+	transform(cards.begin(), cards.end(), bits.begin(), [](auto hole){ return hole.ToBits(); });
+	return bits;
 }

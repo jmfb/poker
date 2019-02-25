@@ -360,7 +360,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		//Test4();
+		Test4();
 		//Test5();
 		//Test6();
 		//Test7();
@@ -368,8 +368,6 @@ int main(int argc, char** argv)
 		//Test9();
 		//Test10();
 		Test11();	//Current fastest solution
-		Test11();
-		Test11();
 		//Test12();
 		//Test13();
 		//Test14();

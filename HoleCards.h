@@ -20,6 +20,7 @@ public:
 	bool IsValid() const;
 	static int GetHash(int c1, int c2);
 	int GetHash() const;
+	uint64_t ToBits() const;
 	void SetHash(int value);
 	void SetCards(const Card& card1, const Card& card2);
 	int GetCard1() const;
@@ -39,3 +40,5 @@ private:
 	int card1 = 0;
 	int card2 = 1;
 };
+
+vector<uint64_t> ToBits(const vector<HoleCards>& cards);

@@ -34,7 +34,7 @@ void Test4()
 		vector<HoleCards> holes;
 		for (auto& twoCard : twoCards)
 			holes.emplace_back(twoCard.first, twoCard.second);
-		auto overlap = TwoCardOverlap::Compute(holes, 45, opponents);
+		auto overlap = TwoCardOverlap::Compute(ToBits(holes), 45, opponents);
 
 		auto lose = ComputeTotalCombinations(43, 2 * opponents - 2) * static_cast<long long>(twoCards.size()) - overlap;
 		cout << "Lose: " << lose << " (" << opponents << " opponents)\n";
