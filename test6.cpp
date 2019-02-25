@@ -1,24 +1,23 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
-#include "Counter.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
+//Size: 196
+//Count2: 16569
+//Count3: 800361
+//Count4: 24670043
+//Count5: 513145502
+//Duration: 3313.01ms (2433.33ms)
 void Test6()
 {
 	cout << "Test6\n";
 
-	//Size: 196
-	//Count2: 16569
-	//Count3: 800361
-	//Count4: 24670043
-	//Count5: 513145502
-	//Duration: 3313.01ms
-
 	Timer timer;
 	auto twoCards = CreateTwoCards();
-	Counter count2, count3, count4, count5;
+	Counts counts;
 
 	struct row_t
 	{
@@ -65,7 +64,7 @@ void Test6()
 					auto b2 = b1;
 					b2.set(r2.value);
 					b2.set(col2);
-					++count2;
+					++counts.count2;
 					for (auto row3 = row2 + 1; row3 < m.size(); ++row3)
 					{
 						auto& r3 = m[row3];
@@ -78,7 +77,7 @@ void Test6()
 							auto b3 = b2;
 							b3.set(r3.value);
 							b3.set(col3);
-							++count3;
+							++counts.count3;
 							for (auto row4 = row3 + 1; row4 < m.size(); ++row4)
 							{
 								auto& r4 = m[row4];
@@ -91,7 +90,7 @@ void Test6()
 									auto b4 = b3;
 									b4.set(r4.value);
 									b4.set(col4);
-									++count4;
+									++counts.count4;
 									for (auto row5 = row4 + 1; row5 < m.size(); ++row5)
 									{
 										auto& r5 = m[row5];
@@ -101,7 +100,7 @@ void Test6()
 										{
 											if (b4.test(col5))
 												continue;
-											++count5;
+											++counts.count5;
 										}
 									}
 								}
@@ -114,10 +113,7 @@ void Test6()
 	}
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2.Get() << '\n';
-	cout << "Count3: " << count3.Get() << '\n';
-	cout << "Count4: " << count4.Get() << '\n';
-	cout << "Count5: " << count5.Get() << '\n';
+	counts.Dump();
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }

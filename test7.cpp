@@ -1,20 +1,19 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
-#include "Counter.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
+//Size: 196
+//Count2: 16569
+//Count3: 800361
+//Count4: 24670043
+//Count5: 513145502
+//Duration: 1607.49ms (1677.72ms)
 void Test7()
 {
 	cout << "Test7\n";
-
-	//Size: 196
-	//Count2: 16569
-	//Count3: 800361
-	//Count4: 24670043
-	//Count5: 513145502
-	//Duration: 1607.49ms
 
 	Timer timer;
 	auto twoCards = CreateTwoCards();
@@ -23,7 +22,7 @@ void Test7()
 	{
 		int value;
 		vector<int> columns;
-		Counter count2, count3, count4, count5;
+		Counts counts;
 	};
 	using matrix_t = vector<row_t>;
 	map<int, int> rowIndexByValue;
@@ -34,7 +33,7 @@ void Test7()
 		if (iter == rowIndexByValue.end())
 		{
 			rowIndexByValue.emplace(twoCard.first, static_cast<int>(m.size()));
-			m.push_back({ twoCard.first, { twoCard.second }, {}, {}, {}, {} });
+			m.push_back({ twoCard.first, { twoCard.second }, {} });
 		}
 		else
 			m[iter->second].columns.push_back(twoCard.second);
@@ -67,7 +66,7 @@ void Test7()
 					auto b2 = b1;
 					b2.set(r2.value);
 					b2.set(col2);
-					++r1.count2;
+					++r1.counts.count2;
 					for (auto row3 = row2 + 1; row3 < m.size(); ++row3)
 					{
 						auto& r3 = m[row3];
@@ -80,7 +79,7 @@ void Test7()
 							auto b3 = b2;
 							b3.set(r3.value);
 							b3.set(col3);
-							++r1.count3;
+							++r1.counts.count3;
 							for (auto row4 = row3 + 1; row4 < m.size(); ++row4)
 							{
 								auto& r4 = m[row4];
@@ -93,7 +92,7 @@ void Test7()
 									auto b4 = b3;
 									b4.set(r4.value);
 									b4.set(col4);
-									++r1.count4;
+									++r1.counts.count4;
 									for (auto row5 = row4 + 1; row5 < m.size(); ++row5)
 									{
 										auto& r5 = m[row5];
@@ -103,7 +102,7 @@ void Test7()
 										{
 											if (b4.test(col5))
 												continue;
-											++r1.count5;
+											++r1.counts.count5;
 										}
 									}
 								}
@@ -115,20 +114,12 @@ void Test7()
 		}
 	});
 
-	Counter count2, count3, count4, count5;
+	Counts total;
 	for (auto& r : m)
-	{
-		count2 += r.count2;
-		count3 += r.count3;
-		count4 += r.count4;
-		count5 += r.count5;
-	}
+		total += r.counts;
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2.Get() << '\n';
-	cout << "Count3: " << count3.Get() << '\n';
-	cout << "Count4: " << count4.Get() << '\n';
-	cout << "Count5: " << count5.Get() << '\n';
+	total.Dump();
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }

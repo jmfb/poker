@@ -1,21 +1,23 @@
 #include "pch.h"
 #include "Timer.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
+//Copy to device: 1.007ms
+//Compilation: 492.443ms
+//Execute duration: 3710.78ms
+//Copy to host: 99.36ms
+//Sum: 1.996ms
+//Size: 196
+//Count2: 16569
+//Count3: 800361
+//Count4: 24670043
+//Count5: 513145502
 void Test8()
 {
 	cout << "Test8\n";
-	//Execute duration: 3689.61ms
-	//Size: 196
-	//Count2: 16569
-	//Count3: 800361
-	//Count4: 24670043
-	//Count5: 513145502
-	//Duration: 3932.67ms
-	//Sum Duration: 16.744ms
 
-	Timer timer;
 	auto twoCards = CreateTwoCards();
 
 	struct row_t
@@ -48,11 +50,7 @@ void Test8()
 	auto rowSize = static_cast<int>(m.size());
 	auto colSize = m[0].colCount;
 	auto countSize = rowSize * rowSize * colSize * colSize;
-	struct counts_t
-	{
-		unsigned long long count2 = 0, count3 = 0, count4 = 0, count5 = 0;
-	};
-	vector<counts_t> counts(countSize);
+	vector<Counts> counts(countSize);
 
 	const char* source = R"(
 struct row_t
@@ -63,7 +61,8 @@ struct row_t
 };
 struct counts_t
 {
-	unsigned long count2, count3, count4, count5;
+	unsigned int count2, count3, count4;
+	unsigned long count5, count6, count7, count8;
 };
 __kernel void test(__global struct row_t* m, __global struct counts_t* c, int rowSize, int colSize)
 {
@@ -140,40 +139,33 @@ __kernel void test(__global struct row_t* m, __global struct counts_t* c, int ro
 	compute::context deviceContext{ device };
 	compute::command_queue commandQueue{ deviceContext, device };
 
+	Timer copyToDevice;
 	compute::vector<row_t> mDevice{ m.size(), deviceContext };
 	compute::copy(m.begin(), m.end(), mDevice.begin(), commandQueue);
+	cout << "Copy to device: " << copyToDevice.GetDurationMs() << "ms\n";
 
-	compute::vector<counts_t> countsDevice{ counts.size(), deviceContext };
-	compute::copy(counts.begin(), counts.end(), countsDevice.begin(), commandQueue);
+	compute::vector<Counts> countsDevice{ counts.size(), deviceContext };
 
+	Timer compileTimer;
 	auto program = compute::program::build_with_source(source, deviceContext);
 	auto kernel = program.create_kernel("test");
 	kernel.set_args(mDevice.get_buffer(), countsDevice.get_buffer(), rowSize, colSize);
+	cout << "Compilation: " << compileTimer.GetDurationMs() << "ms\n";
 
 	Timer executeTimer;
 	commandQueue.enqueue_1d_range_kernel(kernel, 0, countSize, 0);
 	commandQueue.finish();
 	cout << "Execute duration: " << executeTimer.GetDurationMs() << "ms\n";
 
+	Timer copyToHostTimer;
 	compute::copy(countsDevice.begin(), countsDevice.end(), counts.begin(), commandQueue);
+	cout << "Copy to host: " << copyToHostTimer.GetDurationMs() << "ms\n";
 
 	Timer sumTimer;
-
-	uint128_t count2 = 0, count3 = 0, count4 = 0, count5 = 0;
-	for (auto& count : counts)
-	{
-		count2 += count.count2;
-		count3 += count.count3;
-		count4 += count.count4;
-		count5 += count.count5;
-	}
+	auto total = Counts::GetTotal(counts);
+	cout << "Sum: " << sumTimer.GetDurationMs() << "ms\n";
 
 	cout << "Size: " << twoCards.size() << '\n';
-	cout << "Count2: " << count2 << '\n';
-	cout << "Count3: " << count3 << '\n';
-	cout << "Count4: " << count4 << '\n';
-	cout << "Count5: " << count5 << '\n';
-	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
-	cout << "Sum Duration: " << sumTimer.GetDurationMs() << "ms\n";
+	total.Dump();
 	cout << '\n';
 }

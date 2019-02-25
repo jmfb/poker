@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "Timer.h"
-#include "OpenClCounter.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
+//NOTE: Does not complete on laptop (but does on dekstop)
 void Test12()
 {
-	cout << "Test12: 128-bit increment in OpenCL.\n";
+	cout << "Test12: Increment in OpenCL.\n";
 
 	vector<uint64_t> data;
 	for (auto& twoCard : CreateTwoCards())
@@ -17,10 +18,11 @@ void Test12()
 	auto context = compute::context{ device };
 	auto commandQueue = compute::command_queue{ context, device };
 
-	auto source = OpenClCounter::GetSource() + R"(
+	auto source = R"(
 struct counts_t
 {
-	struct uint128_t count2, count3, count4, count5;
+	unsigned int count2, count3, count4;
+	unsigned long count5, count6, count7, count8;
 };
 __kernel void test(__global unsigned long* data, __global struct counts_t* counts, unsigned long size)
 {
@@ -44,61 +46,42 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	unsigned long index3 = remainder % size;
 
 	if (index3 == 0)
-		increment(&count->count2);
+		++count->count2;
 	if (index3 >= index2)
 		return;
 	__global unsigned long* i3 = data + index3;
 	if ((b2 & *i3) != 0)
 		return;
 	unsigned long b3 = b2 | *i3;
-	increment(&count->count3);
+	++count->count3;
 
 	for (__global unsigned long* i4 = data; i4 != i3; ++i4)
 	{
 		if ((b3 & *i4) != 0)
 			continue;
 		unsigned long b4 = b3 | *i4;
-		increment(&count->count4);
+		++count->count4;
 		for (__global unsigned long* i5 = data; i5 != i4; ++i5)
 		{
 			if ((b4 & *i5) != 0)
 				continue;
-			increment(&count->count5);
+			++count->count5;
 		}
 	}
 }
 	)";
 
-	struct counts_t
-	{
-		OpenClCounter count2, count3, count4, count5;
-		counts_t& operator+=(const counts_t& rhs)
-		{
-			count2 += rhs.count2;
-			count3 += rhs.count3;
-			count4 += rhs.count4;
-			count5 += rhs.count5;
-			return *this;
-		}
-		counts_t operator+(const counts_t& rhs) const
-		{
-			auto result{ *this };
-			result += rhs;
-			return result;
-		}
-	};
-
 	auto size = data.size();
 	auto countsSize = size * size * size;
 	cout << "Count Size: " << countsSize << '\n';
-	vector<counts_t> counts(countsSize);
+	vector<Counts> counts(countsSize);
 	
 	Timer copyToDeviceTimer;
 	compute::vector<uint64_t> deviceData(data.size(), context);
 	compute::copy(data.begin(), data.end(), deviceData.begin(), commandQueue);
 	cout << "Copy to device: " << copyToDeviceTimer.GetDurationMs() << "ms\n";
 
-	compute::vector<uint32_t> deviceCounts(counts.size() * 4 * 4, context);
+	compute::vector<Counts> deviceCounts(counts.size(), context);
 
 	Timer compileTimer;
 	auto program = compute::program::build_with_source(source, context);
@@ -109,19 +92,14 @@ __kernel void test(__global unsigned long* data, __global struct counts_t* count
 	Timer timer;
 	commandQueue.enqueue_1d_range_kernel(kernel, 0, countsSize, 1);
 	commandQueue.finish();
-	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
+	cout << "Execution: " << timer.GetDurationMs() << "ms\n";
 
 	Timer copyToHostTimer;
-	compute::copy(deviceCounts.begin(), deviceCounts.end(), reinterpret_cast<uint32_t*>(counts.data()), commandQueue);
+	compute::copy(deviceCounts.begin(), deviceCounts.end(), counts.begin(), commandQueue);
 	cout << "Copy to host: " << copyToHostTimer.GetDurationMs() << "ms\n";
 
 	Timer sumTimer;
-	auto total = reduce(execution::par_unseq, counts.begin(), counts.end(), counts_t{}, [](auto lhs, auto rhs){ return lhs + rhs; });
+	Counts::GetTotal(counts).Dump();
 	cout << "Sum: " << sumTimer.GetDurationMs() << "ms\n";
-
-	cout << "Count2: " << total.count2.Get() << '\n';
-	cout << "Count3: " << total.count3.Get() << '\n';
-	cout << "Count4: " << total.count4.Get() << '\n';
-	cout << "Count5: " << total.count5.Get() << '\n';
 	cout << '\n';
 }

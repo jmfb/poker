@@ -8,6 +8,7 @@
 #include "HandValue.h"
 #include "PreflopOdds.h"
 #include "Timer.h"
+#include "Math.h"
 
 class GamePlayer
 {
@@ -367,9 +368,11 @@ int main(int argc, char** argv)
 		//Test9();
 		//Test10();
 		Test11();	//Current fastest solution
+		Test11();
+		Test11();
 		//Test12();
 		//Test13();
-		Test14();
+		//Test14();
 		return 0;
 
 		AllHands allHands;

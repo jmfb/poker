@@ -152,6 +152,7 @@
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardSet.cpp" />
     <ClCompile Include="Counter.cpp" />
+    <ClCompile Include="Counts.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="Hand.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardSet.h" />
     <ClInclude Include="Counter.h" />
+    <ClInclude Include="Counts.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Face.h" />
     <ClInclude Include="Hand.h" />

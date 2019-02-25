@@ -1,9 +1,16 @@
 #include "pch.h"
 #include "Timer.h"
-#include "Counter.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
+//3-loop parallel size: 7529536
+//Duration: 455.425ms
+//Count2: 16569
+//Count3: 800361
+//Count4: 24670043
+//Count5: 513145502
+//Sum: 24.181ms
 void Test14()
 {
 	Timer timer;
@@ -13,36 +20,11 @@ void Test14()
 	for (auto& twoCard : CreateTwoCards())
 		data.push_back((1ull << twoCard.first) | (1ull << twoCard.second));
 
-	struct counts_t
-	{
-		Counter count2, count3, count4, count5;
-		counts_t& operator+=(const counts_t& rhs)
-		{
-			count2 += rhs.count2;
-			count3 += rhs.count3;
-			count4 += rhs.count4;
-			count5 += rhs.count5;
-			return *this;
-		}
-		counts_t operator+(const counts_t& rhs) const
-		{
-			counts_t result{ *this };
-			result += rhs;
-			return result;
-		}
-		void Dump() const
-		{
-			cout << "Count2: " << count2.Get() << '\n';
-			cout << "Count3: " << count3.Get() << '\n';
-			cout << "Count4: " << count4.Get() << '\n';
-			cout << "Count5: " << count5.Get() << '\n';
-		}
-	};
 	auto size = data.size();
 	auto begin = data.begin();
 	auto countsSize = size * size * size;
 	cout << "3-loop parallel size: " << countsSize << '\n';
-	vector<counts_t> counts(countsSize);
+	vector<Counts> counts(countsSize);
 
 	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(countsSize), [&](uint64_t reverseIndex)
 	{
@@ -88,12 +70,10 @@ void Test14()
 			}
 		}
 	});
-
-	reduce(execution::par_unseq, counts.begin(), counts.end(), counts_t{}, [](auto lhs, auto rhs)
-	{
-		return lhs + rhs;
-	}).Dump();
-
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
+
+	Timer sumTimer;
+	Counts::GetTotal(counts).Dump();
+	cout << "Sum: " << sumTimer.GetDurationMs() << "ms\n";
 	cout << '\n';
 }

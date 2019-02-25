@@ -1,39 +1,11 @@
 #include "pch.h"
 #include "Timer.h"
 #include "Deck.h"
-#include "Counter.h"
+#include "Counts.h"
 
 vector<pair<int, int>> CreateTwoCards();
 
 const auto MaxByte = numeric_limits<uint8_t>::max();
-
-struct Counts
-{
-	Counter count1;
-	Counter count2;
-	Counter count3;
-	Counter count4;
-	Counter count5;
-
-	Counts& operator+=(const Counts& rhs)
-	{
-		count1 += rhs.count1;
-		count2 += rhs.count2;
-		count3 += rhs.count3;
-		count4 += rhs.count4;
-		count5 += rhs.count5;
-		return *this;
-	}
-
-	void Dump()
-	{
-		cout << "Count1: " << count1.Get() << '\n';
-		cout << "Count2: " << count2.Get() << '\n';
-		cout << "Count3: " << count3.Get() << '\n';
-		cout << "Count4: " << count4.Get() << '\n';
-		cout << "Count5: " << count5.Get() << '\n';
-	}
-};
 
 class Column
 {
@@ -249,7 +221,6 @@ public:
 			{
 				auto& c1 = r1[col1];
 				auto b1 = r1.GetBit() | c1.GetBit();
-				++counts.count1;
 				for (auto row2 = row1 + 1; row2 < size; ++row2)
 				{
 					auto& r2 = rows[row2];
@@ -330,10 +301,7 @@ public:
 			//Count1
 			auto r1 = rows[row1];
 			if (row2 == 0 && row3 == 0 && row4 == 0)
-			{
-				count.count1 += rows[row1].GetColumnCount();
 				return;
-			}
 			
 			//Count2
 			if (row2 <= row1)
@@ -437,10 +405,7 @@ public:
 				}
 			}
 		});
-		Counts total;
-		for (auto& count : counts)
-			total += count;
-		return total;
+		return Counts::GetTotal(counts);
 	}
 
 private:
@@ -468,14 +433,13 @@ void Test9()
 	cout << "Create duration: " << createTimer.GetDurationMs() << "ms\n";
 	cout << '\n';
 
-
 	//Counting in series (single-threaded):
 	//Count1: 196
 	//Count2: 16569
 	//Count3: 800361
 	//Count4: 24670043
 	//Count5: 513145502
-	//Duration: 2434.7ms
+	//Duration: 2434.7ms (2051.4ms)
 	Timer seriesTimer;
 	cout << "Counting in series (single-threaded):\n";
 	auto countsSeries = m.GetCounts();
@@ -489,7 +453,7 @@ void Test9()
 	//Count3: 800361
 	//Count4: 24670043
 	//Count5: 513145502
-	//Duration: 856.33ms
+	//Duration: 856.33ms (442.536ms)
 	Timer parallelTimer;
 	cout << "Counting in parallel (unwrapping 4 row loops):\n";
 	auto countsParallel = m.GetCountsParallelRows4();

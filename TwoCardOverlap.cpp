@@ -14,59 +14,53 @@ uint64_t TwoCardOverlap::GetBits() const
 
 void TwoCardOverlap::AddCount2()
 {
-	++count2;
+	++counts.count2;
 }
 
 void TwoCardOverlap::AddCount3()
 {
-	++count3;
+	++counts.count3;
 }
 
 void TwoCardOverlap::AddCount4()
 {
-	++count4;
+	++counts.count4;
 }
 
 void TwoCardOverlap::AddCount5()
 {
-	++count5;
+	++counts.count5;
 }
 
 void TwoCardOverlap::AddCount6()
 {
-	++count6;
+	++counts.count6;
 }
 
 void TwoCardOverlap::AddCount7()
 {
-	++count7;
+	++counts.count7;
 }
 
 void TwoCardOverlap::AddCount8()
 {
-	++count8;
+	++counts.count8;
 }
 
 uint128_t TwoCardOverlap::GetTotalOverlap(uint128_t remainingCards, uint128_t opponentCards) const
 {
-	return count2.Get() * ComputeTotalCombinations(remainingCards, opponentCards) -
-		count3.Get() * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
-		count4.Get() * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
-		count5.Get() * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6) +
-		count6.Get() * ComputeTotalCombinations(remainingCards - 8, opponentCards - 8) -
-		count7.Get() * ComputeTotalCombinations(remainingCards - 10, opponentCards - 10) +
-		count8.Get() * ComputeTotalCombinations(remainingCards - 12, opponentCards - 12);
+	return counts.count2 * ComputeTotalCombinations(remainingCards, opponentCards) -
+		counts.count3 * ComputeTotalCombinations(remainingCards - 2, opponentCards - 2) +
+		counts.count4 * ComputeTotalCombinations(remainingCards - 4, opponentCards - 4) -
+		counts.count5 * ComputeTotalCombinations(remainingCards - 6, opponentCards - 6) +
+		counts.count6 * ComputeTotalCombinations(remainingCards - 8, opponentCards - 8) -
+		counts.count7 * ComputeTotalCombinations(remainingCards - 10, opponentCards - 10) +
+		counts.count8 * ComputeTotalCombinations(remainingCards - 12, opponentCards - 12);
 }
 
 TwoCardOverlap& TwoCardOverlap::operator+=(const TwoCardOverlap& rhs)
 {
-	count2 += rhs.count2;
-	count3 += rhs.count3;
-	count4 += rhs.count4;
-	count5 += rhs.count5;
-	count6 += rhs.count6;
-	count7 += rhs.count7;
-	count8 += rhs.count8;
+	counts += rhs.counts;
 	return *this;
 }
 

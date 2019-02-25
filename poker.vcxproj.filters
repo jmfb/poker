@@ -106,6 +106,9 @@
     <ClCompile Include="OpenClCounter.cpp">
       <Filter>Classes\OpenClInt128</Filter>
     </ClCompile>
+    <ClCompile Include="Counts.cpp">
+      <Filter>Classes\Counts</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -183,6 +186,9 @@
     <Filter Include="Classes\Counter">
       <UniqueIdentifier>{bfd8f0cf-e298-43d7-8350-119f1c90b1e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Counts">
+      <UniqueIdentifier>{9956999e-d211-497e-922b-ca2cb1c8f3c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -250,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="OpenClCounter.h">
       <Filter>Classes\OpenClInt128</Filter>
+    </ClInclude>
+    <ClInclude Include="Counts.h">
+      <Filter>Classes\Counts</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,6 @@
 #pragma once
 #include "HoleCards.h"
-#include "Counter.h"
+#include "Counts.h"
 
 class TwoCardOverlap
 {
@@ -41,11 +41,5 @@ private:
 
 private:
 	uint64_t bits = 0;
-	Counter count2;
-	Counter count3;
-	Counter count4;
-	Counter count5;
-	Counter count6;
-	Counter count7;
-	Counter count8;
+	Counts counts;
 };
