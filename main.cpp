@@ -365,7 +365,9 @@ int main(int argc, char** argv)
 		CombinationSequences::Get(0);
 		cout << "Initialize combination sequences: " << timer.GetDurationMs() << "ms\n";
 
-		Test4();
+		LargeOddsComputer::Compute(argc, argv);
+
+		//Test4();
 		//Test5();
 		//Test6();
 		//Test7();
