@@ -48,7 +48,7 @@ LargeOdds LargeOddsComputer::ComputeCommunity(
 	auto winOrDraw = ComputeTotalCombinations(cards.GetSize(), opponentCards) -
 		ComputeTotalCombinations(cards.GetSize() - 2, opponentCards - 2) * static_cast<long long>(twoCards.size());
 	auto totalOverlap = TwoCardOverlap::Compute(twoCards, cards.GetSize(), opponents);
-	auto largeOdds = LargeOdds::Create(winOrDraw, opponents);
+	auto largeOdds = LargeOdds::Create(winOrDraw + totalOverlap, opponents);
 	cache.emplace(hash, largeOdds);
 	AddSuitCombinations(hole, c1, c2, c3, c4, c5, largeOdds);
 	return largeOdds;
