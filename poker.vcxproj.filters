@@ -112,6 +112,9 @@
     <ClCompile Include="CombinationSequences.cpp">
       <Filter>Classes\CombinationSequence</Filter>
     </ClCompile>
+    <ClCompile Include="test15.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

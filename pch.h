@@ -34,6 +34,9 @@ namespace compute = boost::compute;
 #include <boost/iterator/counting_iterator.hpp>
 using boost::iterators::make_counting_iterator;
 
+#include <boost/dynamic_bitset.hpp>
+using dynamic_bitset = boost::dynamic_bitset<>;
+
 #pragma comment(lib, "OpenCL.lib")
 
 #include <intrin.h>
