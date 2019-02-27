@@ -3,6 +3,13 @@
 #include "Counts.h"
 #include "Timer.h"
 
+//Duration: 1473.24ms
+//Count1: 196
+//Count2: 16569
+//Count3: 1253794
+//Count4: 82408790
+//Count5: 5021768178
+
 class Bitset
 {
 public:
