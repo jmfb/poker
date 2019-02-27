@@ -175,13 +175,17 @@ void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, 
 }
 
 //About 10hours to compute odds for a given opponent spread
-void LargeOddsComputer::Compute(int opponents)
+void LargeOddsComputer::Compute(int opponents, int startAt)
 {
+	auto skip = startAt;
 	AllHands allHands;
-	ofstream out{ to_string(opponents) + "-opponent-odds.txt" };
+	ofstream out{ to_string(opponents) + "-opponent-odds.txt", startAt == 0 ? ios::ate : ios::app };
 	for (auto f1 = 0; f1 < FaceCount; ++f1)
 		for (auto f2 = 0; f2 < FaceCount; ++f2)
-			Compute(out, allHands, f1, f2, opponents);
+			if (skip > 0)
+				--skip;
+			else
+				Compute(out, allHands, f1, f2, opponents);
 }
 
 int LargeOddsComputer::Compute(int argc, char** argv)
@@ -199,7 +203,16 @@ int LargeOddsComputer::Compute(int argc, char** argv)
 		return -1;
 	}
 
-	Compute(opponents);
+	auto startAt = 0;
+	if (argc > 2)
+		startAt = stoi(argv[2]);
+	if (startAt < 0 || startAt > 168)
+	{
+		cout << "Please enter a starting hand between 0 and 168.\n";
+		return -1;
+	}
+
+	Compute(opponents, startAt);
 	return 0;
 }
 
