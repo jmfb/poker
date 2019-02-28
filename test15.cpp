@@ -3,12 +3,12 @@
 #include "Counts.h"
 #include "Timer.h"
 
-//Duration: 1473.24ms
+//Duration: 159.747ms
 //Count1: 196
 //Count2: 16569
-//Count3: 1253794
-//Count4: 82408790
-//Count5: 5021768178
+//Count3: 800361
+//Count4: 24670043
+//Count5: 513145502
 
 class Bitset
 {
@@ -47,7 +47,7 @@ public:
 
 	unsigned long CountLeadingZeros(unsigned long start = 0) const
 	{
-		unsigned long offset = 0;
+		unsigned long offset = (start / 64) * 64;
 		for (auto index = start / 64; index < data.size(); ++index, offset += 64)
 			if (data[index] != 0)
 				return offset + BitScan(data[index]);
@@ -96,52 +96,50 @@ void Test15()
 	for (auto& twoCard : CreateTwoCards())
 		data.push_back((1ull << twoCard.first) | (1ull << twoCard.second));
 
-	Counts counts;
 	vector<Bitset> m(data.size());
 	for (auto x = 0; x < (data.size() - 1); ++x)
 		for (auto y = x + 1; y < data.size(); ++y)
 			if ((data[x] & data[y]) == 0)
 				m[x].Set(y);
 
-	Bitset r1, r2, r3, r4;
-	unsigned long i2 = 0, i3 = 0, i4 = 0;
-	uint64_t c2 = 0, c3 = 0, c4 = 0;
-	for (auto i1 = 0; i1 < (m.size() - 1); ++i1)
+	vector<Counts> counts(data.size());
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() - 1), [&](uint64_t i1)
 	{
-		r1 = m[i1];
-		c2 = r1.Count();
+		auto& count = counts[i1];
+		auto r1 = m[i1];
+		auto c2 = r1.Count();
 		if (c2 == 0)
-			continue;
-		counts.count2 += static_cast<uint32_t>(c2);
-		for (i2 = i1; c2--; )
+			return;
+		count.count2 += static_cast<uint32_t>(c2);
+		for (auto i2 = i1; c2--; )
 		{
 			i2 = r1.CountLeadingZeros(i2 + 1);
 			r1.Set(i2, false);
-			r2 = r1 & m[i2];
-			c3 = r2.Count();
+			auto r2 = r1 & m[i2];
+			auto c3 = r2.Count();
 			if (c3 == 0)
 				continue;
-			counts.count3 += static_cast<uint32_t>(c3);
-			for (i3 = i2; c3--; )
+			count.count3 += static_cast<uint32_t>(c3);
+			for (auto i3 = i2; c3--; )
 			{
 				i3 = r2.CountLeadingZeros(i3 + 1);
 				r2.Set(i3, false);
-				r3 = r2 & m[i3];
-				c4 = r3.Count();
+				auto r3 = r2 & m[i3];
+				auto c4 = r3.Count();
 				if (c4 == 0)
 					continue;
-				counts.count4 += static_cast<uint32_t>(c4);
-				for (i4 = i3; c4--; )
+				count.count4 += static_cast<uint32_t>(c4);
+				for (auto i4 = i3; c4--; )
 				{
 					i4 = r3.CountLeadingZeros(i4 + 1);
 					r3.Set(i4, false);
-					counts.count5 += (r3 & m[i4]).Count();
+					count.count5 += (r3 & m[i4]).Count();
 				}
 			}
 		}
-	}
+	});
 
 	cout << "Duration: " << timer.GetDurationMs() << "ms\n";
-	cout << "Count1: " << data.size() << '\n';
-	counts.Dump();
+	cout << "Count1: " << m.size() << '\n';
+	Counts::GetTotal(counts).Dump();
 }
