@@ -1,6 +1,6 @@
 #pragma once
 
-using CombinationSequence = vector<pair<uint64_t, uint64_t>>;
+using CombinationSequence = vector<pair<uint32_t, uint32_t>>;
 
 class CombinationSequences
 {
@@ -18,5 +18,5 @@ public:
 	static const CombinationSequence& Get(uint64_t n);
 
 private:
-	vector<vector<pair<uint64_t, uint64_t>>> sequences;
+	vector<CombinationSequence> sequences;
 };

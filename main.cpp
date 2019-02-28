@@ -363,9 +363,9 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		//Timer timer;
-		//CombinationSequences::Get(0);
-		//cout << "Initialize combination sequences: " << timer.GetDurationMs() << "ms\n";
+		Timer sequenceTimer;
+		CombinationSequences::Get(0);
+		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";
 
 		LargeOddsComputer::Compute(argc, argv);
 

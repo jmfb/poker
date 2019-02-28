@@ -2,6 +2,7 @@
 #include "HoleCards.h"
 #include "Counts.h"
 #include "Bitset.h"
+#include "CombinationSequences.h"
 
 class TwoCardOverlap
 {
@@ -11,9 +12,9 @@ public:
 private:
 	static void Compute2(const vector<Bitset>& m, vector<Counts>& counts);
 	static void Compute3(const vector<Bitset>& m, vector<Counts>& counts);
-	static void Compute4(const vector<Bitset>& m, vector<Counts>& counts);
-	static void Compute5(const vector<Bitset>& m, vector<Counts>& counts);
-	static void Compute6(const vector<Bitset>& m, vector<Counts>& counts);
-	static void Compute7(const vector<Bitset>& m, vector<Counts>& counts);
-	static void Compute8(const vector<Bitset>& m, vector<Counts>& counts);
+	static void Compute4(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence);
+	static void Compute5(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence);
+	static void Compute6(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence);
+	static void Compute7(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence);
+	static void Compute8(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence);
 };
