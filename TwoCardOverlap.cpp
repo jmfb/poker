@@ -48,7 +48,7 @@ void TwoCardOverlap::Compute2(const vector<Bitset>& m, vector<Counts>& counts)
 {
 	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() - 1), [&](uint64_t index)
 	{
-		counts[index].count2 = m[index].Count();
+		counts[index].count2 = static_cast<uint32_t>(m[index].Count());
 	});
 }
 
