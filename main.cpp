@@ -357,6 +357,7 @@ void Test12();
 void Test13();
 void Test14();
 void Test15();
+void Test16();
 
 int main(int argc, char** argv)
 {
@@ -366,7 +367,7 @@ int main(int argc, char** argv)
 		//CombinationSequences::Get(0);
 		//cout << "Initialize combination sequences: " << timer.GetDurationMs() << "ms\n";
 
-		LargeOddsComputer::Compute(argc, argv);
+		//LargeOddsComputer::Compute(argc, argv);
 
 		//Test4();
 		//Test5();
@@ -380,6 +381,7 @@ int main(int argc, char** argv)
 		//Test13();
 		//Test14();
 		//Test15();
+		Test16();
 		return 0;
 
 		AllHands allHands;

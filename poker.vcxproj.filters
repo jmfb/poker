@@ -118,6 +118,9 @@
     <ClCompile Include="Bitset.cpp">
       <Filter>Classes\Bitset</Filter>
     </ClCompile>
+    <ClCompile Include="test16.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
