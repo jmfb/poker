@@ -115,6 +115,9 @@
     <ClCompile Include="test15.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="Bitset.cpp">
+      <Filter>Classes\Bitset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -198,6 +201,9 @@
     <Filter Include="Classes\CombinationSequence">
       <UniqueIdentifier>{a6c43e64-6387-4d16-9f7c-ab2979bb5029}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Bitset">
+      <UniqueIdentifier>{1e9279b0-b647-49ae-a98f-7ae74f060378}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -271,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="CombinationSequences.h">
       <Filter>Classes\CombinationSequence</Filter>
+    </ClInclude>
+    <ClInclude Include="Bitset.h">
+      <Filter>Classes\Bitset</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
