@@ -9,8 +9,8 @@ CombinationSequences::CombinationSequences()
 	{
 		auto size = (n * (n - 1)) / 2;
 		auto& sequence = sequences[n];
-		for (auto i1 = 0; i1 < (n - 1); ++i1)
-			sequence.emplace_back(i1 + 1, 0);
+		for (auto i2 = 1; i2 < n; ++i2)
+			sequence.emplace_back(0, i2);
 		for (auto p : sequences[n - 1])
 			sequence.emplace_back(p.first + 1, p.second + 1);
 	}

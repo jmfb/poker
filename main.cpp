@@ -346,41 +346,19 @@ void ComputeMaxTwoCardLossCount()
 }
 
 void Test4();
-void Test5();
-void Test6();
-void Test7();
-void Test8();
-void Test9();
-void Test10();
-void Test11();
-void Test12();
-void Test13();
-void Test14();
-void Test15();
 void Test16();
 
 int main(int argc, char** argv)
 {
 	try
 	{
-		//Timer timer;
-		//CombinationSequences::Get(0);
-		//cout << "Initialize combination sequences: " << timer.GetDurationMs() << "ms\n";
+		Timer sequenceTimer;
+		CombinationSequences::Get(0);
+		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";
 
 		LargeOddsComputer::Compute(argc, argv);
 
 		//Test4();
-		//Test5();
-		//Test6();
-		//Test7();
-		//Test8();
-		//Test9();
-		//Test10();
-		//Test11();
-		//Test12();
-		//Test13();
-		//Test14();
-		//Test15();
 		//Test16();
 		return 0;
 

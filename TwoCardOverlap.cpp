@@ -2,6 +2,7 @@
 #include "TwoCardOverlap.h"
 #include "Math.h"
 
+
 uint128_t TwoCardOverlap::Compute(const vector<uint64_t>& twoCards, int remaining, int opponents)
 {
 	if (opponents == 1 || twoCards.empty())
@@ -13,7 +14,8 @@ uint128_t TwoCardOverlap::Compute(const vector<uint64_t>& twoCards, int remainin
 			if ((twoCards[row] & twoCards[column]) == 0)
 				m[row].Set(column);
 
-	vector<Counts> counts(opponents < 4 ? m.size() - 1 : m.size() * m.size());
+	auto& sequence = CombinationSequences::Get(m.size());
+	vector<Counts> counts(opponents < 4 ? m.size() - 1 : sequence.size());
 	switch (opponents)
 	{
 	case 2:
@@ -23,19 +25,19 @@ uint128_t TwoCardOverlap::Compute(const vector<uint64_t>& twoCards, int remainin
 		Compute3(m, counts);
 		break;
 	case 4:
-		Compute4(m, counts);
+		Compute4(m, counts, sequence);
 		break;
 	case 5:
-		Compute5(m, counts);
+		Compute5(m, counts, sequence);
 		break;
 	case 6:
-		Compute6(m, counts);
+		Compute6(m, counts, sequence);
 		break;
 	case 7:
-		Compute7(m, counts);
+		Compute7(m, counts, sequence);
 		break;
 	case 8:
-		Compute8(m, counts);
+		Compute8(m, counts, sequence);
 		break;
 	default:
 		throw runtime_error{ "Unsupported number of opponents: " + to_string(opponents) };
@@ -46,7 +48,7 @@ uint128_t TwoCardOverlap::Compute(const vector<uint64_t>& twoCards, int remainin
 
 void TwoCardOverlap::Compute2(const vector<Bitset>& m, vector<Counts>& counts)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() - 1), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(counts.size()), [&](uint64_t index)
 	{
 		counts[index].count2 = static_cast<uint32_t>(m[index].Count());
 	});
@@ -54,7 +56,7 @@ void TwoCardOverlap::Compute2(const vector<Bitset>& m, vector<Counts>& counts)
 
 void TwoCardOverlap::Compute3(const vector<Bitset>& m, vector<Counts>& counts)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() - 1), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(counts.size()), [&](uint64_t index)
 	{
 		auto i1 = static_cast<uint32_t>(index);
 		auto& count = counts[i1];
@@ -72,14 +74,13 @@ void TwoCardOverlap::Compute3(const vector<Bitset>& m, vector<Counts>& counts)
 	});
 }
 
-void TwoCardOverlap::Compute4(const vector<Bitset>& m, vector<Counts>& counts)
+void TwoCardOverlap::Compute4(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() * m.size()), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
-		auto i1 = static_cast<uint32_t>(index % m.size());
-		auto i2 = static_cast<uint32_t>(index / m.size());
-		if (i2 <= i1)
-			return;
+		auto& p = sequence[index];
+		auto i1 = p.first;
+		auto i2 = p.second;
 		auto& count = counts[index];
 		auto& r1 = m[i1];
 		if (!r1[i2])
@@ -99,14 +100,13 @@ void TwoCardOverlap::Compute4(const vector<Bitset>& m, vector<Counts>& counts)
 	});
 }
 
-void TwoCardOverlap::Compute5(const vector<Bitset>& m, vector<Counts>& counts)
+void TwoCardOverlap::Compute5(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() * m.size()), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
-		auto i1 = static_cast<uint32_t>(index % m.size());
-		auto i2 = static_cast<uint32_t>(index / m.size());
-		if (i2 <= i1)
-			return;
+		auto& p = sequence[index];
+		auto i1 = p.first;
+		auto i2 = p.second;
 		auto& count = counts[index];
 		auto& r1 = m[i1];
 		if (!r1[i2])
@@ -136,14 +136,13 @@ void TwoCardOverlap::Compute5(const vector<Bitset>& m, vector<Counts>& counts)
 	});
 }
 
-void TwoCardOverlap::Compute6(const vector<Bitset>& m, vector<Counts>& counts)
+void TwoCardOverlap::Compute6(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() * m.size()), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
-		auto i1 = static_cast<uint32_t>(index % m.size());
-		auto i2 = static_cast<uint32_t>(index / m.size());
-		if (i2 <= i1)
-			return;
+		auto& p = sequence[index];
+		auto i1 = p.first;
+		auto i2 = p.second;
 		auto& count = counts[index];
 		auto& r1 = m[i1];
 		if (!r1[i2])
@@ -183,14 +182,13 @@ void TwoCardOverlap::Compute6(const vector<Bitset>& m, vector<Counts>& counts)
 	});
 }
 
-void TwoCardOverlap::Compute7(const vector<Bitset>& m, vector<Counts>& counts)
+void TwoCardOverlap::Compute7(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() * m.size()), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
-		auto i1 = static_cast<uint32_t>(index % m.size());
-		auto i2 = static_cast<uint32_t>(index / m.size());
-		if (i2 <= i1)
-			return;
+		auto& p = sequence[index];
+		auto i1 = p.first;
+		auto i2 = p.second;
 		auto& count = counts[index];
 		auto& r1 = m[i1];
 		if (!r1[i2])
@@ -240,14 +238,13 @@ void TwoCardOverlap::Compute7(const vector<Bitset>& m, vector<Counts>& counts)
 	});
 }
 
-void TwoCardOverlap::Compute8(const vector<Bitset>& m, vector<Counts>& counts)
+void TwoCardOverlap::Compute8(const vector<Bitset>& m, vector<Counts>& counts, const CombinationSequence& sequence)
 {
-	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(m.size() * m.size()), [&](uint64_t index)
+	for_each(execution::par_unseq, make_counting_iterator(0ull), make_counting_iterator(sequence.size()), [&](uint64_t index)
 	{
-		auto i1 = static_cast<uint32_t>(index % m.size());
-		auto i2 = static_cast<uint32_t>(index / m.size());
-		if (i2 <= i1)
-			return;
+		auto& p = sequence[index];
+		auto i1 = p.first;
+		auto i2 = p.second;
 		auto& count = counts[index];
 		auto& r1 = m[i1];
 		if (!r1[i2])
