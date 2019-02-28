@@ -12,6 +12,7 @@ public:
 	Timer& operator=(Timer&& rhs) = default;
 
 	double GetDurationMs() const;
+	long long GetDurationS() const;
 
 private:
 	time_point<system_clock> start;

@@ -165,7 +165,7 @@ void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, 
 	cout << opponents << ": " << index << " of " << count << ": Computing " << hole.ToString() << "...";
 	LargeOddsComputer computer{ allHands, hole, opponents };
 	auto odds = computer.GetOdds();
-	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << timer.GetDurationMs() << "ms\n";
+	cout << " Win or draw " << odds.GetWinOrDraw() << ", Lose " << odds.GetLose() << ", Duration " << timer.GetDurationS() << "s\n";
 	out << hole.GetCard1() << ','
 		<< hole.GetCard2() << ','
 		<< hole.ToString() << ','
