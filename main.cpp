@@ -358,12 +358,12 @@ int main(int argc, char** argv)
 		CombinationSequences::Get(0);
 		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";
 
-		//LargeOddsComputer::Compute(argc, argv);
+		LargeOddsComputer::Compute(argc, argv);
 
 		//Test4();
 		//Test16();
 		//Test17();
-		Test18();
+		//Test18();
 		return 0;
 
 		AllHands allHands;
