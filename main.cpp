@@ -347,6 +347,7 @@ void ComputeMaxTwoCardLossCount()
 
 void Test4();
 void Test16();
+void Test17();
 
 int main(int argc, char** argv)
 {
@@ -356,10 +357,11 @@ int main(int argc, char** argv)
 		CombinationSequences::Get(0);
 		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";
 
-		LargeOddsComputer::Compute(argc, argv);
+		//LargeOddsComputer::Compute(argc, argv);
 
 		//Test4();
 		//Test16();
+		Test17();
 		return 0;
 
 		AllHands allHands;

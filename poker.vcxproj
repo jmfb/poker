@@ -182,6 +182,7 @@
     <ClCompile Include="test14.cpp" />
     <ClCompile Include="test15.cpp" />
     <ClCompile Include="test16.cpp" />
+    <ClCompile Include="test17.cpp" />
     <ClCompile Include="test4.cpp" />
     <ClCompile Include="test5.cpp" />
     <ClCompile Include="test6.cpp" />

@@ -121,6 +121,9 @@
     <ClCompile Include="test16.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="test17.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
