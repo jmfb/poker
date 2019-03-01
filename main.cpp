@@ -348,6 +348,7 @@ void ComputeMaxTwoCardLossCount()
 void Test4();
 void Test16();
 void Test17();
+void Test18();
 
 int main(int argc, char** argv)
 {
@@ -361,7 +362,8 @@ int main(int argc, char** argv)
 
 		//Test4();
 		//Test16();
-		Test17();
+		//Test17();
+		Test18();
 		return 0;
 
 		AllHands allHands;
