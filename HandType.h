@@ -13,3 +13,5 @@ enum class HandType
 	StraightFlush,
 	RoyalFlush
 };
+
+string ToString(HandType value);

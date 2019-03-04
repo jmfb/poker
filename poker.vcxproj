@@ -158,6 +158,7 @@
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Face.cpp" />
     <ClCompile Include="Hand.cpp" />
+    <ClCompile Include="HandType.cpp" />
     <ClCompile Include="HandValue.cpp" />
     <ClCompile Include="HoleCards.cpp" />
     <ClCompile Include="LargeOdds.cpp" />
