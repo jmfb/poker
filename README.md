@@ -132,8 +132,8 @@ since you only need to test if any combination beats you and not what the best h
 You can remove the 1-card losses from the remaining deck since dealing that card to any opponent would result in a loss.
 We will call the remaining deck size `r` where `r = 45 - count(1-card losses)` and remaining deck `R`
 where `R = Full Deck - Starting Hand - Community Cards - 1-Card Losses`.
-
-TODO: Find the maximum set of 1-card losses and give starting hand and community cards.
+The maximum 1-card loss count is 44 for the starting hand pair of 2s with the community of four 3s and a 2 since every other card
+in the deck other than the remaining 2 is a four of a kind 3s with a better kicker.
 
 ### Finding 2-Card Losses
 
@@ -141,6 +141,7 @@ The only way you might still lose would be if an opponent had exactly two cards 
 You need to test the remaining `C(r, 2)` possible 2-card combinations of `R` against up to the `C(5, 3) = 10` community card combinations.
 This will give you the set of 2-card losses, `S = {s_0,...,s_(n-1)}` of size `n`.
 Each 2-card loss, `s_i`, can be represented as the set `{c1, c2}` where `c1` and `c2` are the integer representations, in ascending order, of the cards in the deck.
+The maximum 2-card loss count is 268 for the starting hand of TODO.
 
 TODO: Give the specific max 2-card loss set of size 268 for 8/4 starting hand
 
