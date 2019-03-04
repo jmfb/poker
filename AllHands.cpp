@@ -37,14 +37,14 @@ void AllHands::Compute()
 
 void AllHands::Load()
 {
-	ifstream in{ "handRanksByHash.bin", ios::binary };
+	ifstream in{ fileName, ios::binary };
 	handRanksByHash.resize(HandHashCount);
 	in.read(reinterpret_cast<char*>(handRanksByHash.data()), HandHashCount * sizeof(int));
 }
 
 void AllHands::Save()
 {
-	ofstream out{ "handRanksByHash.bin", ios::binary };
+	ofstream out{ fileName, ios::binary };
 	out.write(reinterpret_cast<const char*>(handRanksByHash.data()), HandHashCount * sizeof(int));
 }
 
@@ -100,6 +100,19 @@ bool AllHands::BeatenByTwoCards(int bestHand, int c1, int c2, int m1, int m2, in
 		GetRank(c1, c2, m2, m3, m5) > bestHand ||
 		GetRank(c1, c2, m2, m4, m5) > bestHand ||
 		GetRank(c1, c2, m3, m4, m5) > bestHand;
+}
+
+void AllHands::DumpHistogram() const
+{
+	map<HandType, int> histogram;
+	for (auto c1 = 0; c1 < DeckSize; ++c1)
+		for (auto c2 = c1 + 1; c2 < DeckSize; ++c2)
+			for (auto c3 = c2 + 1; c3 < DeckSize; ++c3)
+				for (auto c4 = c3 + 1; c4 < DeckSize; ++c4)
+					for (auto c5 = c4 + 1; c5 < DeckSize; ++c5)
+						++histogram[HandValue{ handRanksByHash[Hand::GetHash(c1, c2, c3, c4, c5)] }.GetType()];
+	for (auto p : histogram)
+		cout << ToString(p.first) << ": " << p.second << '\n';
 }
 
 int AllHands::GetRank(int c1, int c2, int c3, int c4, int c5) const

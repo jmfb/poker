@@ -58,10 +58,11 @@ Face Card::GetFace() const
 	return face;
 }
 
-void Card::SwitchSuit(Suit original, Suit replacement)
+void Card::SwitchSuit(const map<Suit, Suit>& suitMap)
 {
-	if (suit == original)
-		suit = replacement;
+	auto iter = suitMap.find(suit);
+	if (iter != suitMap.end())
+		suit = iter->second;
 }
 
 bool Card::operator==(const Card& rhs) const

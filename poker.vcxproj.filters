@@ -127,6 +127,9 @@
     <ClCompile Include="test18.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="HandType.cpp">
+      <Filter>Classes\HandType</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">

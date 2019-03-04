@@ -132,18 +132,15 @@ void LargeOddsComputer::AddSuitCombinations(const HoleCards& hole, Card c1, Card
 
 void LargeOddsComputer::AddSuitCombination(Card c1, Card c2, Card c3, Card c4, Card c5, const LargeOdds& largeOdds, const map<Suit, Suit>& suitMap)
 {
-	for (auto suits : suitMap)
-	{
-		c1.SwitchSuit(suits.first, suits.second);
-		c2.SwitchSuit(suits.first, suits.second);
-		c3.SwitchSuit(suits.first, suits.second);
-		c4.SwitchSuit(suits.first, suits.second);
-		c5.SwitchSuit(suits.first, suits.second);
-	}
+	c1.SwitchSuit(suitMap);
+	c2.SwitchSuit(suitMap);
+	c3.SwitchSuit(suitMap);
+	c4.SwitchSuit(suitMap);
+	c5.SwitchSuit(suitMap);
 	array<int, HandSize> cards{ c1.GetId(), c2.GetId(), c3.GetId(), c4.GetId(), c5.GetId() };
 	sort(cards.begin(), cards.end());
 	auto hash = Hand::GetHash(cards[0], cards[1], cards[2], cards[3], cards[4]);
-	cache.emplace(hash, largeOdds);
+	auto result = cache.emplace(hash, largeOdds);
 }
 
 void LargeOddsComputer::Compute(ostream& out, const AllHands& allHands, int f1, int f2, int opponents)
