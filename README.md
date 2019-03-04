@@ -141,12 +141,128 @@ The only way you might still lose would be if an opponent had exactly two cards 
 You need to test the remaining `C(r, 2)` possible 2-card combinations of `R` against up to the `C(5, 3) = 10` community card combinations.
 This will give you the set of 2-card losses, `S = {s_0,...,s_(n-1)}` of size `n`.
 Each 2-card loss, `s_i`, can be represented as the set `{c1, c2}` where `c1` and `c2` are the integer representations, in ascending order, of the cards in the deck.
-The maximum 2-card loss count is 268 for the starting hand of 4s 8s and a community of 2s 3s 6h 7h 8h.
+The maximum 2-card loss count is 268 for the starting hand of `4s 8s` and a community of `2s 3s 6h 7h 8h`.
 
 ### Win or Draw Calculation
 
-TODO: left off here
+The number of hands you will win from the total set of opponent combinations is:
+```
+"Win Or Draw" = "Remaining Opponent Combinations" - "2-Card Loss Combinations" + "2-Card Overlap Combinations"
+"Remaining Opponent Combinations" = C(r, 2k) * Product(i=0..k-1, 2i + 1)
+    NOTE: remember r is the size of the deck after removing 1-card losses
+"2-Card Loss Combinations" = n * C(r - 2, 2k - 2) * Product(i=0..k-2, 2i + 1)
+    NOTE: n is the number of 2-card losses and the rest is the combinations of remaining opponents.
+"2-Card Overlap Combinations" = This is the remaining tricky problem.
+```
 
-### 2-Card Overlap Time Complexity Problem
+### 2-Card Overlap Combinations
+
+This is most easily explained by giving a contrived example.
+Let us say there are two opponents, no 1-card losses (`r = 45`), and `S = { {As Ks}, {Qs Js} }`.
+```
+"Remaining Opponent Combinations" = C(45, 4) * 3 = 446,985
+"2-Card Loss Combinations" = 2 * C(43, 2) * 1 = 2 * 903 = 1,806
+"2-Card Overlap Combinations" = ??? = 1
+```
+
+If we break this down you can see that for each 2-card loss we count 903 losses.
+Assuming opponent 1 gets the AK then there are 903 combinations of opponent 2 cards that we we lose on regardless; and the same for QJ.
+However, we've double counted the scenario where opponent 1 gets AK and opponent 2 gets QJ so we need to add it back to our win-or-draw count.
+
+
+When there is only one opponent then the overlap is always zero, `C(r-2, 0) = 1`, `partitions = 1` and so we just subtract `n`.
+
+
+Let us define a function `f(S, k)` that counts the possible combinations of 2-card losses taken `k` at a time.
+The 2-card loss and overlap combinations can be represented as the following sum:
+```
+Sum(i=0..k-1, (-1)^i * f(S, i+1) * C(r-(2*(i+1)), 2*(k-i-1)) * Product(x=0..k-i-1, 2x+1))
+
+(-1)^i - This represents the alternating sign of the summand starting with positive.
+f(S, i+1) - This represents the count of possible 2-card losses starting at 1 and going up to k.
+Remainder - This represents the remaining combinations which degrades with each remaining opponent.
+```
+
+When all elements of `S` are disjoint then `f(S, k)` achieves a maximum value of `C(n, k)`.
+However, not all elements of `S` will be disjoint.  Take `S = { {As Ks}, {As Qs} }` (a slight modification of the previous example).
+Each 2-card loss element carries a weight of 903 but there is no longer an overlap since there is no way to deal `As Ks` to one
+opponent and `As Qs` to the other opponent since there is only one `As` in the deck.
+
+### f(S, k) Time Complexity Problem
 
 https://math.stackexchange.com/questions/3107016/count-of-disjoint-combinations-of-sets-of-sets
+
+
+The worst case for `f(S, k)` is when `n = 268` (max 2-card loss count) and `k = 8` (8 opponents) which has a
+brute force time complexity of `O(C(n,k))` and thus requires 593,956,331,943,183 iterations (~594 trillion).
+While this is still better than the brute force space of 1 quintillion it is still slow to execute.
+
+### Current Best Algorithm for f(S, k)
+
+The best algorithm for solving I have been able to find is a `k`-clique counting algorithm from graph theory:
+https://en.wikipedia.org/wiki/Clique_problem.  This is a proven NP-complete problem so I have given up hope of reducing
+the problem to the P problem space (though there might be some other arrangement of the graph; I just don't know
+what it might be).
+
+
+To do this, arrange the elements of `S` as an undirected graph with edges between disjoint elements.
+The graph is then represented as a matrix with rows and columns for each element of `S` with a `1` for the disjoint edges and `0` otherwise.
+The row can be represented using a bitfield of max size 268 (5 * 64-bit unsigned integers = `320 bits or 40 bytes`).
+The matrix can be represented as a vector of bitfields.
+The max space used for a matrix is `268 rows * 40 bytes = 10,720 bytes or ~10Kb`.
+The matrix can be constructed in `O(C(n,2))` time (max of 35,778 disjoint comparisons).
+If each 2-card loss element of `S` is represented by a 64-bit unsigned integer (bitfield of max size 52) then disjoint comparisons
+are just testing bitwise-ands for equality to zero (`disjoint(s_x, s_y) = ((s_x & s_y) == 0)`).
+We know the diagonal of the matrix will always be zero since elements of `S` are never disjoint with themselves.
+Additionally, we don't care about the lower triangle (where col < row) since we only care about ordered
+elements (since we are counting combinations and not permutations).
+* `f(S, 1)` = Number of rows in the matrix (number of elements in `S`; number of 1-cliques)
+* `f(S, 2)` = Sum of `1`s in the matrix (number of 2-cliques)
+* `f(S, k)` = Count of `k`-cliques for `k > 2`.
+
+Algorithm for finding all `k+1`-cliques comprised of `k`-cliques using `2`-clique bitfields as the seed:
+```
+foreach (1-bit column c in bitfield r of matrix m)
+    r2 = r & m[c]
+```
+
+Each `r2` is a bitfield that represents all `k+1`-cliques containinng `r->c`.
+Since each `m[c]` is a `2`-clique bitfield the intersection (bitwise-and) of `r` and `m[c]` is all the `k+1`-cliques.
+To find higher order cliques you just nest the foreach loops.
+This reduces the overall problem space since all `k+1`-cliques are formed by `k`-cliques and only the `k`-cliques are searched.
+The time complexity is difficult to represent but likely involves the arboricity of the graph.
+* https://www.ics.uci.edu/~eppstein/pubs/Epp-TR-94-11.pdf
+* https://core.ac.uk/download/pdf/54846454.pdf
+
+
+Here is a simple example to follow along with:
+```
+       ABCDE
+m = A [01101]
+    B [00110]
+    C [00011]
+    D [00001]
+    E [00000] // NOTE: anything & m[E] = 00000 so they will be ommitted for brevity
+
+f(S, 1) = 5
+f(S, 2) = 8
+f(S, 3) = A & m[B] + A & m[C] + B & m[C] + B & m[D] + C & m[D]
+        = AB=00100 + AC=00001 + BC=00010 + BD=00000 + CD=00001
+        = 1 + 1 + 1 + 0 + 1
+        = 4
+f(S, 4) = AB & m[C] + BC & m[D]
+        = ABC=00000 + BCD=00000
+        = 0 + 0
+        = 0
+f(S,>4) = 0 (if there are no 4-cliques then there are no cliques greater than 4)
+```
+
+Looping through only the bits that are set in a bitfield can be optimized using a Bit Scan Forward (a.k.a Count Leading Zeros starting from LSB) assembly/intrinsic instruction.
+
+
+Counting the bits that are set in a bitfield can be optimized using a Population Count assembly/intrinsic instruction.
+
+
+A further optimization is that the outer row and column loops can be parallelized.
+There are `C(n, 2)` valid combinations of row and column indexes since `row < col`.
+Further parallelization has shown diminishing returns with testing.
