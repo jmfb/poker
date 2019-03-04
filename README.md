@@ -36,9 +36,11 @@ The total odds for a given starting hand equals the sum of odds for each communi
 
 
 *Optimization:* The odds for community card suit combinations independent from the starting hand are equal and allows for between 1 to 5 free community computations.
-
-
-TODO: Put in statistics for pairs, suited, and offsuit counts.
+```
+Distinct Suited Starting Hand Community Card Combinations:    388,863 (1,729,897 free suit combinations)
+Distinct Offsuit Starting Hand Community Card Combinations: 1,094,724 (1,024,036 free suit combinations)
+NOTE: Pairs have the same combinations as offsuit starting hands.
+```
 
 ### Hand Ranking
 
@@ -78,7 +80,71 @@ We can then compute the integer rank for all 2,598,960 possible hands and store 
 to give a constant time comparison for any given hands.  This vector is saved to disk in a 1.3GB file, handRanksByHash.bin, to save time computing and
 comparing hands.  See the `AllHands` class for details.
 
+### Best Hand Rank
+
+For any given set of two hole cards and five community cards there exists a best hand rank.
+The best hand rank is the max hand rank for all possible five card combinations:
+```
+C(2, 0) * C(5, 5) = 1 * 1 = 1   // Use no hole cards and the entire community.
+C(2, 1) * C(5, 4) = 2 * 5 = 10  // Use either hole card and any four community cards.
+C(2, 2) * C(5, 3) = 1 * 10 = 10 // Use both hole cards and any three community cards.
+Total: 21 possible 5 card combinations.
+```
+
 ### Win, Draw, Lose Calculations
+
+The total number of opponent card combinations, for `k`-opponents, for a given starting hand and community is:
+```
+C(45, 2k) * Product(n=0..k-1, 2n + 1)
+```
+The first part represents the way to deal `x` cards to the opponents where each opponent gets 2 cards: `x = 2k`.
+The second part represents the ways to partition `2k` cards among `k` opponents.
+
+The following table shows the resulting problem space for 1 to 8 opponents:
+```
+k        C(45, 2k) Partitions                      Total
+1              990          1                        990
+2          148,995          3                    446,985
+3        8,145,060         15                122,175,900 (122 million)
+4      215,553,195        105             22,633,085,475 ( 22 billion)
+5    3,190,187,286        945          3,014,726,985,270 (  3 trillion)
+6   28,760,021,745     10,395        298,960,426,039,275 (298 trillion)
+7  166,871,334,960    135,135     22,550,157,849,819,600 ( 22 quadrillion)
+8  646,626,422,970  2,027,025  1,310,727,925,020,764,250 (  1 quintillion)
+```
+
+Brute forcing the problem space is not feasible beyond a single opponent as even two opponents would take 451 times longer.
+The 8 opponent problem space is huge:
+```
+Brute Force Problem Space = Starting Hands * Distinct Community Combinations * Opponent Combinations
+Suited:  78 *   388,863 * 1,310,727,925,020,764,250 =  39,756,100,262,373,256,986,724,500 ( 39 septillion)
+Offsuit: 91 * 1,094,724 * 1,310,727,925,020,764,250 = 130,574,563,846,129,232,176,347,000 (130 septillion)
+```
+
+However, we can reduce the problem space significantly.
+
+### Removing 1-Card Losses
+
+For a given starting hand and community combination you have a given best hand rank `v`.
+You can now test the remaining 45 cards in the deck to see if just adding the one card to the community beats your hand.
+You need to test each of the 45 cards against up to `C(5, 4) = 5` combinations of the community cards
+since you only need to test if any combination beats you and not what the best hand rank would be.
+You can remove the 1-card losses from the remaining deck since dealing that card to any opponent would result in a loss.
+We will call the remaining deck size `r` where `r = 45 - count(1-card losses)` and remaining deck `R`
+where `R = Full Deck - Starting Hand - Community Cards - 1-Card Losses`.
+
+TODO: Find the maximum set of 1-card losses and give starting hand and community cards.
+
+### Finding 2-Card Losses
+
+The only way you might still lose would be if an opponent had exactly two cards that, when combined with the community cards, beat you.
+You need to test the remaining `C(r, 2)` possible 2-card combinations of `R` against up to the `C(5, 3) = 10` community card combinations.
+This will give you the set of 2-card losses, `S = {s_0,...,s_(n-1)}` of size `n`.
+Each 2-card loss, `s_i`, can be represented as the set `{c1, c2}` where `c1` and `c2` are the integer representations, in ascending order, of the cards in the deck.
+
+TODO: Give the specific max 2-card loss set of size 268 for 8/4 starting hand
+
+### Win or Draw Calculation
 
 TODO: left off here
 
