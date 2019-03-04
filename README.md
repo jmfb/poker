@@ -141,9 +141,7 @@ The only way you might still lose would be if an opponent had exactly two cards 
 You need to test the remaining `C(r, 2)` possible 2-card combinations of `R` against up to the `C(5, 3) = 10` community card combinations.
 This will give you the set of 2-card losses, `S = {s_0,...,s_(n-1)}` of size `n`.
 Each 2-card loss, `s_i`, can be represented as the set `{c1, c2}` where `c1` and `c2` are the integer representations, in ascending order, of the cards in the deck.
-The maximum 2-card loss count is 268 for the starting hand of TODO.
-
-TODO: Give the specific max 2-card loss set of size 268 for 8/4 starting hand
+The maximum 2-card loss count is 268 for the starting hand of 4s 8s and a community of 2s 3s 6h 7h 8h.
 
 ### Win or Draw Calculation
 
