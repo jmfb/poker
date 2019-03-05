@@ -242,7 +242,7 @@ m = A [01101]
     B [00110]
     C [00011]
     D [00001]
-    E [00000] // NOTE: anything & m[E] = 00000 so they will be ommitted for brevity
+    E [00000] // NOTE: anything & m[E] = 00000 so they will be omitted for brevity
 
 f(S, 1) = 5
 f(S, 2) = 8
