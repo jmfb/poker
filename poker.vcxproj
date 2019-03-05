@@ -165,8 +165,7 @@
     <ClCompile Include="LargeOddsComputer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
-    <ClCompile Include="Odds.cpp" />
-    <ClCompile Include="OddsCache.cpp" />
+    <ClCompile Include="LargeOddsCache.cpp" />
     <ClCompile Include="OpenClCounter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -217,8 +216,7 @@
     <ClInclude Include="LargeOdds.h" />
     <ClInclude Include="LargeOddsComputer.h" />
     <ClInclude Include="Math.h" />
-    <ClInclude Include="Odds.h" />
-    <ClInclude Include="OddsCache.h" />
+    <ClInclude Include="LargeOddsCache.h" />
     <ClInclude Include="OpenClCounter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
@@ -227,7 +225,9 @@
     <ClInclude Include="TwoCardOverlap.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="1-opponent-analysis.txt" />
     <Text Include="1-opponent-odds.txt" />
+    <Text Include="2-opponent-analysis.txt" />
     <Text Include="2-opponent-odds.txt" />
     <Text Include="3-opponent-odds.txt" />
     <Text Include="4-opponent-odds.txt" />

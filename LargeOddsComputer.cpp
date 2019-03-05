@@ -230,7 +230,7 @@ void LargeOddsComputer::CombineOpponentOdds()
 			parts >> card1 >> comma >> card2 >> comma;
 			getline(parts, name, ',');
 			parts >> winOrDraw >> comma >> lose;
-			allOdds[{ card1, card2 }][opponents] = { winOrDraw, lose };
+			allOdds[{ card1, card2 }][opponents] = { opponents, winOrDraw, lose };
 		}
 	}
 

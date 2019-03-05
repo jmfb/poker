@@ -10,6 +10,7 @@
 #include "Timer.h"
 #include "Math.h"
 #include "CombinationSequences.h"
+#include "LargeOddsCache.h"
 
 class GamePlayer
 {
@@ -354,6 +355,12 @@ int main(int argc, char** argv)
 {
 	try
 	{
+		//for (auto opponents = 1; opponents <= 2; ++opponents)
+		//{
+		//	ofstream out{ to_string(opponents) + "-opponent-analysis.txt" };
+		//	LargeOddsCache{ opponents }.Analyze(out);
+		//}
+
 		Timer sequenceTimer;
 		CombinationSequences::Get(0);
 		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";

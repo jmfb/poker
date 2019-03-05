@@ -34,12 +34,6 @@
     <ClCompile Include="HoleCards.cpp">
       <Filter>Classes\HoleCards</Filter>
     </ClCompile>
-    <ClCompile Include="Odds.cpp">
-      <Filter>Classes\Odds</Filter>
-    </ClCompile>
-    <ClCompile Include="OddsCache.cpp">
-      <Filter>Classes\OddsCache</Filter>
-    </ClCompile>
     <ClCompile Include="Math.cpp">
       <Filter>Classes\Math</Filter>
     </ClCompile>
@@ -130,6 +124,9 @@
     <ClCompile Include="HandType.cpp">
       <Filter>Classes\HandType</Filter>
     </ClCompile>
+    <ClCompile Include="LargeOddsCache.cpp">
+      <Filter>Classes\LargeOddsCache</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -171,12 +168,6 @@
     <Filter Include="Classes\HoleCards">
       <UniqueIdentifier>{d947ff95-30ac-45e1-b547-faf2361795b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Odds">
-      <UniqueIdentifier>{4e8959c4-5dc2-4c74-80d1-5c85025ab2b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\OddsCache">
-      <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Classes\Math">
       <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
     </Filter>
@@ -216,6 +207,9 @@
     <Filter Include="Classes\Bitset">
       <UniqueIdentifier>{1e9279b0-b647-49ae-a98f-7ae74f060378}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\LargeOddsCache">
+      <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -247,12 +241,6 @@
     </ClInclude>
     <ClInclude Include="HoleCards.h">
       <Filter>Classes\HoleCards</Filter>
-    </ClInclude>
-    <ClInclude Include="Odds.h">
-      <Filter>Classes\Odds</Filter>
-    </ClInclude>
-    <ClInclude Include="OddsCache.h">
-      <Filter>Classes\OddsCache</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
       <Filter>Classes\Math</Filter>
@@ -293,6 +281,9 @@
     <ClInclude Include="Bitset.h">
       <Filter>Classes\Bitset</Filter>
     </ClInclude>
+    <ClInclude Include="LargeOddsCache.h">
+      <Filter>Classes\LargeOddsCache</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="1-opponent-odds.txt">
@@ -323,6 +314,12 @@
       <Filter>Resources</Filter>
     </Text>
     <Text Include="Max-2-card-loss-counts.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="1-opponent-analysis.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="2-opponent-analysis.txt">
       <Filter>Resources</Filter>
     </Text>
   </ItemGroup>
