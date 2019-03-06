@@ -2,7 +2,6 @@
 #include "AllHands.h"
 #include "HoleCards.h"
 #include "LargeOdds.h"
-#include "CardSet.h"
 #include "Card.h"
 #include "Suit.h"
 

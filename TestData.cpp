@@ -5,7 +5,7 @@
 //Good example for testing optimizations to 2-card overlap computations.
 //Flop{ 2s Tc 3s } Turn{ 8s } River{ Jc } Player0{ 9h Jd } - 196 2-card losses
 //
-vector<pair<int, int>> CreateTwoCards()
+vector<pair<int, int>> CreateTwoCardsPair()
 {
 	return
 	{
@@ -46,4 +46,17 @@ vector<pair<int, int>> CreateTwoCards()
 	{ 45, 47 },
 	{ 46, 49 }
 	};
+}
+
+vector<HoleCards> CreateTwoCardsHole()
+{
+	vector<HoleCards> holes;
+	for (auto& twoCard : CreateTwoCardsPair())
+		holes.emplace_back(twoCard.first, twoCard.second);
+	return holes;
+}
+
+vector<uint64_t> CreateTwoCardsBits()
+{
+	return ToBits(CreateTwoCardsHole());
 }
