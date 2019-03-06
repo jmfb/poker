@@ -1,10 +1,8 @@
 #include "pch.h"
 #include "Timer.h"
-#include "HoleCards.h"
 #include "TwoCardOverlap.h"
 #include "Math.h"
-
-vector<pair<int, int>> CreateTwoCards();
+#include "TestData.h"
 
 //Lose: 196 (1 opponents)
 //Duration: 0.413ms
@@ -22,24 +20,15 @@ vector<pair<int, int>> CreateTwoCards();
 //Duration: 21662.5ms (down from 31s)
 //Lose: 1108007012317984113 (8 opponents)
 //Duration: 264692ms (down from 355s; 4.4m < 5.9m)
-void Test4()
+void TestBaseline(int firstOpponents, int maxOpponents)
 {
-	cout << "Test4: Standard combinations using bitfields and 1-loop parallelization.\n";
-	auto opponents = 5;
-	//for (auto opponents = 1; opponents <= 8; ++opponents)
+	for (auto opponents = firstOpponents; opponents <= maxOpponents; ++opponents)
 	{
 		Timer timer;
-
-		auto twoCards = CreateTwoCards();
-		vector<HoleCards> holes;
-		for (auto& twoCard : twoCards)
-			holes.emplace_back(twoCard.first, twoCard.second);
-		auto overlap = TwoCardOverlap::Compute(ToBits(holes), 45, opponents);
-
+		auto twoCards = CreateTwoCardsBits();
+		auto overlap = TwoCardOverlap::Compute(twoCards, 45, opponents);
 		auto lose = ComputeTotalCombinations(43, 2 * opponents - 2) * static_cast<long long>(twoCards.size()) - overlap;
 		cout << "Lose: " << lose << " (" << opponents << " opponents)\n";
-
 		cout << "Duration: " << timer.GetDurationMs() << "ms\n";
 	}
-	cout << '\n';
 }

@@ -14,118 +14,82 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Suit.cpp">
-      <Filter>Classes\Suit</Filter>
+      <Filter>Classes\Common Classes\Suit</Filter>
     </ClCompile>
     <ClCompile Include="Face.cpp">
-      <Filter>Classes\Face</Filter>
+      <Filter>Classes\Common Classes\Face</Filter>
     </ClCompile>
     <ClCompile Include="Card.cpp">
-      <Filter>Classes\Card</Filter>
+      <Filter>Classes\Common Classes\Card</Filter>
     </ClCompile>
     <ClCompile Include="HandValue.cpp">
-      <Filter>Classes\HandValue</Filter>
+      <Filter>Classes\Common Classes\HandValue</Filter>
     </ClCompile>
     <ClCompile Include="Hand.cpp">
-      <Filter>Classes\Hand</Filter>
+      <Filter>Classes\Common Classes\Hand</Filter>
     </ClCompile>
     <ClCompile Include="AllHands.cpp">
-      <Filter>Classes\AllHands</Filter>
+      <Filter>Classes\Common Classes\AllHands</Filter>
     </ClCompile>
     <ClCompile Include="HoleCards.cpp">
-      <Filter>Classes\HoleCards</Filter>
+      <Filter>Classes\Common Classes\HoleCards</Filter>
     </ClCompile>
     <ClCompile Include="Math.cpp">
-      <Filter>Classes\Math</Filter>
+      <Filter>Classes\Odds Classes\Math</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Headers</Filter>
     </ClCompile>
     <ClCompile Include="Deck.cpp">
-      <Filter>Classes\Deck</Filter>
+      <Filter>Classes\Common Classes\Deck</Filter>
     </ClCompile>
     <ClCompile Include="LargeOdds.cpp">
-      <Filter>Classes\LargeOdds</Filter>
-    </ClCompile>
-    <ClCompile Include="CardSet.cpp">
-      <Filter>Classes\CardSet</Filter>
+      <Filter>Classes\Odds Classes\LargeOdds</Filter>
     </ClCompile>
     <ClCompile Include="LargeOddsComputer.cpp">
-      <Filter>Classes\LargeOddsComputer</Filter>
+      <Filter>Classes\Odds Classes\LargeOddsComputer</Filter>
     </ClCompile>
     <ClCompile Include="PreflopOdds.cpp">
-      <Filter>Classes\PreflopOdds</Filter>
+      <Filter>Classes\Odds Classes\PreflopOdds</Filter>
     </ClCompile>
     <ClCompile Include="TwoCardOverlap.cpp">
-      <Filter>Classes\TwoCardOverlap</Filter>
+      <Filter>Classes\Odds Classes\TwoCardOverlap</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Classes\Timer</Filter>
-    </ClCompile>
-    <ClCompile Include="test4.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test5.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test6.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test7.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test8.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test9.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test10.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test11.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test12.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test13.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test14.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Counter.cpp">
-      <Filter>Classes\Counter</Filter>
-    </ClCompile>
-    <ClCompile Include="OpenClCounter.cpp">
-      <Filter>Classes\OpenClInt128</Filter>
+      <Filter>Classes\Common Classes\Timer</Filter>
     </ClCompile>
     <ClCompile Include="Counts.cpp">
-      <Filter>Classes\Counts</Filter>
+      <Filter>Classes\Odds Classes\Counts</Filter>
     </ClCompile>
     <ClCompile Include="CombinationSequences.cpp">
-      <Filter>Classes\CombinationSequence</Filter>
-    </ClCompile>
-    <ClCompile Include="test15.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Classes\Odds Classes\CombinationSequence</Filter>
     </ClCompile>
     <ClCompile Include="Bitset.cpp">
-      <Filter>Classes\Bitset</Filter>
-    </ClCompile>
-    <ClCompile Include="test16.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test17.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="test18.cpp">
-      <Filter>Tests</Filter>
+      <Filter>Classes\Odds Classes\Bitset</Filter>
     </ClCompile>
     <ClCompile Include="HandType.cpp">
-      <Filter>Classes\HandType</Filter>
+      <Filter>Classes\Common Classes\HandType</Filter>
     </ClCompile>
     <ClCompile Include="LargeOddsCache.cpp">
-      <Filter>Classes\LargeOddsCache</Filter>
+      <Filter>Classes\Odds Classes\LargeOddsCache</Filter>
+    </ClCompile>
+    <ClCompile Include="GamePlayer.cpp">
+      <Filter>Classes\Game Classes\GamePlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="BurnAndTurn.cpp">
+      <Filter>Classes\Game Classes\BurnAndTurn</Filter>
+    </ClCompile>
+    <ClCompile Include="TestData.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Classes\Game Classes\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Community.cpp">
+      <Filter>Classes\Game Classes\Community</Filter>
+    </ClCompile>
+    <ClCompile Include="TestBaseline.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -138,151 +102,169 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{e9f8520a-9625-4150-89ae-8e5260f35832}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Suit">
-      <UniqueIdentifier>{dfb30ac1-952f-416d-89cb-12ebd73c92ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Face">
-      <UniqueIdentifier>{798d3e70-3fe8-4fc1-b8fc-a0a082452bbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Deck">
-      <UniqueIdentifier>{5d88e681-fd40-42a5-a8dc-ea8a973096cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Card">
-      <UniqueIdentifier>{ca185511-c13b-4f9e-a3c4-283880f6174a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\HandValue">
-      <UniqueIdentifier>{a7d56328-4c67-4ba7-84c1-123cd6df4a1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\HandSize">
-      <UniqueIdentifier>{de11ecfb-f858-4e29-a141-8c6cabcaf2eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\HandType">
-      <UniqueIdentifier>{f7ceaf8c-70da-411b-ac52-93b3ab5d7fa5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Hand">
-      <UniqueIdentifier>{9dbd29bc-7236-4b4f-b90c-d5e3bf36919f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\AllHands">
-      <UniqueIdentifier>{5a8f8d84-c1d3-4331-9fe6-2cb25f9138a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\HoleCards">
-      <UniqueIdentifier>{d947ff95-30ac-45e1-b547-faf2361795b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Math">
-      <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\LargeOdds">
-      <UniqueIdentifier>{5d26f2ab-fbe7-40c2-abd7-3db2fd2c4826}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\CardSet">
-      <UniqueIdentifier>{b9335837-f673-4015-8876-aab8735484c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\LargeOddsComputer">
-      <UniqueIdentifier>{af75951e-525c-49c1-8ea9-36b4a675de13}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\PreflopOdds">
-      <UniqueIdentifier>{62fe598b-d347-413a-be55-a6f2f3412728}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\TwoCardOverlap">
-      <UniqueIdentifier>{4b063c88-7957-41c9-8e9e-aa9223d2c980}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Classes\Timer">
-      <UniqueIdentifier>{9b3c87ec-d922-4f8a-8271-3bb814e23ca3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tests">
       <UniqueIdentifier>{3fb86f4f-7cb9-46f0-99ec-324209c15820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\OpenClInt128">
-      <UniqueIdentifier>{1d49a6a4-7dde-4c2e-ae40-96be11e3c1e3}</UniqueIdentifier>
+    <Filter Include="Classes\Common Classes">
+      <UniqueIdentifier>{68da6ceb-cd83-4353-a3a3-cbaa60299bd8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Counter">
-      <UniqueIdentifier>{bfd8f0cf-e298-43d7-8350-119f1c90b1e3}</UniqueIdentifier>
+    <Filter Include="Classes\Game Classes">
+      <UniqueIdentifier>{44e9e3cb-ed16-49f0-8e0f-51d3c7935458}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Counts">
+    <Filter Include="Classes\Odds Classes">
+      <UniqueIdentifier>{60e88034-efd5-4291-822e-4af1ec929b5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\AllHands">
+      <UniqueIdentifier>{5a8f8d84-c1d3-4331-9fe6-2cb25f9138a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Game Classes\BurnAndTurn">
+      <UniqueIdentifier>{c8df9217-8eb1-4f72-81dc-effdc4ee4459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\Card">
+      <UniqueIdentifier>{ca185511-c13b-4f9e-a3c4-283880f6174a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Game Classes\Community">
+      <UniqueIdentifier>{9d8f1063-d839-4555-8873-d94adb2e7abf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\Counts">
       <UniqueIdentifier>{9956999e-d211-497e-922b-ca2cb1c8f3c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\CombinationSequence">
-      <UniqueIdentifier>{a6c43e64-6387-4d16-9f7c-ab2979bb5029}</UniqueIdentifier>
+    <Filter Include="Classes\Common Classes\Deck">
+      <UniqueIdentifier>{5d88e681-fd40-42a5-a8dc-ea8a973096cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Bitset">
+    <Filter Include="Classes\Common Classes\Face">
+      <UniqueIdentifier>{798d3e70-3fe8-4fc1-b8fc-a0a082452bbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Game Classes\Game">
+      <UniqueIdentifier>{fc141c43-3d5d-4152-8baf-28fabe4fef1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Game Classes\GamePlayer">
+      <UniqueIdentifier>{e82b0051-7682-46a5-82b3-66cf9a7164af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\Hand">
+      <UniqueIdentifier>{9dbd29bc-7236-4b4f-b90c-d5e3bf36919f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\HandSize">
+      <UniqueIdentifier>{de11ecfb-f858-4e29-a141-8c6cabcaf2eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\HandType">
+      <UniqueIdentifier>{f7ceaf8c-70da-411b-ac52-93b3ab5d7fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\HandValue">
+      <UniqueIdentifier>{a7d56328-4c67-4ba7-84c1-123cd6df4a1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\HoleCards">
+      <UniqueIdentifier>{d947ff95-30ac-45e1-b547-faf2361795b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\LargeOdds">
+      <UniqueIdentifier>{5d26f2ab-fbe7-40c2-abd7-3db2fd2c4826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\LargeOddsCache">
+      <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\LargeOddsComputer">
+      <UniqueIdentifier>{af75951e-525c-49c1-8ea9-36b4a675de13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\Math">
+      <UniqueIdentifier>{debad357-112b-4870-818e-525512d7d148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\PreflopOdds">
+      <UniqueIdentifier>{62fe598b-d347-413a-be55-a6f2f3412728}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\Suit">
+      <UniqueIdentifier>{dfb30ac1-952f-416d-89cb-12ebd73c92ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Common Classes\Timer">
+      <UniqueIdentifier>{9b3c87ec-d922-4f8a-8271-3bb814e23ca3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\TwoCardOverlap">
+      <UniqueIdentifier>{4b063c88-7957-41c9-8e9e-aa9223d2c980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Odds Classes\Bitset">
       <UniqueIdentifier>{1e9279b0-b647-49ae-a98f-7ae74f060378}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\LargeOddsCache">
-      <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
+    <Filter Include="Classes\Odds Classes\CombinationSequence">
+      <UniqueIdentifier>{a6c43e64-6387-4d16-9f7c-ab2979bb5029}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
-      <Filter>Classes\Suit</Filter>
+      <Filter>Classes\Common Classes\Suit</Filter>
     </ClInclude>
     <ClInclude Include="Face.h">
-      <Filter>Classes\Face</Filter>
+      <Filter>Classes\Common Classes\Face</Filter>
     </ClInclude>
     <ClInclude Include="Deck.h">
-      <Filter>Classes\Deck</Filter>
+      <Filter>Classes\Common Classes\Deck</Filter>
     </ClInclude>
     <ClInclude Include="Card.h">
-      <Filter>Classes\Card</Filter>
+      <Filter>Classes\Common Classes\Card</Filter>
     </ClInclude>
     <ClInclude Include="HandValue.h">
-      <Filter>Classes\HandValue</Filter>
+      <Filter>Classes\Common Classes\HandValue</Filter>
     </ClInclude>
     <ClInclude Include="HandSize.h">
-      <Filter>Classes\HandSize</Filter>
+      <Filter>Classes\Common Classes\HandSize</Filter>
     </ClInclude>
     <ClInclude Include="HandType.h">
-      <Filter>Classes\HandType</Filter>
+      <Filter>Classes\Common Classes\HandType</Filter>
     </ClInclude>
     <ClInclude Include="Hand.h">
-      <Filter>Classes\Hand</Filter>
+      <Filter>Classes\Common Classes\Hand</Filter>
     </ClInclude>
     <ClInclude Include="AllHands.h">
-      <Filter>Classes\AllHands</Filter>
+      <Filter>Classes\Common Classes\AllHands</Filter>
     </ClInclude>
     <ClInclude Include="HoleCards.h">
-      <Filter>Classes\HoleCards</Filter>
+      <Filter>Classes\Common Classes\HoleCards</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
-      <Filter>Classes\Math</Filter>
+      <Filter>Classes\Odds Classes\Math</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="LargeOdds.h">
-      <Filter>Classes\LargeOdds</Filter>
-    </ClInclude>
-    <ClInclude Include="CardSet.h">
-      <Filter>Classes\CardSet</Filter>
+      <Filter>Classes\Odds Classes\LargeOdds</Filter>
     </ClInclude>
     <ClInclude Include="LargeOddsComputer.h">
-      <Filter>Classes\LargeOddsComputer</Filter>
+      <Filter>Classes\Odds Classes\LargeOddsComputer</Filter>
     </ClInclude>
     <ClInclude Include="PreflopOdds.h">
-      <Filter>Classes\PreflopOdds</Filter>
+      <Filter>Classes\Odds Classes\PreflopOdds</Filter>
     </ClInclude>
     <ClInclude Include="TwoCardOverlap.h">
-      <Filter>Classes\TwoCardOverlap</Filter>
+      <Filter>Classes\Odds Classes\TwoCardOverlap</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Classes\Timer</Filter>
-    </ClInclude>
-    <ClInclude Include="Counter.h">
-      <Filter>Classes\Counter</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenClCounter.h">
-      <Filter>Classes\OpenClInt128</Filter>
+      <Filter>Classes\Common Classes\Timer</Filter>
     </ClInclude>
     <ClInclude Include="Counts.h">
-      <Filter>Classes\Counts</Filter>
+      <Filter>Classes\Odds Classes\Counts</Filter>
     </ClInclude>
     <ClInclude Include="CombinationSequences.h">
-      <Filter>Classes\CombinationSequence</Filter>
+      <Filter>Classes\Odds Classes\CombinationSequence</Filter>
     </ClInclude>
     <ClInclude Include="Bitset.h">
-      <Filter>Classes\Bitset</Filter>
+      <Filter>Classes\Odds Classes\Bitset</Filter>
     </ClInclude>
     <ClInclude Include="LargeOddsCache.h">
-      <Filter>Classes\LargeOddsCache</Filter>
+      <Filter>Classes\Odds Classes\LargeOddsCache</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePlayer.h">
+      <Filter>Classes\Game Classes\GamePlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="BurnAndTurn.h">
+      <Filter>Classes\Game Classes\BurnAndTurn</Filter>
+    </ClInclude>
+    <ClInclude Include="TestData.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Classes\Game Classes\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Community.h">
+      <Filter>Classes\Game Classes\Community</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,6 +302,9 @@
       <Filter>Resources</Filter>
     </Text>
     <Text Include="2-opponent-analysis.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="3-opponent-analysis.txt">
       <Filter>Resources</Filter>
     </Text>
   </ItemGroup>

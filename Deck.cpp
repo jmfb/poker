@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Deck.h"
+#include "AllHands.h"
 
 Deck::iterator Deck::begin()
 {

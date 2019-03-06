@@ -2,7 +2,7 @@
 #include "Suit.h"
 #include "Face.h"
 #include "HoleCards.h"
-#include "AllHands.h"
+class AllHands;
 
 const auto DeckSize = SuitCount * FaceCount;
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -150,13 +150,15 @@
   <ItemGroup>
     <ClCompile Include="AllHands.cpp" />
     <ClCompile Include="Bitset.cpp" />
+    <ClCompile Include="BurnAndTurn.cpp" />
     <ClCompile Include="Card.cpp" />
-    <ClCompile Include="CardSet.cpp" />
     <ClCompile Include="CombinationSequences.cpp" />
-    <ClCompile Include="Counter.cpp" />
+    <ClCompile Include="Community.cpp" />
     <ClCompile Include="Counts.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Face.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GamePlayer.cpp" />
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="HandType.cpp" />
     <ClCompile Include="HandValue.cpp" />
@@ -166,7 +168,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="LargeOddsCache.cpp" />
-    <ClCompile Include="OpenClCounter.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -175,21 +176,8 @@
     </ClCompile>
     <ClCompile Include="PreflopOdds.cpp" />
     <ClCompile Include="Suit.cpp" />
-    <ClCompile Include="test10.cpp" />
-    <ClCompile Include="test11.cpp" />
-    <ClCompile Include="test12.cpp" />
-    <ClCompile Include="test13.cpp" />
-    <ClCompile Include="test14.cpp" />
-    <ClCompile Include="test15.cpp" />
-    <ClCompile Include="test16.cpp" />
-    <ClCompile Include="test17.cpp" />
-    <ClCompile Include="test18.cpp" />
-    <ClCompile Include="test4.cpp" />
-    <ClCompile Include="test5.cpp" />
-    <ClCompile Include="test6.cpp" />
-    <ClCompile Include="test7.cpp" />
-    <ClCompile Include="test8.cpp" />
-    <ClCompile Include="test9.cpp" />
+    <ClCompile Include="TestBaseline.cpp" />
+    <ClCompile Include="TestData.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TwoCardOverlap.cpp" />
   </ItemGroup>
@@ -201,13 +189,15 @@
   <ItemGroup>
     <ClInclude Include="AllHands.h" />
     <ClInclude Include="Bitset.h" />
+    <ClInclude Include="BurnAndTurn.h" />
     <ClInclude Include="Card.h" />
-    <ClInclude Include="CardSet.h" />
     <ClInclude Include="CombinationSequences.h" />
-    <ClInclude Include="Counter.h" />
+    <ClInclude Include="Community.h" />
     <ClInclude Include="Counts.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Face.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GamePlayer.h" />
     <ClInclude Include="Hand.h" />
     <ClInclude Include="HandSize.h" />
     <ClInclude Include="HandType.h" />
@@ -217,10 +207,10 @@
     <ClInclude Include="LargeOddsComputer.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="LargeOddsCache.h" />
-    <ClInclude Include="OpenClCounter.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
     <ClInclude Include="Suit.h" />
+    <ClInclude Include="TestData.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TwoCardOverlap.h" />
   </ItemGroup>
@@ -229,6 +219,7 @@
     <Text Include="1-opponent-odds.txt" />
     <Text Include="2-opponent-analysis.txt" />
     <Text Include="2-opponent-odds.txt" />
+    <Text Include="3-opponent-analysis.txt" />
     <Text Include="3-opponent-odds.txt" />
     <Text Include="4-opponent-odds.txt" />
     <Text Include="5-opponent-odds.txt" />

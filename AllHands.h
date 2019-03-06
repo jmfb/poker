@@ -1,5 +1,7 @@
 #pragma once
 #include "HandType.h"
+#include "GamePlayer.h"
+#include "Community.h"
 
 class AllHands
 {
@@ -11,6 +13,8 @@ public:
 
 	AllHands& operator=(const AllHands& rhs) = default;
 	AllHands& operator=(AllHands&& rhs) = default;
+
+	int GetBestHandRank(const GamePlayer& player, const Community& community) const;
 
 	int GetBestHandRank(int c1, int c2, int m1, int m2, int m3, int m4, int m5) const;
 	bool BeatenByOneCard(int bestHand, int c, int m1, int m2, int m3, int m4, int m5) const;
