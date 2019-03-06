@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		//for (auto opponents = 1; opponents <= 2; ++opponents)
+		//for (auto opponents = 1; opponents <= 4; ++opponents)
 		//{
 		//	ofstream out{ to_string(opponents) + "-opponent-analysis.txt" };
 		//	LargeOddsCache{ opponents }.Analyze(out);
