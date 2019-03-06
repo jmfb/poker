@@ -14,3 +14,16 @@ int BurnAndTurn::GetCard(int index) const
 		throw runtime_error{ "Invalid index." };
 	return cards[index];
 }
+
+string BurnAndTurn::ToString() const
+{
+	ostringstream out;
+	for (auto index = 0; index < cards.size(); ++index)
+		out << (index > 0 ? " " : "") << Card{ cards[index] }.ToString();
+	return out.str();
+}
+
+int BurnAndTurn::operator[](int index) const
+{
+	return GetCard(index);
+}

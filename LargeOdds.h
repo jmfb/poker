@@ -17,6 +17,7 @@ public:
 	uint128_t GetLose() const;
 	uint128_t GetTotal() const;
 	double GetWinOrDrawPercent() const;
+	int GetWinOrDrawPercentRounded() const;
 
 	uint128_t GetCoinFlip() const;
 	double GetCoinFlipDeltaPercent() const;

@@ -33,6 +33,11 @@ double LargeOdds::GetWinOrDrawPercent() const
 	return static_cast<int>(winOrDraw * 10000 / GetTotal()) / 100.0;
 }
 
+int LargeOdds::GetWinOrDrawPercentRounded() const
+{
+	return (static_cast<int>(winOrDraw * 1000 / GetTotal()) + 5) / 10;
+}
+
 uint128_t LargeOdds::GetCoinFlip() const
 {
 	return GetTotal() / (opponents + 1);

@@ -37,15 +37,16 @@ int main(int argc, char** argv)
 			game.DealFlop();
 			game.DealTurn();
 			game.DealRiver();
+			game.ComputeWinningHand(allHands);
 
 			game.Dump(allHands, preflopOdds);
 
 			cout << "Type exit to quit: ";
 			string line;
 			getline(cin, line);
-			if (line == "exit")
+			if (line == "exit" || line == "quit")
 				break;
-			cout << '\n';
+			cout << "\n\n\n\n";
 		}
 	}
 	catch (const compute::program_build_failure& failure)

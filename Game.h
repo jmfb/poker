@@ -22,6 +22,9 @@ public:
 	void DealTurn();
 	void DealRiver();
 
+	void ComputeWinningHand(const AllHands& allHands);
+	int GetWinningHand() const;
+
 	void Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const;
 
 private:
@@ -30,4 +33,5 @@ private:
 	optional<BurnAndTurn> flop;
 	optional<BurnAndTurn> turn;
 	optional<BurnAndTurn> river;
+	int winningHand = 0;
 };

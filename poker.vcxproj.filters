@@ -139,6 +139,9 @@
     <ClCompile Include="Game.cpp">
       <Filter>Classes\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Community.cpp">
+      <Filter>Classes\Community</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -231,6 +234,9 @@
     <Filter Include="Classes\Game">
       <UniqueIdentifier>{fc141c43-3d5d-4152-8baf-28fabe4fef1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\Community">
+      <UniqueIdentifier>{9d8f1063-d839-4555-8873-d94adb2e7abf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -316,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Classes\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Community.h">
+      <Filter>Classes\Community</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,3 +15,13 @@ const HoleCards& GamePlayer::GetHole() const
 {
 	return hole;
 }
+
+void GamePlayer::SetBestHand(int rank)
+{
+	bestHand = rank;
+}
+
+int GamePlayer::GetBestHand() const
+{
+	return bestHand;
+}

@@ -17,6 +17,10 @@ public:
 	void SetCard2(Deck& deck);
 	const HoleCards& GetHole() const;
 
+	void SetBestHand(int rank);
+	int GetBestHand() const;
+
 private:
 	HoleCards hole;
+	int bestHand = 0;
 };

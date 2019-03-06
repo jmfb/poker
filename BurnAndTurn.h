@@ -13,6 +13,9 @@ public:
 	BurnAndTurn& operator=(BurnAndTurn&& rhs) = default;
 
 	int GetCard(int index) const;
+	string ToString() const;
+
+	int operator[](int index) const;
 
 private:
 	int burn = 0;

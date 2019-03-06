@@ -34,23 +34,28 @@ void Game::DealRiver()
 	river = { deck, 1 };
 }
 
+void Game::ComputeWinningHand(const AllHands& allHands)
+{
+	for (auto& player : players)
+	{
+		auto bestHand = allHands.GetBestHandRank(player, { *flop, *turn, *river });
+		player.SetBestHand(bestHand);
+		winningHand = max(winningHand, bestHand);
+	}
+}
+
+int Game::GetWinningHand() const
+{
+	return winningHand;
+}
+
 void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 {
-	vector<int> bestHands;
-	auto winningHand = 0;
-	cout << "                 Flop{ "
-		<< Card{ flop->GetCard(0) }.ToString() << ' '
-		<< Card{ flop->GetCard(1) }.ToString() << ' '
-		<< Card{ flop->GetCard(2) }.ToString() << " } ";
-	cout << "Turn{ " << Card{ turn->GetCard(0) }.ToString() << " } ";
-	cout << "River{ " << Card{ river->GetCard(0) }.ToString() << " }\n";
-	for (auto index = 0; index < players.size(); ++index)
-	{
-		auto& player = players[index];
-		auto bestHand = allHands.GetBestHandRank(player.GetHole().GetCard1(), player.GetHole().GetCard2(), flop->GetCard(0), flop->GetCard(1), flop->GetCard(2), turn->GetCard(0), river->GetCard(0));
-		bestHands.push_back(bestHand);
-		winningHand = ::max(winningHand, bestHand);
-	}
+	cout << "                 Preflop     "
+		<< "Flop{ " << flop->ToString() << " } "
+		<< "Turn{ " << turn->ToString() << " } "
+		<< "River{ " << river->ToString() << " }\n";
+	cout << "                 =========== ================ ========== ===========\n";
 
 	//Compute preflop odds for audience (where we know all players hands)
 	Deck remaining;
@@ -73,7 +78,7 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 						auto best = 0;
 						for (auto& player : players)
 						{
-							auto hand = allHands.GetBestHandRank(player.GetHole().GetCard1(), player.GetHole().GetCard2(), *c1, *c2, *c3, *c4, *c5);
+							auto hand = allHands.GetBestHandRank(player, { *c1, *c2, *c3, *c4, *c5 });
 							best = ::max(best, hand);
 							hands.push_back(hand);
 						}
@@ -100,9 +105,7 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 			auto best = 0;
 			for (auto& player : players)
 			{
-				array<int, 5> community{ flop->GetCard(0), flop->GetCard(1), flop->GetCard(2), *c4, *c5 };
-				::sort(community.begin(), community.end());
-				auto hand = allHands.GetBestHandRank(player.GetHole().GetCard1(), player.GetHole().GetCard2(), community[0], community[1], community[2], community[3], community[4]);
+				auto hand = allHands.GetBestHandRank(player, { *flop, *c4, *c5 });
 				best = ::max(best, hand);
 				hands.push_back(hand);
 			}
@@ -126,9 +129,7 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 		auto best = 0;
 		for (auto& player : players)
 		{
-			array<int, 5> community{ flop->GetCard(0), flop->GetCard(1), flop->GetCard(2), turn->GetCard(0), *c5 };
-			::sort(community.begin(), community.end());
-			auto hand = allHands.GetBestHandRank(player.GetHole().GetCard1(), player.GetHole().GetCard2(), community[0], community[1], community[2], community[3], community[4]);
+			auto hand = allHands.GetBestHandRank(player, { *flop, *turn, *c5 });
 			best = ::max(best, hand);
 			hands.push_back(hand);
 		}
@@ -153,23 +154,19 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 	for (auto index = 0; index < players.size(); ++index)
 	{
 		auto& player = players[index];
-		auto bestHand = bestHands[index];
-		auto preflopToPlayer = preflopOdds.GetOdds(player.GetHole(), static_cast<int>(players.size()) - 1);
-		auto preflopToAudience = static_cast<double>((preflopAudience[index] * 10000) / preflopCount) / 100.0;
-		auto flopToAudience = static_cast<double>((flopAudience[index] * 10000) / flopCount) / 100.0;
-		auto turnToAudience = static_cast<double>((turnAudience[index] * 10000) / turnCount) / 100.0;
-		auto riverToPlayer = riverPlayer[index].GetWinOrDrawPercent();
-		cout << "Player" << index << "{ " << player.GetHole().ToString() << " } ";
+		auto bestHand = player.GetBestHand();
+		//auto preflopToPlayer = preflopOdds.GetOdds(player.GetHole(), static_cast<int>(players.size()) - 1);
+		auto preflopToAudience = (static_cast<int>((preflopAudience[index] * 1000) / preflopCount) + 5) / 10;
+		auto flopToAudience = (static_cast<int>((flopAudience[index] * 1000) / flopCount) + 5) / 10;
+		auto turnToAudience = (static_cast<int>((turnAudience[index] * 1000) / turnCount) + 5) / 10;
+		auto riverToPlayer = riverPlayer[index].GetWinOrDrawPercentRounded();
 
-		cout
-			<< ", preflop " << "???"//preflopToPlayer
-			<< " (" << preflopToAudience
-			<< "), flop (" << flopToAudience
-			<< "), turn (" << turnToAudience
-			<< "), river " << riverToPlayer
-			<< " best hand " << HandValue{ bestHand }.ToString();
-		if (bestHand == winningHand)
-			cout << " (winner)";
-		cout << '\n';
+		cout << "Player" << index << "{ " << player.GetHole().ToString() << " } "
+			<< "??? (" << setw(3) << setfill(' ') << right << preflopToAudience << ")   "
+			<< "??? (" << setw(3) << setfill(' ') << right << flopToAudience << ")        "
+			<< "??? (" << setw(3) << setfill(' ') << right << turnToAudience << ")  "
+			<< setw(3) << setfill(' ') << right << riverToPlayer
+			<< " (" << (bestHand == winningHand ? 'x' : ' ') << ") "
+			<< HandValue{ bestHand }.ToString() << '\n';
 	}
 }
