@@ -127,6 +127,18 @@
     <ClCompile Include="LargeOddsCache.cpp">
       <Filter>Classes\LargeOddsCache</Filter>
     </ClCompile>
+    <ClCompile Include="GamePlayer.cpp">
+      <Filter>Classes\GamePlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="BurnAndTurn.cpp">
+      <Filter>Classes\BurnAndTurn</Filter>
+    </ClCompile>
+    <ClCompile Include="TestData.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Classes\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -210,6 +222,15 @@
     <Filter Include="Classes\LargeOddsCache">
       <UniqueIdentifier>{fea775a9-21c6-4739-9b41-a55e8c48448b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Classes\GamePlayer">
+      <UniqueIdentifier>{e82b0051-7682-46a5-82b3-66cf9a7164af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\BurnAndTurn">
+      <UniqueIdentifier>{c8df9217-8eb1-4f72-81dc-effdc4ee4459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Game">
+      <UniqueIdentifier>{fc141c43-3d5d-4152-8baf-28fabe4fef1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Suit.h">
@@ -284,6 +305,18 @@
     <ClInclude Include="LargeOddsCache.h">
       <Filter>Classes\LargeOddsCache</Filter>
     </ClInclude>
+    <ClInclude Include="GamePlayer.h">
+      <Filter>Classes\GamePlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="BurnAndTurn.h">
+      <Filter>Classes\BurnAndTurn</Filter>
+    </ClInclude>
+    <ClInclude Include="TestData.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Classes\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="1-opponent-odds.txt">
@@ -320,6 +353,9 @@
       <Filter>Resources</Filter>
     </Text>
     <Text Include="2-opponent-analysis.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="3-opponent-analysis.txt">
       <Filter>Resources</Filter>
     </Text>
   </ItemGroup>

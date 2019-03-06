@@ -150,6 +150,7 @@
   <ItemGroup>
     <ClCompile Include="AllHands.cpp" />
     <ClCompile Include="Bitset.cpp" />
+    <ClCompile Include="BurnAndTurn.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="CardSet.cpp" />
     <ClCompile Include="CombinationSequences.cpp" />
@@ -157,6 +158,8 @@
     <ClCompile Include="Counts.cpp" />
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="Face.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GamePlayer.cpp" />
     <ClCompile Include="Hand.cpp" />
     <ClCompile Include="HandType.cpp" />
     <ClCompile Include="HandValue.cpp" />
@@ -190,6 +193,7 @@
     <ClCompile Include="test7.cpp" />
     <ClCompile Include="test8.cpp" />
     <ClCompile Include="test9.cpp" />
+    <ClCompile Include="TestData.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TwoCardOverlap.cpp" />
   </ItemGroup>
@@ -201,6 +205,7 @@
   <ItemGroup>
     <ClInclude Include="AllHands.h" />
     <ClInclude Include="Bitset.h" />
+    <ClInclude Include="BurnAndTurn.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="CardSet.h" />
     <ClInclude Include="CombinationSequences.h" />
@@ -208,6 +213,8 @@
     <ClInclude Include="Counts.h" />
     <ClInclude Include="Deck.h" />
     <ClInclude Include="Face.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GamePlayer.h" />
     <ClInclude Include="Hand.h" />
     <ClInclude Include="HandSize.h" />
     <ClInclude Include="HandType.h" />
@@ -221,6 +228,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PreflopOdds.h" />
     <ClInclude Include="Suit.h" />
+    <ClInclude Include="TestData.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TwoCardOverlap.h" />
   </ItemGroup>
@@ -229,6 +237,7 @@
     <Text Include="1-opponent-odds.txt" />
     <Text Include="2-opponent-analysis.txt" />
     <Text Include="2-opponent-odds.txt" />
+    <Text Include="3-opponent-analysis.txt" />
     <Text Include="3-opponent-odds.txt" />
     <Text Include="4-opponent-odds.txt" />
     <Text Include="5-opponent-odds.txt" />
