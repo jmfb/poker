@@ -95,7 +95,10 @@ Total: 21 possible 5 card combinations.
 
 The total number of opponent card combinations, for `k`-opponents, for a given starting hand and community is:
 ```
-C(45, 2k) * Product(n=0..k-1, 2n + 1)
+C(45, 2k) * Partitions(k)
+Partitions(k) = Product(n=0..k-1, 2n + 1) // Product of all odd numbers from 1 to 2k-1
+- or -
+Partitions(k) = (2k)! / (2^k * k!) // Factorial Notation
 ```
 The first part represents the way to deal `x` cards to the opponents where each opponent gets 2 cards: `x = 2k`.
 The second part represents the ways to partition `2k` cards among `k` opponents.
