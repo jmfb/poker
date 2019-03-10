@@ -221,6 +221,7 @@
     <Text Include="2-opponent-odds.txt" />
     <Text Include="3-opponent-analysis.txt" />
     <Text Include="3-opponent-odds.txt" />
+    <Text Include="4-opponent-analysis.txt" />
     <Text Include="4-opponent-odds.txt" />
     <Text Include="5-opponent-odds.txt" />
     <Text Include="6-opponent-odds.txt" />

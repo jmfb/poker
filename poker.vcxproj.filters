@@ -307,5 +307,8 @@
     <Text Include="3-opponent-analysis.txt">
       <Filter>Resources</Filter>
     </Text>
+    <Text Include="4-opponent-analysis.txt">
+      <Filter>Resources</Filter>
+    </Text>
   </ItemGroup>
 </Project>
