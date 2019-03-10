@@ -13,6 +13,7 @@ public:
 	PreflopOdds& operator=(PreflopOdds&& rhs) = default;
 
 	double GetOdds(const HoleCards& hole, int opponents) const;
+	int GetOddsRounded(const HoleCards& hole, int opponents) const;
 
 private:
 	map<int, map<int, double>> odds;

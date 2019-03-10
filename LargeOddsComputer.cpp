@@ -216,7 +216,7 @@ int LargeOddsComputer::Compute(int argc, char** argv)
 void LargeOddsComputer::CombineOpponentOdds()
 {
 	map<pair<int, int>, map<int, LargeOdds>> allOdds;
-	for (auto opponents = 1; opponents <= 8; ++opponents)
+	for (auto opponents = 1; opponents <= 5; ++opponents)
 	{
 		ifstream in{ to_string(opponents) + "-opponent-odds.txt" };
 		string line;
@@ -235,7 +235,7 @@ void LargeOddsComputer::CombineOpponentOdds()
 	}
 
 	ofstream out{ "all-odds.txt" };
-	out << "hand,1,2,3,4,5,6,7,8\n";
+	out << "hand,1,2,3,4,5\n";
 	for (auto& hand : allOdds)
 	{
 		out << hand.first.first << ',' << hand.first.second << ',' << HoleCards{ { hand.first.first }, { hand.first.second } }.ToHandString();

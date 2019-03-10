@@ -155,16 +155,19 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 	{
 		auto& player = players[index];
 		auto bestHand = player.GetBestHand();
-		//auto preflopToPlayer = preflopOdds.GetOdds(player.GetHole(), static_cast<int>(players.size()) - 1);
+		auto preflopToPlayer = preflopOdds.GetOddsRounded(player.GetHole(), static_cast<int>(players.size()) - 1);
 		auto preflopToAudience = (static_cast<int>((preflopAudience[index] * 1000) / preflopCount) + 5) / 10;
 		auto flopToAudience = (static_cast<int>((flopAudience[index] * 1000) / flopCount) + 5) / 10;
 		auto turnToAudience = (static_cast<int>((turnAudience[index] * 1000) / turnCount) + 5) / 10;
 		auto riverToPlayer = riverPlayer[index].GetWinOrDrawPercentRounded();
 
 		cout << "Player" << index << "{ " << player.GetHole().ToString() << " } "
-			<< "??? (" << setw(3) << setfill(' ') << right << preflopToAudience << ")   "
-			<< "??? (" << setw(3) << setfill(' ') << right << flopToAudience << ")        "
-			<< "??? (" << setw(3) << setfill(' ') << right << turnToAudience << ")  "
+			<< setw(3) << setfill(' ') << right << preflopToPlayer
+			<< " (" << setw(3) << setfill(' ') << right << preflopToAudience << ")   "
+			<< "???" //Flop to player
+			<< " (" << setw(3) << setfill(' ') << right << flopToAudience << ")        "
+			<< "???" //Turn to player
+			<< " (" << setw(3) << setfill(' ') << right << turnToAudience << ")  "
 			<< setw(3) << setfill(' ') << right << riverToPlayer
 			<< " (" << (bestHand == winningHand ? 'x' : ' ') << ") "
 			<< HandValue{ bestHand }.ToString() << '\n';

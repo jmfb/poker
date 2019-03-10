@@ -223,10 +223,8 @@
     <Text Include="3-opponent-odds.txt" />
     <Text Include="4-opponent-analysis.txt" />
     <Text Include="4-opponent-odds.txt" />
+    <Text Include="5-opponent-analysis.txt" />
     <Text Include="5-opponent-odds.txt" />
-    <Text Include="6-opponent-odds.txt" />
-    <Text Include="7-opponent-odds.txt" />
-    <Text Include="8-opponent-odds.txt" />
     <Text Include="all-odds.txt" />
     <Text Include="Max-2-card-loss-counts.txt" />
   </ItemGroup>

@@ -283,15 +283,6 @@
     <Text Include="5-opponent-odds.txt">
       <Filter>Resources</Filter>
     </Text>
-    <Text Include="6-opponent-odds.txt">
-      <Filter>Resources</Filter>
-    </Text>
-    <Text Include="7-opponent-odds.txt">
-      <Filter>Resources</Filter>
-    </Text>
-    <Text Include="8-opponent-odds.txt">
-      <Filter>Resources</Filter>
-    </Text>
     <Text Include="all-odds.txt">
       <Filter>Resources</Filter>
     </Text>
@@ -308,6 +299,9 @@
       <Filter>Resources</Filter>
     </Text>
     <Text Include="4-opponent-analysis.txt">
+      <Filter>Resources</Filter>
+    </Text>
+    <Text Include="5-opponent-analysis.txt">
       <Filter>Resources</Filter>
     </Text>
   </ItemGroup>

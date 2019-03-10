@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	try
 	{
-		//for (auto opponents = 1; opponents <= 4; ++opponents)
+		//for (auto opponents = 1; opponents <= 5; ++opponents)
 		//{
 		//	ofstream out{ to_string(opponents) + "-opponent-analysis.txt" };
 		//	LargeOddsCache{ opponents }.Analyze(out);
@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 		CombinationSequences::Get(0);
 		cout << "Combination sequence generation: " << sequenceTimer.GetDurationMs() << "ms\n";
 
-		LargeOddsComputer::Compute(argc, argv);
-		return 0;
+		//LargeOddsComputer::Compute(argc, argv);
+		//return 0;
 
 		AllHands allHands;
 		PreflopOdds preflopOdds;

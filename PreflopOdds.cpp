@@ -52,3 +52,9 @@ double PreflopOdds::GetOdds(const HoleCards& hole, int opponents) const
 		throw runtime_error{ "Missing odds: " + hole.ToString() };
 	return iter->second.find(opponents)->second;
 }
+
+int PreflopOdds::GetOddsRounded(const HoleCards& hole, int opponents) const
+{
+	auto odds = GetOdds(hole, opponents);
+	return static_cast<int>(floor(odds + 0.5));
+}
