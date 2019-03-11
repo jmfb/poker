@@ -4,6 +4,8 @@
 #include "Hand.h"
 #include "TwoCardOverlap.h"
 #include "Timer.h"
+#include "BurnAndTurn.h"
+#include "Community.h"
 
 LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, int opponents)
 {
@@ -17,6 +19,45 @@ LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& 
 				for (auto c4 = c3 + 1; c4 != end; ++c4)
 					for (auto c5 = c4 + 1; c5 != end; ++c5)
 						odds += ComputeCommunity(allHands, hole, *c1, *c2, *c3, *c4, *c5, opponents);
+}
+
+LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const BurnAndTurn& flop, int opponents)
+{
+	Deck deck;
+	deck.NewDeck();
+	deck.Remove(hole);
+	deck.Remove(flop);
+	auto end = deck.end();
+	for (auto c4 = deck.begin(); c4 != end; ++c4)
+		for (auto c5 = c4 + 1; c5 != end; ++c5)
+		{
+			array<int, 5> cards{ flop[0], flop[1], flop[2], *c4, *c5 };
+			sort(cards.begin(), cards.end());
+			odds += ComputeCommunity(allHands, hole, cards[0], cards[1], cards[2], cards[3], cards[4], opponents);
+		}
+}
+
+LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const BurnAndTurn& flop, const BurnAndTurn& turn, int opponents)
+{
+	Deck deck;
+	deck.NewDeck();
+	deck.Remove(hole);
+	deck.Remove(flop);
+	deck.Remove(turn);
+	for (auto c5 : deck)
+	{
+		array<int, 5> cards{ flop[0], flop[1], flop[2], turn[0], c5 };
+		sort(cards.begin(), cards.end());
+		odds += ComputeCommunity(allHands, hole, cards[0], cards[1], cards[2], cards[3], cards[4], opponents);
+	}
+}
+
+LargeOddsComputer::LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const Community& community, int opponents)
+{
+	array<int, 5> cards;
+	copy(community.begin(), community.end(), cards.begin());
+	sort(cards.begin(), cards.end());
+	odds = ComputeCommunity(allHands, hole, cards[0], cards[1], cards[2], cards[3], cards[4], opponents);
 }
 
 const LargeOdds& LargeOddsComputer::GetOdds() const

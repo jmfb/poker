@@ -27,3 +27,13 @@ int BurnAndTurn::operator[](int index) const
 {
 	return GetCard(index);
 }
+
+vector<int>::const_iterator BurnAndTurn::begin() const
+{
+	return cards.begin();
+}
+
+vector<int>::const_iterator BurnAndTurn::end() const
+{
+	return cards.end();
+}

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Deck.h"
 #include "AllHands.h"
+#include "BurnAndTurn.h"
+#include "Community.h"
 
 Deck::iterator Deck::begin()
 {
@@ -40,6 +42,18 @@ void Deck::Remove(const HoleCards& hole, int c1, int c2, int c3, int c4, int c5)
 	Remove(c3);
 	Remove(c4);
 	Remove(c5);
+}
+
+void Deck::Remove(const BurnAndTurn& cards)
+{
+	for (auto card : cards)
+		Remove(card);
+}
+
+void Deck::Remove(const Community& community)
+{
+	for (auto card : community)
+		Remove(card);
 }
 
 void Deck::RemoveSingleCardLosses(const AllHands& allHands, int bestHand, int c1, int c2, int c3, int c4, int c5)

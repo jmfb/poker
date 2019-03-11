@@ -3,6 +3,7 @@
 #include "LargeOdds.h"
 #include "LargeOddsComputer.h"
 #include "HandValue.h"
+#include "Timer.h"
 
 void Game::AddPlayer()
 {
@@ -139,16 +140,25 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 				++turnAudience[index];
 	}
 
-	//Compute player odds (not knowing opponents) on river
-	vector<LargeOdds> riverPlayer;
+	//Compute player odds (not knowing opponents) on flop, turn, and river
+	Timer flopTimer;
+	vector<LargeOdds> flopPlayer;
 	auto opponents = static_cast<int>(players.size()) - 1;
 	for (auto& player : players)
-	{
-		LargeOddsComputer computer;
-		array<int, 5> community{ flop->GetCard(0), flop->GetCard(1), flop->GetCard(2), turn->GetCard(0), river->GetCard(0) };
-		::sort(community.begin(), community.end());
-		riverPlayer.push_back(computer.ComputeCommunity(allHands, player.GetHole(), community[0], community[1], community[2], community[3], community[4], opponents));
-	}
+		flopPlayer.push_back(LargeOddsComputer{ allHands, player.GetHole(), *flop, opponents }.GetOdds());
+	auto flopDuration = flopTimer.GetDurationS();
+
+	Timer turnTimer;
+	vector<LargeOdds> turnPlayer;
+	for (auto& player : players)
+		turnPlayer.push_back(LargeOddsComputer{ allHands, player.GetHole(), *flop, *turn, opponents }.GetOdds());
+	auto turnDuration = turnTimer.GetDurationS();
+
+	Timer riverTimer;
+	vector<LargeOdds> riverPlayer;
+	for (auto& player : players)
+		riverPlayer.push_back(LargeOddsComputer{ allHands, player.GetHole(), Community{ *flop, *turn, *river }, opponents }.GetOdds());
+	auto riverDuration = riverTimer.GetDurationS();
 
 	auto winningCount = 0;
 	for (auto index = 0; index < players.size(); ++index)
@@ -157,19 +167,23 @@ void Game::Dump(const AllHands& allHands, const PreflopOdds& preflopOdds) const
 		auto bestHand = player.GetBestHand();
 		auto preflopToPlayer = preflopOdds.GetOddsRounded(player.GetHole(), static_cast<int>(players.size()) - 1);
 		auto preflopToAudience = (static_cast<int>((preflopAudience[index] * 1000) / preflopCount) + 5) / 10;
+		auto flopToPlayer = flopPlayer[index].GetWinOrDrawPercentRounded();
 		auto flopToAudience = (static_cast<int>((flopAudience[index] * 1000) / flopCount) + 5) / 10;
+		auto turnToPlayer = turnPlayer[index].GetWinOrDrawPercentRounded();
 		auto turnToAudience = (static_cast<int>((turnAudience[index] * 1000) / turnCount) + 5) / 10;
 		auto riverToPlayer = riverPlayer[index].GetWinOrDrawPercentRounded();
+		auto riverToAudience = bestHand == winningHand;
 
 		cout << "Player" << index << "{ " << player.GetHole().ToString() << " } "
 			<< setw(3) << setfill(' ') << right << preflopToPlayer
 			<< " (" << setw(3) << setfill(' ') << right << preflopToAudience << ")   "
-			<< "???" //Flop to player
+			<< setw(3) << setfill(' ') << right << flopToPlayer
 			<< " (" << setw(3) << setfill(' ') << right << flopToAudience << ")        "
-			<< "???" //Turn to player
+			<< setw(3) << setfill(' ') << right << turnToPlayer
 			<< " (" << setw(3) << setfill(' ') << right << turnToAudience << ")  "
 			<< setw(3) << setfill(' ') << right << riverToPlayer
-			<< " (" << (bestHand == winningHand ? 'x' : ' ') << ") "
+			<< " (" << (riverToAudience ? 'x' : ' ') << ") "
 			<< HandValue{ bestHand }.ToString() << '\n';
 	}
+	cout << "Odds Duration: Preflop cached, Flop " << flopDuration << "s, Turn " << turnDuration << "s, River " << riverDuration << "s\n";
 }

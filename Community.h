@@ -19,6 +19,9 @@ public:
 
 	int operator[](int index) const;
 
+	array<int, 5>::const_iterator begin() const;
+	array<int, 5>::const_iterator end() const;
+
 private:
 	array<int, 5> cards;
 };

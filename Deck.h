@@ -3,6 +3,8 @@
 #include "Face.h"
 #include "HoleCards.h"
 class AllHands;
+class BurnAndTurn;
+class Community;
 
 const auto DeckSize = SuitCount * FaceCount;
 
@@ -24,6 +26,8 @@ public:
 	void Remove(int card);
 	void Remove(const HoleCards& hole);
 	void Remove(const HoleCards& hole, int c1, int c2, int c3, int c4, int c5);
+	void Remove(const BurnAndTurn& cards);
+	void Remove(const Community& community);
 	void RemoveSingleCardLosses(const AllHands& allHands, int bestHand, int c1, int c2, int c3, int c4, int c5);
 	vector<HoleCards> FindTwoCardLosses(const AllHands& allHands, int bestHand, int c1, int c2, int c3, int c4, int c5);
 	void Add(int card);

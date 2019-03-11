@@ -17,6 +17,9 @@ public:
 
 	int operator[](int index) const;
 
+	vector<int>::const_iterator begin() const;
+	vector<int>::const_iterator end() const;
+
 private:
 	int burn = 0;
 	vector<int> cards;

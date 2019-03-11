@@ -4,12 +4,17 @@
 #include "LargeOdds.h"
 #include "Card.h"
 #include "Suit.h"
+class BurnAndTurn;
+class Community;
 
 class LargeOddsComputer
 {
 public:
 	LargeOddsComputer() = default;
 	LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, int opponents);
+	LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const BurnAndTurn& flop, int opponents);
+	LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const BurnAndTurn& flop, const BurnAndTurn& turn, int opponents);
+	LargeOddsComputer(const AllHands& allHands, const HoleCards& hole, const Community& community, int opponents);
 	LargeOddsComputer(const LargeOddsComputer& rhs) = default;
 	LargeOddsComputer(LargeOddsComputer&& rhs) = default;
 	~LargeOddsComputer() = default;

@@ -27,3 +27,13 @@ int Community::operator[](int index) const
 		throw runtime_error{ "Invalid index." };
 	return cards[index];
 }
+
+array<int, 5>::const_iterator Community::begin() const
+{
+	return cards.begin();
+}
+
+array<int, 5>::const_iterator Community::end() const
+{
+	return cards.end();
+}
