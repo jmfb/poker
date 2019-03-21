@@ -55,9 +55,14 @@ int AllHands::GetRankByHash(int hash) const
 
 int AllHands::GetBestHandRank(const GamePlayer& player, const Community& community) const
 {
+	return GetBestHandRank(player.GetHole(), community);
+}
+
+int AllHands::GetBestHandRank(const HoleCards& hole, const Community& community) const
+{
 	return GetBestHandRank(
-		player.GetHole().GetCard1(),
-		player.GetHole().GetCard2(),
+		hole.GetCard1(),
+		hole.GetCard2(),
 		community[0],
 		community[1],
 		community[2],

@@ -19,6 +19,11 @@ HoleCards::HoleCards(Card card1, Card card2, const map<Suit, Suit>& suitMap)
 	SetCards(card1, card2);
 }
 
+HoleCards::HoleCards(Deck& deck)
+{
+	SetCards(deck.DealCard(), deck.DealCard());
+}
+
 void HoleCards::MoveNext()
 {
 	++card2;

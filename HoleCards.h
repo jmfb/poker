@@ -1,6 +1,7 @@
 #pragma once
 #include "Card.h"
 #include "Suit.h"
+class Deck;
 
 class HoleCards
 {
@@ -11,6 +12,7 @@ public:
 	HoleCards(int hash);
 	HoleCards(const Card& card1, const Card& card2);
 	HoleCards(Card card1, Card card2, const map<Suit, Suit>& suitMap);
+	HoleCards(Deck& deck);
 	~HoleCards() = default;
 
 	HoleCards& operator=(const HoleCards& rhs) = default;
